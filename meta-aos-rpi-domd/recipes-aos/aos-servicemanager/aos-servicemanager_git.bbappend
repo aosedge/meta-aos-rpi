@@ -1,4 +1,3 @@
-FILESEXTRAPATHS:prepend:aos-main-node := "${THISDIR}/files/main-node:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI += " \
