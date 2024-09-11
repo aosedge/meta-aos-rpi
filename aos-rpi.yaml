@@ -360,6 +360,7 @@ parameters:
           domd:
             builder:
               conf:
+                - [AOS_MAIN_NODE, "0"]
                 - [
                     AOS_HOSTS:append,
                     " %{AOS_MAIN_NODE_IP}=${AOS_MAIN_NODE_HOSTNAME}",
