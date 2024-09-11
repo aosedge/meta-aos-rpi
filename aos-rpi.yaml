@@ -32,7 +32,6 @@ variables:
   AOS_ROOTFS_REF_VERSION: "0.0.0"
 
   # Aos node configuration
-  AOS_MAIN_NODE_HOSTNAME: "main-node"
   AOS_MAIN_NODE_IP: "127.0.0.1"
 
   AOS_DOMD_NODE_TYPE: "rpi-domd"
@@ -128,7 +127,6 @@ common_data:
     - [AOS_BOOT_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
 
     # Node configuration
-    - [AOS_MAIN_NODE_HOSTNAME, "%{AOS_MAIN_NODE_HOSTNAME}"]
     - [AOS_HOSTS, "%{AOS_MAIN_NODE_IP}=wwwivi"]
 
     # Requires to properly generate Aos FOTA
@@ -364,7 +362,7 @@ parameters:
               conf:
                 - [
                     AOS_HOSTS:append,
-                    " %{AOS_MAIN_NODE_IP}=%{AOS_MAIN_NODE_HOSTNAME}",
+                    " %{AOS_MAIN_NODE_IP}=${AOS_MAIN_NODE_HOSTNAME}",
                   ]
 
   MACHINE:
