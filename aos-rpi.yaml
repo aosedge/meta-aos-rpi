@@ -301,8 +301,6 @@ images:
         gpt_type: ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
         type: vfat
         size: 512 MiB
-        items:
-          "aos": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos"
 
   rootfs:
     type: gpt
