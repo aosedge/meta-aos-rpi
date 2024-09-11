@@ -132,10 +132,8 @@ common_data:
     # Requires to properly generate Aos FOTA
     - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
 
-    - [
-        AOS_UM_COMPONENT_PREFIX,
-        "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-${AOS_NODE_TYPE}-",
-      ]
+    # Aos UM components prefix
+    - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-"]
 
 components:
   dom0:
@@ -353,6 +351,10 @@ parameters:
               conf:
                 - [AOS_MAIN_NODE, "1"]
                 - [AOS_VIS_DATA_PROVIDER, "%{VIS_DATA_PROVIDER}"]
+                - [
+                    AOS_UM_COMPONENT_PREFIX,
+                    "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-",
+                  ]
 
     "secondary":
       overrides:
@@ -363,6 +365,10 @@ parameters:
                 - [
                     AOS_HOSTS:append,
                     " %{AOS_MAIN_NODE_IP}=${AOS_MAIN_NODE_HOSTNAME}",
+                  ]
+                - [
+                    AOS_UM_COMPONENT_PREFIX,
+                    "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-",
                   ]
 
   MACHINE:
