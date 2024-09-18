@@ -205,22 +205,17 @@ components:
         - [UART_BOORLOADER, "1"]
         - [KERNEL_IMAGETYPE_UBOOT, "Image"]
         - [DISTRO_FEATURES:append, " xen"]
-        - [DOMD_BOOTARGS, "console=ttyAMA0 earlycon=xen earlyprintk=xen clk_ignore_unused root=%{DOMD_ROOTFS_DEV} rootfstype=ext4 rootwait quiet
-                         ro rootwait pci=pcie_bus_perf
-                         cgroup_no_v1=all systemd.unified_cgroup_hierarchy=1 cgroup_enable=memory
-                         vardir.disk=%{VAR_DISK}
-                         opendisk.target=%{OPEN_DISK}
-                         opendisk.pkcs11=optee
-                         aosupdate.disk=\\\\/dev\\\\/aosvg\\\\/workdirs
-                         aosupdate.path=um\\\\/update_rootfs
-                         aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp"]
-
-        # Requires to properly generate Aos FOTA
-        - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
-
         - [
-            AOS_UM_COMPONENT_PREFIX,
-            "%{UNIT_MODEL}-%{UNIT_VERSION}-%{NODE_TYPE}-",
+            DOMD_BOOTARGS,
+            "console=ttyAMA0 earlycon=xen earlyprintk=xen clk_ignore_unused
+            root=\\\\/dev\\\\/%{DOMD_BLK_DEV}1 rootfstype=ext4 rootwait quiet ro rootwait pci=pcie_bus_perf
+            cgroup_no_v1=all systemd.unified_cgroup_hierarchy=1 cgroup_enable=memory
+            vardir.disk=\\\\/dev\\\\/%{DOMD_BLK_DEV}2
+            opendisk.target=\\\\/dev\\\\/%{DOMD_BLK_DEV}3
+            opendisk.pkcs11=optee
+            aosupdate.disk=\\\\/dev\\\\/aosvg\\\\/workdirs
+            aosupdate.path=um\\\\/update_rootfs
+            aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp",
           ]
 
       build_target: "%{AOS_BASE_IMAGE}"
@@ -436,9 +431,8 @@ parameters:
       default: true
       overrides:
         variables:
-          DOMD_ROOTFS_DEV: "\\\\/dev\\\\/sda1"
-          VAR_DISK: "\\\\/dev\\\\/sda2"
-          OPEN_DISK: "\\\\/dev\\\\/sda3"
+          DOMD_BLK_DEV: "sda"
+
         components:
           domd:
             builder:
@@ -449,9 +443,8 @@ parameters:
     nvme:
       overrides:
         variables:
-          DOMD_ROOTFS_DEV: "\\\\/dev\\\\/nvme0n1p1"
-          VAR_DISK: "\\\\/dev\\\\/nvme0n1p2"
-          OPEN_DISK: "\\\\/dev\\\\/nvme0n1p3"
+          DOMD_BLK_DEV: "nvme0n1p"
+
         components:
           domd:
             builder:
