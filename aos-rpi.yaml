@@ -162,8 +162,7 @@ components:
         - "build/zephyr/zephyr.bin"
 
       additional_deps:
-        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/u-boot-domd.bin"
-        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_DOMD_DTB_NAME}"
+        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/ta"
 
   domd:
     default: true
@@ -238,57 +237,33 @@ components:
         - "../meta-aos-rpi/meta-aos-rpi-domd"
 
       target_images:
+        - "tmp/deploy/images/%{MACHINE}/bootfiles"
+
+        - "tmp/deploy/images/%{MACHINE}/armstub8-2712.bin"
+
+        - "tmp/deploy/images/%{MACHINE}/Image.gz-initramfs-%{MACHINE}.bin"
         - "tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}"
+        - "tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
+        - "tmp/deploy/images/%{MACHINE}/u-boot-%{MACHINE}.bin"
+        - "tmp/deploy/images/%{MACHINE}/boot.scr"
+
         - "tmp/deploy/images/%{MACHINE}/%{XT_XEN_DTBO_NAME}"
-        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
-        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
-        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
+        - "tmp/deploy/images/%{MACHINE}/%{XT_DOMD_DTB_NAME}"
+
+        - "tmp/deploy/images/%{MACHINE}/bcm2712-rpi-5-b.dtb"
+
         - "tmp/deploy/images/%{MACHINE}/mmc-passthrough.dtbo"
         - "tmp/deploy/images/%{MACHINE}/usb-passthrough.dtbo"
         - "tmp/deploy/images/%{MACHINE}/pcie1-passthrough.dtbo"
-        - "tmp/deploy/images/%{MACHINE}/bcm2712-rpi-5-b.dtb"
-        - "tmp/deploy/images/%{MACHINE}/Image.gz"
-        - "tmp/deploy/images/%{MACHINE}/armstub8-2712.bin"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/bootcode.bin"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/config.txt"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/cmdline.txt"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/fixup.dat"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/fixup_cd.dat"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/fixup_db.dat"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/fixup_x.dat"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/fixup4.dat"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/fixup4cd.dat"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/fixup4db.dat"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/fixup4x.dat"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/start.elf"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/start_cd.elf"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/start_db.elf"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/start_x.elf"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/start4.elf"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/start4db.elf"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/start4cd.elf"
-        - "tmp/deploy/images/%{MACHINE}/bootfiles/start4x.elf"
+        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
+        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
+        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
 
-        # from aos rcar meta
-        - "tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
-        - "tmp/deploy/images/%{MACHINE}/Image.gz-initramfs-%{MACHINE}.bin"
-        - "tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}.uImage"
-        - "tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
-        - "tmp/deploy/images/%{MACHINE}/%{XT_XEN_DTB_NAME}"
-        - "tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
-        - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.ext4"
+        - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}-var.ext4"
+
         - "tmp/deploy/images/%{MACHINE}/aos/boot/version"
-        - "tmp/deploy/images/%{MACHINE}/boot.uImage"
-        - "tmp/deploy/images/%{MACHINE}/u-boot-domd.bin"
-        - "tmp/deploy/images/%{MACHINE}/%{XT_DOMD_DTB_NAME}"
-        # firmware
-        - "tmp/deploy/images/%{MACHINE}/bl31-%{MACHINE}.bin"
-        - "tmp/deploy/images/%{MACHINE}/bl31-%{MACHINE}.srec"
-        - "tmp/deploy/images/%{MACHINE}/tee-%{MACHINE}.bin"
-        - "tmp/deploy/images/%{MACHINE}/tee-%{MACHINE}.srec"
-        - "tmp/deploy/images/%{MACHINE}/u-boot-elf-%{MACHINE}.srec"
-        - "tmp/deploy/images/%{MACHINE}/u-boot-%{MACHINE}.bin"
+        - "tmp/deploy/images/%{MACHINE}/aos/ta"
 
 images:
   dom0:
@@ -301,48 +276,32 @@ images:
         type: vfat
         size: 512 MiB
         items:
+          "/": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles"
+
           "armstub8-2712.bin": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/armstub8-2712.bin"
-          "bootcode.bin": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/bootcode.bin"
-          "config.txt":   "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/config.txt"
-          "cmdline.txt":  "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/cmdline.txt"
-          "fixup.dat":    "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/fixup.dat"
-          "fixup_cd.dat": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/fixup_cd.dat"
-          "fixup_db.dat": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/fixup_db.dat"
-          "fixup_x.dat":  "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/fixup_x.dat"
-          "fixup4.dat":   "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/fixup4.dat"
-          "fixup4cd.dat": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/fixup4cd.dat"
-          "fixup4db.dat": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/fixup4db.dat"
-          "fixup4x.dat":  "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/fixup4x.dat"
-          "start.elf":    "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/start.elf"
-          "start_cd.elf": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/start_cd.elf"
-          "start_db.elf": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/start_db.elf"
-          "start_x.elf":  "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/start_x.elf"
-          "start4.elf":   "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/start4.elf"
-          "start4db.elf": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/start4db.elf"
-          "start4cd.elf": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/start4cd.elf"
-          "start4x.elf":  "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bootfiles/start4x.elf"
-          # "Image.gz": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image.gz"
+
           "Image.gz": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image.gz-initramfs-%{MACHINE}.bin"
           "xen": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}"
           "xenpolicy": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
           "u-boot": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/u-boot-%{MACHINE}.bin"
           "boot.scr": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/boot.scr"
+
           "%{XT_XEN_DTBO_NAME}": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_XEN_DTBO_NAME}"
           "%{XT_DOMD_DTB_NAME}": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_DOMD_DTB_NAME}"
+
           "bcm2712-rpi-5-b.dtb": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/bcm2712-rpi-5-b.dtb"
+
           "mmc-passthrough.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/mmc-passthrough.dtbo"
           "usb-passthrough.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/usb-passthrough.dtbo"
           "pcie1-passthrough.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/pcie1-passthrough.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-usb.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
+
           "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
 
-
-          # "xen": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}.uImage"
-          "linux-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
-          "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
           "aos/version": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/boot/version"
+
       dom0:
         gpt_type: ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
         type: vfat
