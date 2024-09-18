@@ -344,35 +344,29 @@ parameters:
         variables:
           VIS_DATA_PROVIDER: "telemetryemulatoradapter"
 
-  NODE_TYPE:
-    desc: "Node type to build"
+  DOMD_NODE_TYPE:
+    desc: "Domd node type to build"
     "main":
       default: true
       overrides:
-        variables:
-          NODE_TYPE: "main"
-
         components:
           domd:
             builder:
               conf:
                 - [AOS_MAIN_NODE, "1"]
-                - [AOS_HOSTS, "127.0.0.1=wwwivi"]
                 - [AOS_VIS_DATA_PROVIDER, "%{VIS_DATA_PROVIDER}"]
 
     "secondary":
       overrides:
-        variables:
-          NODE_TYPE: "secondary"
-
         components:
           domd:
             builder:
               conf:
-                - [AOS_MAIN_NODE, "0"]
-                - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
+                - [
+                    AOS_HOSTS:append,
+                    " %{AOS_MAIN_NODE_IP}=%{AOS_MAIN_NODE_HOSTNAME}",
+                  ]
 
-  # Machines
   MACHINE:
     desc: "Raspberry Pi machines"
     rpi5:
