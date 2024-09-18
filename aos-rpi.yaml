@@ -209,7 +209,7 @@ components:
             opendisk.pkcs11=optee
             aosupdate.disk=\\\\/dev\\\\/aosvg\\\\/workdirs
             aosupdate.path=um\\\\/update_rootfs
-            aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp",
+            ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp', '', d)}",
           ]
         - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_DOMD_COMPONENT_PREFIX}"]
         - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
