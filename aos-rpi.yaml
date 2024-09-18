@@ -32,9 +32,8 @@ variables:
   AOS_ROOTFS_REF_VERSION: "0.0.0"
 
   # Aos node configuration
-  AOS_MAIN_NODE_IP: "127.0.0.1"
 
-  AOS_DOMD_NODE_TYPE: "rpi-domd"
+  AOS_MAIN_NODE_IP: "127.0.0.1"
   AOS_DOM0_NODE_TYPE: "rpi-dom0"
 
   AOS_BASE_IMAGE: "aos-image-rpi"
@@ -213,6 +212,7 @@ components:
             aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp",
           ]
         - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_DOMD_COMPONENT_PREFIX}"]
+        - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
 
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
@@ -431,6 +431,7 @@ parameters:
       overrides:
         variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
+          AOS_DOMD_NODE_TYPE: "rpi-main-domd"
 
         components:
           domd:
@@ -443,6 +444,7 @@ parameters:
       overrides:
         variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
+          AOS_DOMD_NODE_TYPE: "rpi-secondary-domd"
 
         components:
           domd:
