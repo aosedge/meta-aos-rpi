@@ -79,9 +79,6 @@ common_data:
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
     - [DL_DIR, "${TOPDIR}/../../../common_data/downloads"]
 
-    - [MACHINE, "%{MACHINE}"]
-    - [SOC_FAMILY, "%{SOC_FAMILY}"]
-    - [RPI_SOC_FAMILY, "%{SOC_FAMILY}"]
 
     # Init manager
     - [INIT_MANAGER, "systemd"]
@@ -104,39 +101,23 @@ common_data:
     # Initramfs configuration
     - [INITRAMFS_IMAGE, "aos-image-initramfs"]
     - [INITRAMFS_IMAGE_BUNDLE, "1"]
-    - [INITRAMFS_FSTYPES, "cpio.gz"]
-
-    # Preferred providers
-
-    # refpolicy
-    - [PREFERRED_PROVIDER_virtual/refpolicy, "refpolicy-aos"]
 
     # Distro features
 
     # Remove features that we are not using
     - [
         DISTRO_FEATURES:remove,
-        "x11 gtk gobject-introspection-data wifi nfc
-        bluetooth irda zeroconf 3g sysvinit acl alsa argp pcmcia usbgadget
-        usbhost opengl ptest multiarch wayland vulkan sysvinit pulseaudio",
+        "x11 gtk gobject-introspection-data nfc irda zeroconf 3g sysvinit
+        acl alsa argp pcmcia usbgadget opengl ptest multiarch wayland
+        vulkan sysvinit",
       ]
     # Remove ptest to reduce the build time
     - [DISTRO_FEATURES:remove, "ptest"]
 
     # Enable SELinux
     # - [DISTRO_FEATURES:append, " acl xattr pam selinux"]
-
-    - [FIRST_BOOT_RELABEL, "1"]
-
-    # Machine features
-
-    # Add Capacity Aware migration Strategy (CAS)
-    - [MACHINE_FEATURES:append, " cas"]
-
-    # SDK features
-
-    # add the static lib to SDK toolchain
-    - [SDKIMAGE_FEATURES:append, " staticdev-pkgs"]
+    # - [FIRST_BOOT_RELABEL, "1"]
+    # - [PREFERRED_PROVIDER_virtual/refpolicy, "refpolicy-aos"]
 
     # Unit model
     - [AOS_UNIT_MODEL, "%{AOS_UNIT_MODEL}"]
@@ -176,8 +157,10 @@ components:
         - 'CONFIG_AOS_NODE_TYPE="%{AOS_DOM0_NODE_TYPE}"'
         - 'CONFIG_TA_DEPLOY_DIR="../../../%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/ta"'
         - 'CONFIG_AOS_ROOT_CA_PATH="../../../%{YOCTOS_WORK_DIR}/meta-aos/recipes-aos/aos-rootca/files/Aos_Root_CA.pem"'
+
       target_images:
         - "build/zephyr/zephyr.bin"
+
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/u-boot-domd.bin"
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_DOMD_DTB_NAME}"
@@ -189,23 +172,31 @@ components:
       - *COMMON_YOCTO_SOURCES
       - type: git
         url: "https://git.yoctoproject.org/meta-raspberrypi"
-        rev: "1918a27419dcd5e79954c0dc0edddcde91057a7e"
+        rev: "scarthgap"
 
       - type: git
         url: "https://github.com/xen-troops/meta-xt-rpi5.git"
-        rev: "v0.2"
+        rev: "main"
 
     builder:
       type: yocto
       work_dir: "%{DOMD_BUILD_DIR}"
       conf:
         - *COMMON_CONF
+        - [MACHINE, "%{MACHINE}"]
+        - [RPI_SOC_FAMILY, "%{SOC_FAMILY}"]
         - [XT_DOM_NAME, "domd"]
         - [XT_DEVICE_TREES, "%{XT_XEN_DTBO_NAME}"]
-        - [DOM0_OS, "%{DOM0_OS}"]
-        - [PREFERRED_VERSION_xen,"4.19.0+git"]
+        - [PREFERRED_VERSION_xen, "4.19.0+git"]
         - [PREFERRED_VERSION_xen-tools, "4.19.0+git"]
         - [PREFERRED_VERSION_u-boot, "2024.04"]
+
+        # Addresses for u-boot
+        - [DOMD_IMG_ADDR, "%{DOMD_IMG_ADDR}"]
+        - [DOMD_DTB_ADDR, "%{DOMD_DTB_ADDR}"]
+        - [XEN_IMG_ADDR, "%{XEN_IMG_ADDR}"]
+        - [XEN_DTBO_ADDR, "%{XEN_DTBO_ADDR}"]
+        - [XENPOLICY_IMG_ADDR, "%{XENPOLICY_IMG_ADDR}"]
 
         # RPI specific
         - [ENABLE_UART, "1"]
