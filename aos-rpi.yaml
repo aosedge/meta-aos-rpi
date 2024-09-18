@@ -212,6 +212,7 @@ components:
             aosupdate.path=um\\\\/update_rootfs
             aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp",
           ]
+        - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_DOMD_COMPONENT_PREFIX}"]
 
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
@@ -288,6 +289,62 @@ components:
 
           libvis-layer:
             target: "aos-libvis-layer"
+
+  fota-full:
+    builder:
+      type: custom_script
+      work_dir: "workdir"
+      script: "../yocto/meta-aos/scripts/fota_builder.py"
+      args: "-v"
+      target_images:
+        - "../output/fota/%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-full-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+
+      additional_deps:
+        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
+
+      components:
+        rootfs-full:
+          componentType: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
+          enabled: true
+          method: "overlay"
+          ostree_repo: "../../ostree_repo/%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
+          yocto_dir: "../%{YOCTOS_WORK_DIR}"
+          build_dir: "%{DOMD_BUILD_DIR}"
+          type: "full"
+          description: "DomD rootfs image"
+          version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+          exclude:
+            - "var/*"
+
+          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+
+  fota-incremental:
+    builder:
+      type: custom_script
+      work_dir: "workdir"
+      script: "../yocto/meta-aos/scripts/fota_builder.py"
+      args: "-v"
+      target_images:
+        - "../output/fota/%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+
+      additional_deps:
+        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
+
+      components:
+        rootfs-incremental:
+          componentType: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
+          enabled: true
+          method: "overlay"
+          ostree_repo: "../../ostree_repo/%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
+          yocto_dir: "../%{YOCTOS_WORK_DIR}"
+          build_dir: "%{DOMD_BUILD_DIR}"
+          type: "incremental"
+          description: "DomD rootfs image"
+          version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+          requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
+          exclude:
+            - "var/*"
+          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
 images:
   boot:
@@ -372,19 +429,21 @@ parameters:
     "main":
       default: true
       overrides:
+        variables:
+          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
+
         components:
           domd:
             builder:
               conf:
                 - [AOS_MAIN_NODE, "1"]
                 - [AOS_VIS_DATA_PROVIDER, "%{VIS_DATA_PROVIDER}"]
-                - [
-                    AOS_UM_COMPONENT_PREFIX,
-                    "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-",
-                  ]
 
     "secondary":
       overrides:
+        variables:
+          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
+
         components:
           domd:
             builder:
@@ -393,10 +452,6 @@ parameters:
                 - [
                     AOS_HOSTS:append,
                     " %{AOS_MAIN_NODE_IP}=${AOS_MAIN_NODE_HOSTNAME}",
-                  ]
-                - [
-                    AOS_UM_COMPONENT_PREFIX,
-                    "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-",
                   ]
 
   MACHINE:
