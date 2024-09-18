@@ -265,7 +265,7 @@ components:
         - "tmp/deploy/images/%{MACHINE}/aos/ta"
 
 images:
-  dom0:
+  boot:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -308,7 +308,7 @@ images:
         items:
           "aos": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos"
 
-  domd:
+  rootfs:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
