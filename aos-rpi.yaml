@@ -260,6 +260,35 @@ components:
         - "tmp/deploy/images/%{MACHINE}/aos/boot/version"
         - "tmp/deploy/images/%{MACHINE}/aos/ta"
 
+  layers:
+    builder:
+      type: custom_script
+      work_dir: "workdir"
+      script: "../yocto/meta-aos/scripts/layer_builder.py"
+      target_images:
+        - "../output/layers/nodejs-layer.tar"
+        - "../output/layers/pylibs-layer.tar"
+        - "../output/layers/libvis-layer.tar"
+
+      additional_deps:
+        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
+
+      layers:
+        yocto_dir: "../%{YOCTOS_WORK_DIR}"
+        build_dir: "%{DOMD_BUILD_DIR}"
+        output_dir: "../output/layers"
+        base_image: "%{AOS_BASE_IMAGE}"
+        items:
+          nodejs-layer:
+            enabled: false
+            target: "aos-nodejs-layer"
+
+          pylibs-layer:
+            target: "aos-pylibs-layer"
+
+          libvis-layer:
+            target: "aos-libvis-layer"
+
 images:
   boot:
     type: gpt
