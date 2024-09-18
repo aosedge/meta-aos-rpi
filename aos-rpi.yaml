@@ -6,9 +6,6 @@ variables:
   YOCTOS_WORK_DIR: "yocto"
   DOM0_OS: "zephyr"
 
-  # Raspberry 5 build configuration
-  ZEPHYR_DOM0_TARGET: "aos_core_zephyr"
-
   DOMD_BUILD_DIR: "build-domd"
   DOM0_BUILD_DIR: "zephyr/build-dom0"
 
@@ -174,7 +171,7 @@ components:
     builder:
       type: zephyr
       board: "%{ZEPHYR_DOM0_MACHINE}"
-      target: "%{ZEPHYR_DOM0_TARGET}"
+      target: "aos_core_zephyr"
       work_dir: build
       vars:
         - 'CONFIG_AOS_NODE_TYPE="%{AOS_DOM0_NODE_TYPE}"'
