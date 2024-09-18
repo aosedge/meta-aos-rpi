@@ -227,13 +227,12 @@ components:
         - "../meta-openembedded/meta-filesystems"
         - "../meta-security"
         - "../meta-selinux"
-        - "../meta-aos"
         - "../meta-xt-common/meta-xt-domx"
         - "../meta-xt-common/meta-xt-driver-domain"
         - "../meta-xt-common/meta-xt-security"
-
         - "../meta-raspberrypi"
         - "../meta-xt-rpi5"
+        - "../meta-aos"
         - "../meta-aos-rpi/meta-aos-rpi-domd"
 
       target_images:
