@@ -1,8 +1,7 @@
 SUMMARY = "Aos image for Raspberry Pi devices"
 
-require recipes-core/image/rpi5-image-xt-domd.bb
+require recipes-core/images/rpi5-image-xt-domd.bb
 require recipes-core/images/aos-image.inc
-
 
 IMAGE_INSTALL:append = " \
     packagegroup-core-ssh-openssh \
