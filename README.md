@@ -1,6 +1,18 @@
 # meta-aos-rpi
 
-This repository contains AodEdge Yocto layers for building Aos virtual machine.
+This repository contains AodEdge Yocto layers for building Aos example image for Raspberry 5.
+
+## Prerequisites
+
+This demo build requires two separate block devices: one contains Raspberry boot partitions and partition for Dom0
+while another block device contains DomD rootfs. The build system builds two separate images for boot device and rootfs
+device respectively. In order to run this demo, the following hardware is required:
+
+1. Raspberry 5 board
+2. SD-Card 2 GB minimum
+3. USB flash drive 16 GB minimum
+or
+4. Raspberry Pi M.2 HAT+ extension board + NVMe drive 16 GB minimum.
 
 ## Requirements
 
@@ -27,11 +39,13 @@ curl -O https://raw.githubusercontent.com/aosedge/meta-aos-rpi/main/aos-rpi.yaml
 
 ## Build
 
-Moulin is used to generate Ninja build file: `mouling aos-rpi.yaml`. This project provides number of additional
+Moulin is used to generate Ninja build file: `moulin aos-rpi.yaml`. This project provides number of additional
 parameters. You can check them with`--help-config` command line option:
 
 ```sh
-usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--DOMD_ROOT {usb,nvme}]
+moulin aos-rpi.yaml --help-config
+
+usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permessive,disabled}]
 
 Config file description: Raspberry 5 with xen dom0less
 
@@ -40,16 +54,22 @@ options:
                         Specifies plugin for VIS automotive data (default: renesassimulator)
   --DOMD_NODE_TYPE {main,secondary}
                         Domd node type to build (default: main)
-  --MACHINE {rpi5}      Raspberry Pi machines (default: rpi5)
+  --MACHINE {rpi5}      Raspberry Pi machine (default: rpi5)
   --DOMD_ROOT {usb,nvme}
                         Domd root device (default: usb)
+  --SELINUX {enabled,permissive,disabled}
+                        Enables SELinux (default: disabled)
 ```
 
-* `DOMD_NODE_TYPE` specifies the DomD node type to build: `main` - main node, `secondary` -
-secondary node. By default, main node is built.
-
 * `VIS_DATA_PROVIDER` - specifies VIS data provider: `renesassimulator` - Renesas Car simulator, `telemetryemulator` -
-telemetry emulator that reads data from the local file. By default, Renesas Car simulator is used.
+telemetry emulator that reads data from the local file. By default, Renesas Car simulator is used;
+
+* `DOMD_NODE_TYPE` - specifies the DomD node type to build: `main` - main node, `secondary` - secondary node. By default,
+main node is built;
+
+* `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
+
+* `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
 
 After performing moulin command with desired configuration, it will generate `build.ninja` with all necessary build
 targets.
@@ -67,6 +87,8 @@ Build boot image:
 ninja boot.img
 ```
 
+### Build rootfs image
+
 Build rootfs image:
 
 ```sh
@@ -75,12 +97,16 @@ ninja rootfs.img
 
 You should have `boot.img` and `rootfs.img` files in the build folder.
 
+## Flash images
+
+This build requires two different
+
 ### Flash boot image
 
 To flash boot image on SD-card run below command:
 
 ```sh
-sudo dd if=dom0.img of=/dev/<sd-dev> bs=4M status=progress conv=sparse
+sudo dd if=boot.img of=/dev/<sd-dev> bs=4M status=progress conv=sparse
 ```
 
 **NOTE:** Be sure to identify correctly <sd-dev> which is usually `sda`. For SD-card identification
@@ -102,7 +128,7 @@ For USB-flash identification Plug/unplug USB-flash and check `/dev/` for devices
 
 **NOTE:** Ensure existing USB-flash partitions unmounted if auto-mount is enabled.
 
-### Flash rootfs rootfs image to the nvme storage
+### Flash rootfs image to the nvme storage
 
 * Create SD-card with official Ubuntu from Raspberry foundation.
 * Copy file `rootfs.img` to the USB-Flash dongle.
