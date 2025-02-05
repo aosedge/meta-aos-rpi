@@ -47,35 +47,35 @@ common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "scarthgap"
+      rev: "dce4163d42f7036ea216b52b9135968d51bec4c1"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "scarthgap"
+      rev: "b8d1a14f7f3b76457c36752202ea7ae5881b6654"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "scarthgap"
+      rev: "450941a1b6df96285691e8c23d4f332d3c88a994"
 
     - type: git
       url: "git://git.yoctoproject.org/meta-security"
-      rev: "scarthgap"
+      rev: "bc865c5276c2ab4031229916e8d7c20148dfbac3"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "scarthgap"
+      rev: "3aff015697fa056b4af83b1c9ba44eca346a8a37"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: "master"
+      rev: "v0.2.0"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
-      rev: "develop"
+      rev: "v8.0.1"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "develop"
+      rev: "v1.0.0"
 
   # Common configuration options for all yocto-based domains
   common_conf: &COMMON_CONF
@@ -143,7 +143,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "develop"
+        rev: "v1.0.1"
 
     builder:
       type: zephyr
