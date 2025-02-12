@@ -95,7 +95,31 @@ Build rootfs image:
 ninja rootfs.img
 ```
 
-You should have `boot.img` and `rootfs.img` files in the build folder.
+### Build Boot Image and RootFS Image in Docker.
+
+You can build both images inside a Docker container by simply running the following command:
+```sh
+./build.sh
+```
+You can also pass the following arguments:
+
+| Argument             | Description |Mandatory|
+|----------------------|-------------|---------|
+| `--ARTIFACTS_DIR`       | Path to the directory where the build results will be stored. |NO|
+| `--VIS_DATA_PROVIDER`   | Same value as described in the **Build** section. |NO|
+| `--DOMD_NODE_TYPE`      | Same value as described in the **Build** section. |NO|
+| `--MACHINE`             | Same value as described in the **Build** section. |NO|
+| `--DOMD_ROOT`           | Same value as described in the **Build** section. |NO|
+| `--SELINUX`             | Same value as described in the **Build** section. |NO|
+
+Example command:
+```sh
+./build.sh
+```
+or
+```sh
+./build.sh --ARTIFACTS_DIR=~/aos_artifacts --MACHINE=rpi5 --SELINUX=disabled
+```
 
 ## Flash images
 
