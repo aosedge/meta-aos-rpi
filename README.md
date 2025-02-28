@@ -59,6 +59,8 @@ options:
                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                         Enables SELinux (default: disabled)
+  --BUILD_ENVIRONMENT {local,docker}
+                     Build execution environment. (default: local)
 ```
 
 * `VIS_DATA_PROVIDER` - specifies VIS data provider: `renesassimulator` - Renesas Car simulator, `telemetryemulator` -
@@ -70,6 +72,8 @@ main node is built;
 * `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
 
 * `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
+
+* `BUILD_ENVIRONMENT` - Defines the build execution environment. Possible values: `local` (build runs on the local machine), `docker` (build runs inside a Docker container).
 
 After performing moulin command with desired configuration, it will generate `build.ninja` with all necessary build
 targets.
@@ -102,7 +106,8 @@ You should have `boot.img` and `rootfs.img` files in the build folder.
 You can build both images inside a Docker container by simply running the following command:
 
 ```sh
-./docker/build.sh
+cd ./docker
+./build.sh
 ```
 
 You can also pass the following arguments:
@@ -115,17 +120,20 @@ You can also pass the following arguments:
 | `--MACHINE`             | Same value as described in the **Build** section. |NO|
 | `--DOMD_ROOT`           | Same value as described in the **Build** section. |NO|
 | `--SELINUX`             | Same value as described in the **Build** section. |NO|
+| `--BUILD_ENVIRONMENT`   | Same value as described in the **Build** section. |NO|
 
 Example command:
 
 ```sh
-./docker/build.sh
+cd ./docker
+./build.sh
 ```
 
 or
 
 ```sh
-./docker/build.sh --ARTIFACTS_DIR=~/aos_artifacts --MACHINE=rpi5 --SELINUX=disabled
+cd ./docker
+./build.sh --ARTIFACTS_DIR=~/aos_artifacts --MACHINE=rpi5 --SELINUX=disabled
 ```
 
 ## Flash images
