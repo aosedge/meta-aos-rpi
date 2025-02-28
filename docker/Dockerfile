@@ -30,21 +30,10 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-RUN mkdir -p /meta-aos-rpi
-RUN chmod -R 755 /meta-aos-rpi
-RUN chown user:user /meta-aos-rpi
-
-USER user
-
-WORKDIR /meta-aos-rpi
-
-RUN git clone --branch main https://github.com/aosedge/meta-aos-rpi.git /meta-aos-rpi
-RUN pip3 install --user git+https://github.com/xen-troops/moulin 
+ENV PATH="/home/user/.local/bin:/root/.local/bin:${PATH}"
+RUN echo "export PATH=$PATH" >> /etc/environment
+RUN pip3 install git+https://github.com/xen-troops/moulin 
 RUN pip3 install west google google-api-core pyelftools
-
-ENV PATH="/home/user/.local/bin:${PATH}"
-
-USER root
 
 RUN cd /tmp/ && curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v25.6/protoc-25.6-linux-x86_64.zip && \
     unzip protoc-25.6-linux-x86_64.zip -d protoc3 && \
@@ -53,3 +42,5 @@ RUN cd /tmp/ && curl -OL https://github.com/protocolbuffers/protobuf/releases/do
     rm -rf protoc3 protoc-25.6-linux-x86_64.zip
 
 RUN chown -R user:user /usr/local/include/google
+USER user
+

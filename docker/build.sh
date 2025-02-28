@@ -9,6 +9,7 @@ DOMD_NODE_TYPE="main"
 MACHINE="rpi5"
 DOMD_ROOT="usb"
 SELINUX="disabled"
+BUILD_ENVIRONMENT="docker"
 
 error_and_exit() {
     echo "$1">&2
@@ -42,6 +43,10 @@ while [[ "$#" -gt 0 ]]; do
             SELINUX="$2"
             shift 2
             ;;
+        --BUILD_ENVIRONMENT)
+            BUILD_ENVIRONMENT="$2"
+            shift 2
+            ;;
         *)
             shift 
             ;;
@@ -58,6 +63,7 @@ if ! docker info &> /dev/null; then
 fi
 
 mkdir -p "$ARTIFACTS_DIR"
+chmod 777 "$ARTIFACTS_DIR"
 
 echo "Building Docker image: $IMAGE_NAME"
 
@@ -71,26 +77,26 @@ fi
 
 echo "Starting new container: $CONTAINER_NAME"
 
-docker run -d -v "$ARTIFACTS_DIR:/meta-aos-rpi/artifacts" --name "$CONTAINER_NAME" "$IMAGE_NAME" tail -f /dev/null
+docker run --rm -d -w /meta-aos-rpi -v "$(realpath ./../):/meta-aos-rpi" -v "$ARTIFACTS_DIR:/tmp/artifacts" --name "$CONTAINER_NAME" "$IMAGE_NAME" tail -f /dev/null
 if ! docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
     error_and_exit "Container $CONTAINER_NAME failed to start."
 fi
 
-echo "Building boot.img and rootfs.img"
+echo "Building install.img"
 
-CMD="cd /meta-aos-rpi/artifacts &&  moulin ../aos-rpi.yaml"
+CMD="cd /tmp/artifacts && moulin /meta-aos-rpi/aos-rpi.yaml"
 [[ -n "$VIS_DATA_PROVIDER" ]] && CMD+=" --VIS_DATA_PROVIDER \"$VIS_DATA_PROVIDER\""
 [[ -n "$DOMD_NODE_TYPE" ]] && CMD+=" --DOMD_NODE_TYPE \"$DOMD_NODE_TYPE\""
 [[ -n "$MACHINE" ]] && CMD+=" --MACHINE \"$MACHINE\""
 [[ -n "$DOMD_ROOT" ]] && CMD+=" --DOMD_ROOT \"$DOMD_ROOT\""
 [[ -n "$SELINUX" ]] && CMD+=" --SELINUX \"$SELINUX\""
-CMD+=" && ninja boot.img && ninja rootfs.img"
+[[ -n "$BUILD_ENVIRONMENT" ]] && CMD+=" --BUILD_ENVIRONMENT \"$BUILD_ENVIRONMENT\""
+CMD+=" && ninja install.img"
 
-if docker exec -it --user user "$CONTAINER_NAME" bash -c "
+if docker exec "$CONTAINER_NAME" bash -c "
     $CMD
 "; then
     echo "Congratulations! Build completed successfully. Artifacts: $ARTIFACTS_DIR"
-
 else
     error_and_exit "Build did not complete successfully! Please look to output for more details."
 fi
