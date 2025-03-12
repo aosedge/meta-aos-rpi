@@ -59,6 +59,8 @@ options:
                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                         Enables SELinux (default: disabled)
+  --OUTSIDE_CACHE {inside,outside}
+                     Indicated where cache and downloads are stored: inside build dir or outside. (default: inside)
 ```
 
 * `VIS_DATA_PROVIDER` - specifies VIS data provider: `renesassimulator` - Renesas Car simulator, `telemetryemulator` -
@@ -71,38 +73,58 @@ main node is built;
 
 * `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
 
+* `OUTSIDE_CACHE` - Indicated where cache and downloads are stored: inside build dir or outside.
+
 After performing moulin command with desired configuration, it will generate `build.ninja` with all necessary build
 targets.
 
 The moulin yaml file contains two target for different block devices:
 
-* `boot` - for SD-Card that contains boot partition and Dom0 zephyr partition;
-* `rootfs` - for USB flash drive or nvme device (depends on `DOMD_ROOT` option) that contains rootfs partitions of DomD and other guest domains.
+* `boot-usb` - for SD-Card that contains boot partition and Dom0 zephyr partition;
+* `rootfs-usb` - for USB flash drive  that contains rootfs partitions of DomD and other guest domains.
 
-### Build boot image
+or
 
-Build boot image:
+* `boot-nvme` - for SD-Card that contains boot partition and Dom0 zephyr partition;
+* `rootfs-usb` - for nvme device that contains rootfs partitions of DomD and other guest domains.
 
-```sh
-ninja boot.img
-```
+The configuration depends on `DOMD_ROOT` option.
 
-### Build rootfs image
-
-Build rootfs image:
+### Build boot image for usb
 
 ```sh
-ninja rootfs.img
+ninja boot-usb.img
 ```
 
-You should have `boot.img` and `rootfs.img` files in the build folder.
+### Build rootfs image for usb
+
+```sh
+ninja rootfs-usb.img
+```
+
+You should have `boot-usb.img` and `rootfs-usb.img` files in the build folder.
+
+### Build boot image for nvme
+
+```sh
+ninja boot-nvme.img
+```
+
+### Build rootfs image for nvme
+
+```sh
+ninja rootfs-nvme.img
+```
+
+You should have `boot-nvme.img` and `rootfs-nvme.img` files in the build folder.
 
 ### Build Boot Image and RootFS Image in Docker
 
 You can build both images inside a Docker container by simply running the following command:
 
 ```sh
-./docker/build.sh
+cd ./docker
+./build.sh
 ```
 
 You can also pass the following arguments:
@@ -115,17 +137,20 @@ You can also pass the following arguments:
 | `--MACHINE`             | Same value as described in the **Build** section. |NO|
 | `--DOMD_ROOT`           | Same value as described in the **Build** section. |NO|
 | `--SELINUX`             | Same value as described in the **Build** section. |NO|
+| `--OUTSIDE_CACHE`       | Same value as described in the **Build** section. |NO|
 
 Example command:
 
 ```sh
-./docker/build.sh
+cd ./docker
+./build.sh
 ```
 
 or
 
 ```sh
-./docker/build.sh --ARTIFACTS_DIR=~/aos_artifacts --MACHINE=rpi5 --SELINUX=disabled
+cd ./docker
+./build.sh --ARTIFACTS_DIR ~/aos_artifacts --MACHINE rpi5 --DOMD_ROOT usb
 ```
 
 ## Flash images
