@@ -6,6 +6,7 @@ variables:
   YOCTOS_WORK_DIR: "yocto"
   DOM0_OS: "zephyr"
 
+  INSTALL_BUILD_DIR: "build-install"
   DOMD_BUILD_DIR: "build-domd"
   DOM0_BUILD_DIR: "zephyr/build-dom0"
 
@@ -42,6 +43,7 @@ variables:
   AOS_DOM0_NODE_TYPE: "rpi-dom0"
 
   AOS_BASE_IMAGE: "aos-image-rpi"
+  AOS_INSTALL_IMAGE: "aos-image-install"
 
 common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
@@ -77,11 +79,12 @@ common_data:
       url: "https://github.com/aosedge/meta-aos-rpi.git"
       rev: "develop"
 
-  # Common configuration options for all yocto-based domains
-  common_conf: &COMMON_CONF
+  cache_conf: &CACHE_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
     - [DL_DIR, "${TOPDIR}/../../../common_data/downloads"]
 
+  # Common configuration options for all yocto-based domains
+  common_conf: &COMMON_CONF
     # Init manager
     - [INIT_MANAGER, "systemd"]
 
@@ -178,6 +181,7 @@ components:
       type: yocto
       work_dir: "%{DOMD_BUILD_DIR}"
       conf:
+        - *CACHE_CONF
         - *COMMON_CONF
         - [MACHINE, "%{MACHINE}"]
         - [RPI_SOC_FAMILY, "%{SOC_FAMILY}"]
@@ -264,6 +268,71 @@ components:
         - "tmp/deploy/images/%{MACHINE}/aos/boot/version"
         - "tmp/deploy/images/%{MACHINE}/aos/ta"
 
+  install:
+    default: true
+    build-dir: "%{YOCTOS_WORK_DIR}"
+    sources:
+      - *COMMON_YOCTO_SOURCES
+      - type: git
+        url: "https://git.yoctoproject.org/meta-raspberrypi"
+        rev: "scarthgap"
+
+    builder:
+      type: yocto
+      work_dir: "%{INSTALL_BUILD_DIR}"
+      conf:
+        - *CACHE_CONF
+        - [MACHINE, "%{MACHINE}"]
+        - [CMDLINE_AOS_DISK, "%{DOMD_BLK_DEV}"]
+        # Skip warning about missing "virtualization" distro feature
+        - [SKIP_META_VIRT_SANITY_CHECK, "1"]
+
+        # Do not install kernel image to rootfs to decrease initrd size
+        - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
+
+        # Make logs persistent
+        - [VOLATILE_LOG_DIR, "no"]
+
+        - [LICENSE_FLAGS_ACCEPTED, "synaptics-killswitch"]
+        # Generate ext4 image files rpi-sdimg
+        - [SDIMG_VFAT_DEPLOY, "1"]
+        - [SDIMG_ROOTFS_TYPE, "ext4"]
+        - [RPI_SDIMG_EXTRA_DEPENDS, "initramfs-aos-install:do_install"]
+
+        - [INITRAMFS_IMAGE, "aos-install-initramfs"]
+        - [INITRAMFS_IMAGE_BUNDLE, "1"]
+        - [BOOT_SPACE, "131072"]
+
+        # RPI specific
+        - [ENABLE_UART, "1"]
+
+      build_target: "%{AOS_INSTALL_IMAGE}"
+      layers:
+        - "../meta-openembedded/meta-oe"
+        - "../meta-openembedded/meta-networking"
+        - "../meta-openembedded/meta-perl"
+        - "../meta-openembedded/meta-python"
+        - "../meta-raspberrypi"
+        - "../meta-aos-rpi/meta-aos-install-rpi"
+
+      target_images:
+        - "tmp/deploy/images/%{MACHINE}/%{AOS_INSTALL_IMAGE}-%{MACHINE}.rootfs.vfat"
+        
+  install_archive:
+    build-dir: "%{INSTALL_BUILD_DIR}"
+    builder:
+      type: custom_script
+      args: "%{DOMD_ROOT}"
+      script: "../scripts/image_archive.sh"
+
+      additional_deps:
+        - "boot-%{DOMD_ROOT}.img"
+        - "rootfs-%{DOMD_ROOT}.img"
+
+      target_images:
+        - "../boot-%{DOMD_ROOT}.img.gz"
+        - "../rootfs-%{DOMD_ROOT}.img.gz"
+        
   layers:
     builder:
       type: custom_script
@@ -350,7 +419,7 @@ components:
           fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
 images:
-  boot:
+  boot-%{DOMD_ROOT}:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -391,7 +460,7 @@ images:
         type: vfat
         size: 512 MiB
 
-  rootfs:
+  rootfs-%{DOMD_ROOT}:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -410,6 +479,24 @@ images:
         gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
         type: empty
         size: 4096 MiB
+
+  install-%{DOMD_ROOT}:
+    type: gpt
+    desc: "Full RPI image"
+    sector_size: 512
+    partitions:
+      boot:
+        gpt_type: C12A7328-F81F-11D2-BA4B-00A0C93EC93B
+        type: raw_image
+        image_path: "%{YOCTOS_WORK_DIR}/%{INSTALL_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_INSTALL_IMAGE}-%{MACHINE}.rootfs.vfat"
+
+      install:
+        gpt_type: ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+        type: ext4
+        size: 300 MiB
+        items:
+          "boot.img.gz": "boot-%{DOMD_ROOT}.img.gz"
+          "rootfs.img.gz": "rootfs-%{DOMD_ROOT}.img.gz"
 
 parameters:
   VIS_DATA_PROVIDER:
@@ -467,12 +554,25 @@ parameters:
           SOC_FAMILY: "bcm2712"
           ZEPHYR_DOM0_MACHINE: "rpi_5"
 
+  OUTSIDE_CACHE:
+    desc: "Indicated where cache and downloads are stored: inside build dir or outside."
+    outside:
+      default: true
+
+    inside:
+      overrides:
+        common_data:
+          common_cache_conf:
+            - [SSTATE_DIR, "${TOPDIR}/../../common_data/sstate"]
+            - [DL_DIR, "${TOPDIR}/../../common_data/downloads"]
+
   DOMD_ROOT:
     desc: "Domd root device"
     usb:
       default: true
       overrides:
         variables:
+          DOMD_ROOT: usb
           DOMD_BLK_DEV: "sda"
 
         components:
@@ -485,6 +585,7 @@ parameters:
     nvme:
       overrides:
         variables:
+          DOMD_ROOT: nvme
           DOMD_BLK_DEV: "nvme0n1p"
 
         components:

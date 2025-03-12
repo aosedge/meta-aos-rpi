@@ -90,7 +90,7 @@ CMD="cd /tmp/artifacts && moulin /meta-aos-rpi/aos-rpi.yaml"
 [[ -n "$DOMD_ROOT" ]] && CMD+=" --DOMD_ROOT \"$DOMD_ROOT\""
 [[ -n "$SELINUX" ]] && CMD+=" --SELINUX \"$SELINUX\""
 [[ -n "$OUTSIDE_CACHE" ]] && CMD+=" --OUTSIDE_CACHE \"$OUTSIDE_CACHE\""
-CMD+=" && ninja install.img"
+CMD+=" && ninja install-$DOMD_ROOT.img"
 
 if docker exec "$CONTAINER_NAME" bash -c "
     $CMD
