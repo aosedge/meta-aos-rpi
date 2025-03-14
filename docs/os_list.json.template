@@ -1,0 +1,61 @@
+{
+    "imager": {
+        "latest_version": "1.8.5",
+        "url": "https://www.raspberrypi.com/software/",
+        "devices": [
+            {
+                "name": "No filtering",
+                "tags": [],
+                "default": false,
+                "description": "Show every possible image",
+                "matching_type": "inclusive"
+            },
+            {
+                "name": "Raspberry Pi 5",
+                "tags": [
+                    "pi5-64bit"
+                ],
+                "icon": "https://downloads.raspberrypi.com/imager/icons/RPi_5.png",
+                "description": "Raspberry Pi 5, 500, and Compute Module 5",
+                "matching_type": "exclusive"
+            }
+        ]
+    },
+    "os_list": [
+        {
+            "name": "AosCore",
+            "description": "AosCore for Raspberry Pi",
+            "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+            "subitems": [
+                {
+                    "name": "AosCore for USB drive v{{ .version }} - 64bit",
+                    "description": "Preconfigured AosCore image with rootfs on USB drive",
+                    "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+                    "url": "{{ .url_usb }}",
+                    "extract_size": {{ .extract_size_usb }},
+                    "extract_sha256": "{{ .extract_sha256_usb }}" ,
+                    "image_download_size": {{ .image_download_size_usb }},
+                    "release_date": "{{ .release_date }}",
+                    "init_format": "none",
+                    "devices": [
+                        "pi5-64bit"
+                    ]
+                },
+                {
+                    "name": "AosCore for NVME drive v{{ .version }} - 64bit",
+                    "description": "Preconfigured AosCore image with rootfs on NVME drive",
+                    "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+                    "url": "{{ .url_nvme }}",
+                    "extract_size": {{ .extract_size_nvme }},
+                    "extract_sha256": "{{ .extract_sha256_nvme }}" ,
+                    "image_download_size": {{ .image_download_size_nvme }},
+                    "release_date": "{{ .release_date }}",
+                    "init_format": "none",
+                    "devices": [
+                        "pi5-64bit"
+                    ]
+                }
+            ]
+        }
+    ]
+}
