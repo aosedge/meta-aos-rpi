@@ -1,0 +1,154 @@
+name: Aos rpi build
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: github-arc-x64-dind
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+      if: github.event_name != 'push'
+
+    - name: Set tag name
+      id: tag
+      run: |
+        echo "basename=${test1}"
+        if [[ "${{ github.event_name }}" != "push" ]]; then
+          tag=${tag#"v"}
+        else
+          tag=$(basename "${{ github.ref }}")
+        fi
+        tag=${tag#"v"}
+        echo "tag=${tag}"
+        echo "tag=${tag}" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+        
+      run: |
+        tag="${{ steps.tag.outputs.tag }}"
+        (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+        && sudo mkdir -p -m 755 /etc/apt/keyrings \
+        && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+        && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+        && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+        && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+        && sudo apt update \
+        && sudo apt install gh -y
+        gh  --version
+        gh release create --draft "$tag" --title "Version $tag"
+
+  build:
+    runs-on: github-arc-x64-dind
+    needs: [release]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-22.04 ]
+        name: [ head ]
+
+    env:
+        LANG: 'en_US.UTF-8'
+        LANGUAGE: 'en_US:en'
+        LC_ALL: 'en_US.UTF-8'
+        BUILD_DIR: './workspace'
+
+    steps:
+    - name: Clone Aos Rpi
+      uses: actions/checkout@v4
+      with:
+        repository: aosedge/meta-aos-rpi
+
+    - name: Set platform
+      id: platform
+      run: |
+        platform=${{ matrix.os }}
+        echo "platform=$platform" >> $GITHUB_OUTPUT
+
+    # Build
+    - name: apt-get update on Ubuntu
+      if: startsWith(matrix.os, 'ubuntu')
+      run: |
+        (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+        && sudo mkdir -p -m 755 /etc/apt/keyrings \
+        && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+        && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+        && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+        && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+        && sudo apt update \
+        && sudo apt install gh -y
+
+    - name: apt-get install on Ubuntu
+      if: startsWith(matrix.os, 'ubuntu')
+      run: sudo apt-get install -y apt-utils gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat cpio locales rsync devscripts debhelper  curl jq ninja-build zstd liblz4-tool dosfstools mtools ca-certificates repo locales cmake
+
+    # Build
+    - name: Prepare environment
+      run: |
+        sudo locale-gen en_US.UTF-8 \
+        && mkdir -p $BUILD_DIR \
+        && echo "$HOME/.local/bin" >> "$GITHUB_PATH" \
+        && echo "PATH=${PATH}"
+
+    - name: Build artifacts
+      run: |
+        id && ls -la \
+        && docker images \
+        && cd ./docker && ./build.sh
+
+    - name: Setup os_list variables
+      id: os_list
+      run: |
+        echo "release_date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        echo "extract_size_usb=$(stat -c %s ./docker/artifacts/install.img)" >> $GITHUB_OUTPUT
+        echo "extract_size_nvme=$(stat -c %s ./docker/artifacts/install.img)" >> $GITHUB_OUTPUT
+        echo "extract_sha256_usb=$(sha256sum ./docker/artifacts/install.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+        echo "extract_sha256_nvme=$(sha256sum ./docker/artifacts/install.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+        echo "image_download_size_usb=$(stat -c %s ./docker/artifacts/install.img)" >> $GITHUB_OUTPUT
+        echo "image_download_size_nvme=$(stat -c %s ./docker/artifacts/install.img)" >> $GITHUB_OUTPUT
+
+    - name: Generate os_list
+      id: render_template
+      uses: chuhlomin/render-template@v1
+      with:
+          template: docs/os_list.json.template
+          vars: |
+            version: ${{ needs.release.outputs.tag }}
+            url_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ needs.release.outputs.tag }}/install.img"
+            extract_size_usb: ${{ steps.os_list.outputs.extract_size_usb }}
+            extract_sha256_usb: ${{ steps.os_list.outputs.extract_sha256_usb }}
+            image_download_size_usb: ${{ steps.os_list.outputs.image_download_size_usb }}
+            url_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ needs.release.outputs.tag }}/install.img"
+            extract_size_nvme: ${{ steps.os_list.outputs.extract_size_nvme }}
+            extract_sha256_nvme: ${{ steps.os_list.outputs.extract_sha256_nvme }}
+            image_download_size_nvme: ${{ steps.os_list.outputs.image_download_size_nvme }}
+            release_date: "${{ steps.os_list.outputs.release_date }}"
+
+    - name: Upload Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+
+      run: |
+        pwd && ls -al \
+        && echo '${{ steps.render_template.outputs.result }}' > ./docker/artifacts/os_list.json \
+        && gh release upload "${{ needs.release.outputs.tag }}" "./docker/artifacts/install.img" \
+        && gh release upload "${{ needs.release.outputs.tag }}" "./docker/artifacts/os_list.json"
+
+    - name: Publish Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+
+      run: ( [[ ! "${{ needs.release.outputs.tag }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && gh release edit "${{ needs.release.outputs.tag }}" --prerelease || echo "Release" ); gh release edit "${{ needs.release.outputs.tag }}" --draft=false
