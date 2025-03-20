@@ -45,7 +45,8 @@ parameters. You can check them with`--help-config` command line option:
 ```sh
 moulin aos-rpi.yaml --help-config
 
-usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permessive,disabled}]
+usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
+                           [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
@@ -55,12 +56,12 @@ options:
   --DOMD_NODE_TYPE {main,secondary}
                         Domd node type to build (default: main)
   --MACHINE {rpi5}      Raspberry Pi machine (default: rpi5)
+  --CACHE_LOCATION {outside,inside}
+                        Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
   --DOMD_ROOT {usb,nvme}
                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                         Enables SELinux (default: disabled)
-  --OUTSIDE_CACHE {inside,outside}
-                     Indicated where cache and downloads are stored: inside build dir or outside. (default: inside)
 ```
 
 * `VIS_DATA_PROVIDER` - specifies VIS data provider: `renesassimulator` - Renesas Car simulator, `telemetryemulator` -
@@ -73,7 +74,7 @@ main node is built;
 
 * `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
 
-* `OUTSIDE_CACHE` - Indicated where cache and downloads are stored: inside build dir or outside.
+* `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
 
 After performing moulin command with desired configuration, it will generate `build.ninja` with all necessary build
 targets.
@@ -137,7 +138,7 @@ You can also pass the following arguments:
 | `--MACHINE`             | Same value as described in the **Build** section. |NO|
 | `--DOMD_ROOT`           | Same value as described in the **Build** section. |NO|
 | `--SELINUX`             | Same value as described in the **Build** section. |NO|
-| `--OUTSIDE_CACHE`       | Same value as described in the **Build** section. |NO|
+| `--CACHE_LOCATION`      | Same value as described in the **Build** section. |NO|
 
 Example command:
 
@@ -155,14 +156,14 @@ cd ./docker
 
 ## Flash images
 
-This build requires two different
+AosCore image requires two different block devices. It could be either SD card and USB flash or SD card and NVME drive.
 
 ### Flash boot image
 
 To flash boot image on SD-card run below command:
 
 ```sh
-sudo dd if=boot.img of=/dev/<sd-dev> bs=4M status=progress conv=sparse
+sudo dd if=boot-usb.img of=/dev/<sd-dev> bs=4M status=progress conv=sparse
 ```
 
 **NOTE:** Be sure to identify correctly `<sd-dev>` which is usually `sda`. For SD-card identification
@@ -176,7 +177,7 @@ s
 To flash USB-flash image run below command:
 
 ```sh
-sudo dd if=rootfs.img of=/dev/<usb-dev> bs=4M status=progress conv=sparse
+sudo dd if=rootfs-usb.img of=/dev/<usb-dev> bs=4M status=progress conv=sparse
 ```
 
 **NOTE:** Be sure to identify correctly `<usb-dev>` which could look like `sdc`.
