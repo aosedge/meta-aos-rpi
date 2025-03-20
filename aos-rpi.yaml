@@ -562,7 +562,7 @@ parameters:
     inside:
       overrides:
         common_data:
-          common_cache_conf:
+          cache_conf:
             - [SSTATE_DIR, "${TOPDIR}/../../common_data/sstate"]
             - [DL_DIR, "${TOPDIR}/../../common_data/downloads"]
 
