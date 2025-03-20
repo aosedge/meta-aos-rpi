@@ -9,7 +9,7 @@ DOMD_NODE_TYPE="main"
 MACHINE="rpi5"
 DOMD_ROOT="usb"
 SELINUX="disabled"
-OUTSIDE_CACHE="inside"
+CACHE_LOCATION="inside"
 
 error_and_exit() {
     echo "$1">&2
@@ -19,37 +19,37 @@ error_and_exit() {
 
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
-        --ARTIFACTS_DIR)
-            ARTIFACTS_DIR="$2"
-            shift 2
-            ;;
-        --VIS_DATA_PROVIDER)
-            VIS_DATA_PROVIDER="$2"
-            shift 2
-            ;;
-        --DOMD_NODE_TYPE)
-            DOMD_NODE_TYPE="$2"
-            shift 2
-            ;;
-        --MACHINE)
-            MACHINE="$2"
-            shift 2
-            ;;
-        --DOMD_ROOT)
-            DOMD_ROOT="$2"
-            shift 2
-            ;;
-        --SELINUX)
-            SELINUX="$2"
-            shift 2
-            ;;
-        --OUTSIDE_CACHE)
-            OUTSIDE_CACHE="$2"
-            shift 2
-            ;;
-        *)
-            shift 
-            ;;
+    --ARTIFACTS_DIR)
+        ARTIFACTS_DIR="$2"
+        shift 2
+        ;;
+    --VIS_DATA_PROVIDER)
+        VIS_DATA_PROVIDER="$2"
+        shift 2
+        ;;
+    --DOMD_NODE_TYPE)
+        DOMD_NODE_TYPE="$2"
+        shift 2
+        ;;
+    --MACHINE)
+        MACHINE="$2"
+        shift 2
+        ;;
+    --DOMD_ROOT)
+        DOMD_ROOT="$2"
+        shift 2
+        ;;
+    --SELINUX)
+        SELINUX="$2"
+        shift 2
+        ;;
+    --CACHE_LOCATION)
+        CACHE_LOCATION="$2"
+        shift 2
+        ;;
+    *)
+        shift
+        ;;
     esac
 done
 
@@ -83,13 +83,13 @@ fi
 
 echo "Building install.img"
 
-CMD="cd /tmp/artifacts && moulin /meta-aos-rpi/aos-rpi.yaml"
-[[ -n "$VIS_DATA_PROVIDER" ]] && CMD+=" --VIS_DATA_PROVIDER \"$VIS_DATA_PROVIDER\""
-[[ -n "$DOMD_NODE_TYPE" ]] && CMD+=" --DOMD_NODE_TYPE \"$DOMD_NODE_TYPE\""
-[[ -n "$MACHINE" ]] && CMD+=" --MACHINE \"$MACHINE\""
-[[ -n "$DOMD_ROOT" ]] && CMD+=" --DOMD_ROOT \"$DOMD_ROOT\""
-[[ -n "$SELINUX" ]] && CMD+=" --SELINUX \"$SELINUX\""
-[[ -n "$OUTSIDE_CACHE" ]] && CMD+=" --OUTSIDE_CACHE \"$OUTSIDE_CACHE\""
+CMD="moulin /meta-aos-rpi/aos-rpi.yaml"
+[[ -n "$VIS_DATA_PROVIDER" ]] && CMD+=" --VIS_DATA_PROVIDER=$VIS_DATA_PROVIDER"
+[[ -n "$DOMD_NODE_TYPE" ]] && CMD+=" --DOMD_NODE_TYPE=$DOMD_NODE_TYPE"
+[[ -n "$MACHINE" ]] && CMD+=" --MACHINE=$MACHINE"
+[[ -n "$DOMD_ROOT" ]] && CMD+=" --DOMD_ROOT=$DOMD_ROOT"
+[[ -n "$SELINUX" ]] && CMD+=" --SELINUX=$SELINUX"
+[[ -n "$CACHE_LOCATION" ]] && CMD+=" --CACHE_LOCATION=$CACHE_LOCATION"
 CMD+=" && ninja install-$DOMD_ROOT.img"
 
 if docker exec "$CONTAINER_NAME" bash -c "

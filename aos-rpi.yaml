@@ -554,7 +554,7 @@ parameters:
           SOC_FAMILY: "bcm2712"
           ZEPHYR_DOM0_MACHINE: "rpi_5"
 
-  OUTSIDE_CACHE:
+  CACHE_LOCATION:
     desc: "Indicated where cache and downloads are stored: inside build dir or outside."
     outside:
       default: true
