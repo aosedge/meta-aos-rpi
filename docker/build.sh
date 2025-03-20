@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE_NAME="meta-aos-rpi"
-CONTAINER_NAME="meta-aos-rpi_container"
+CONTAINER_NAME="meta-aos-rpi"
 ARTIFACTS_DIR="$(pwd)/artifacts"
 
 # List aos-rpi.yaml parameters.
@@ -12,8 +12,8 @@ SELINUX="disabled"
 CACHE_LOCATION="inside"
 
 error_and_exit() {
-    echo "$1">&2
-    
+    echo "$1" >&2
+
     exit 1
 }
 
@@ -53,12 +53,11 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
-
-if ! command -v docker &> /dev/null; then
+if ! command -v docker &>/dev/null; then
     error_and_exit "Docker is not installed. Please install Docker and try again."
 fi
 
-if ! docker info &> /dev/null; then
+if ! docker info &>/dev/null; then
     error_and_exit "Docker daemon is not running. Please start Docker daemon and try again."
 fi
 
@@ -82,7 +81,7 @@ if ! docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
     error_and_exit "Container $CONTAINER_NAME failed to start."
 fi
 
-echo "Building install.img"
+echo "Building install image..."
 
 CMD="moulin /meta-aos-rpi/aos-rpi.yaml"
 [[ -n "$VIS_DATA_PROVIDER" ]] && CMD+=" --VIS_DATA_PROVIDER=$VIS_DATA_PROVIDER"
@@ -93,9 +92,7 @@ CMD="moulin /meta-aos-rpi/aos-rpi.yaml"
 [[ -n "$CACHE_LOCATION" ]] && CMD+=" --CACHE_LOCATION=$CACHE_LOCATION"
 CMD+=" && ninja install-$DOMD_ROOT.img"
 
-if docker exec "$CONTAINER_NAME" bash -c "
-    $CMD
-"; then
+if docker exec "$CONTAINER_NAME" bash -c "$CMD"; then
     echo "Congratulations! Build completed successfully. Artifacts: $ARTIFACTS_DIR"
 else
     error_and_exit "Build did not complete successfully! Please look to output for more details."
