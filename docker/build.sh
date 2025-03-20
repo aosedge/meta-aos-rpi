@@ -76,7 +76,8 @@ fi
 
 echo "Starting new container: $CONTAINER_NAME"
 
-docker run --rm -d -w /meta-aos-rpi -v "$(realpath ./../):/meta-aos-rpi" -v "$ARTIFACTS_DIR:/tmp/artifacts" --name "$CONTAINER_NAME" "$IMAGE_NAME" tail -f /dev/null
+docker run --rm -d -u "$(id -u):$(id -g)" -w /artifacts -v "$(realpath ./../):/meta-aos-rpi" -v "$ARTIFACTS_DIR:/artifacts" \
+    --name "$CONTAINER_NAME" "$IMAGE_NAME" tail -f /dev/null
 if ! docker ps --format '{{.Names}}' | grep -q "^$CONTAINER_NAME$"; then
     error_and_exit "Container $CONTAINER_NAME failed to start."
 fi
