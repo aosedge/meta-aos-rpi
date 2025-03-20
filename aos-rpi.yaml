@@ -1,4 +1,4 @@
-desc: "Raspberry 5 with xen dom0less"
+desc: "AosCore build for Raspberry Pi 5"
 min_ver: "0.24"
 
 variables:
@@ -317,7 +317,7 @@ components:
 
       target_images:
         - "tmp/deploy/images/%{MACHINE}/%{AOS_INSTALL_IMAGE}-%{MACHINE}.rootfs.vfat"
-        
+
   install_archive:
     build-dir: "%{INSTALL_BUILD_DIR}"
     builder:
@@ -332,7 +332,7 @@ components:
       target_images:
         - "../boot-%{DOMD_ROOT}.img.gz"
         - "../rootfs-%{DOMD_ROOT}.img.gz"
-        
+
   layers:
     builder:
       type: custom_script

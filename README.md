@@ -47,7 +47,7 @@ moulin aos-rpi.yaml --help-config
 
 usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permessive,disabled}]
 
-Config file description: Raspberry 5 with xen dom0less
+Config file description: AosCore build for Raspberry Pi 5
 
 options:
   --VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}
