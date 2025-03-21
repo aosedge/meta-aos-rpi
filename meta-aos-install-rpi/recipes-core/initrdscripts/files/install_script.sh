@@ -1,6 +1,7 @@
 #!/bin/sh
 
-echo "Welcome to AOS RPI! Setting up your system for a smooth experience."
+echo "Welcome to AOS RPI!"
+echo "Setting up your system for a smooth experience..."
 
 echo "Initializing the file system..."
 
@@ -15,16 +16,16 @@ read_args() {
     [ -z "$CMDLINE" ] && CMDLINE=$(cat /proc/cmdline)
     for arg in $CMDLINE; do
         case $arg in
-            aos_disk=*) 
-                BLOCK_DEVICE="${arg#*=}" 
-                ;;
+        aos_disk=*)
+            BLOCK_DEVICE="${arg#*=}"
+            ;;
         esac
     done
 }
 
 wait_for_block_device() {
     DEVICE=/dev/$1
-    TIMEOUT=5 
+    TIMEOUT=5
     INTERVAL=1
 
     echo "Waiting for device $DEVICE to be ready."
@@ -46,7 +47,7 @@ read_args
 
 if [ "$BLOCK_DEVICE" = "sda" ]; then
     BLOCK_DEVICE_PARTITION="sda3"
-elif [ "$BLOCK_DEVICE" = "nvme0n1" ]; then
+elif [ "$BLOCK_DEVICE" = "nvme0n1p" ]; then
     BLOCK_DEVICE_PARTITION="nvme0n1p3"
 else
     echo "Error: Unsupported BLOCK_DEVICE ($BLOCK_DEVICE)"
@@ -74,6 +75,6 @@ cp -v /sd/boot.img.gz /flash/tmp || echo "Failed to copy boot.img to tmp"
 umount /sd
 gunzip -c /flash/tmp/boot.img.gz | dd of=/dev/mmcblk0 bs=8096 || echo "Failed to copy boot.img to tmp"
 
-rm /flash/tmp/boot.img.gz 
+rm /flash/tmp/boot.img.gz
 
 exec reboot -f
