@@ -50,14 +50,10 @@ wait_for_block_device() {
 
 read_args
 
-if [ "$BLOCK_DEVICE" = "sda" ]; then
-    BLOCK_DEVICE_PARTITION="sda3"
-elif [ "$BLOCK_DEVICE" = "nvme0n1p" ]; then
-    BLOCK_DEVICE_PARTITION="nvme0n1p3"
-else
-    echo "Error: Unsupported BLOCK_DEVICE ($BLOCK_DEVICE)"
-    exit 1
-fi
+BLOCK_DEVICE_PARTITION="${BLOCK_DEVICE}3"
+BLOCK_DEVICE="${BLOCK_DEVICE%p}"
+
+wait_for_block_device "$BLOCK_DEVICE"
 
 echo "Preparing the SD card..."
 
