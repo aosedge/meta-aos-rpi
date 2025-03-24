@@ -1,9 +1,15 @@
 #!/bin/sh
 
-echo "Welcome to AOS RPI!"
-echo "Setting up your system for a smooth experience..."
+sleep 1
 
-echo "Initializing the file system..."
+echo
+echo "********************************************************************************"
+echo "Welcome to AosCore install script!"
+echo "********************************************************************************"
+echo
+echo "Setting up your system for a smooth experience."
+
+sleep 1
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -11,6 +17,8 @@ mkdir -p /proc /sys /dev
 mount -t proc proc /proc || echo "Failed to mount /proc"
 mount -t sysfs sysfs /sys || echo "Failed to mount /sys"
 mount -t devtmpfs dev /dev || echo "Failed to mount /dev"
+
+echo "Initializing the file system..."
 
 read_args() {
     [ -z "$CMDLINE" ] && CMDLINE=$(cat /proc/cmdline)
@@ -60,22 +68,28 @@ echo "Preparing the SD card..."
 mkdir -p /flash /sd
 mount -t auto /dev/mmcblk0p2 /sd
 
-echo "Flashing the flash drive..."
-
-wait_for_block_device "$BLOCK_DEVICE"
+echo "Flashing root device..."
 
 gunzip -c /sd/rootfs.img.gz | dd of="/dev/$BLOCK_DEVICE" bs=8096 || echo "Failed to write rootfs.img"
 mkfs.ext4 -F -E lazy_journal_init=1 "/dev/$BLOCK_DEVICE_PARTITION" || echo "Failed to format /dev/$BLOCK_DEVICE_PARTITION"
 
-mount -t auto /dev/$BLOCK_DEVICE_PARTITION /flash || echo "Failed to remount /dev/$BLOCK_DEVICE_PARTITION"
+mount -t auto "/dev/$BLOCK_DEVICE_PARTITION" /flash || echo "Failed to mount /dev/$BLOCK_DEVICE_PARTITION"
 
-echo "Flashing the SD card..."
+echo "Flashing SD card..."
 
-mkdir -p /flash/tmp
-cp -v /sd/boot.img.gz /flash/tmp || echo "Failed to copy boot.img to tmp"
+cp /sd/boot.img.gz /flash || echo "Failed to copy boot.img"
 umount /sd
-gunzip -c /flash/tmp/boot.img.gz | dd of=/dev/mmcblk0 bs=8096 || echo "Failed to copy boot.img to tmp"
+gunzip -c /flash/boot.img.gz | dd of=/dev/mmcblk0 bs=8096 || echo "Failed to write boot.img"
 
-rm /flash/tmp/boot.img.gz
+rm /flash/boot.img.gz
+
+echo
+echo "********************************************************************************"
+echo "AosCore image successfully installed!"
+echo "********************************************************************************"
+echo
+echo "Rebooting the system..."
+
+sleep 5
 
 exec reboot -f
