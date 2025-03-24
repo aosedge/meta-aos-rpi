@@ -308,7 +308,7 @@ components:
         - "../meta-openembedded/meta-perl"
         - "../meta-openembedded/meta-python"
         - "../meta-raspberrypi"
-        - "../meta-aos-rpi/meta-aos-install-rpi"
+        - "../meta-aos-rpi/meta-aos-rpi-install"
 
       target_images:
         - "tmp/deploy/images/%{MACHINE}/%{AOS_INSTALL_IMAGE}-%{MACHINE}.rootfs.vfat"
