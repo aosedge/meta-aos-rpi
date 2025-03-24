@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 sleep 1
 
 echo
