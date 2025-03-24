@@ -79,12 +79,10 @@ common_data:
       url: "https://github.com/aosedge/meta-aos-rpi.git"
       rev: "develop"
 
-  cache_conf: &CACHE_CONF
+  common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
     - [DL_DIR, "${TOPDIR}/../../../common_data/downloads"]
 
-  # Common configuration options for all yocto-based domains
-  common_conf: &COMMON_CONF
     # Init manager
     - [INIT_MANAGER, "systemd"]
 
@@ -96,16 +94,6 @@ common_data:
 
     # Do not install kernel image to rootfs to decrease initrd size
     - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
-
-    # Make logs persistent
-    - [VOLATILE_LOG_DIR, "no"]
-
-    # Generate ext4 image files
-    - [IMAGE_FSTYPES:append, " ext4"]
-
-    # Initramfs configuration
-    - [INITRAMFS_IMAGE, "aos-image-initramfs"]
-    - [INITRAMFS_IMAGE_BUNDLE, "1"]
 
     # Distro features
 
@@ -121,6 +109,16 @@ common_data:
 
     # Enable security features
     - [DISTRO_FEATURES:append, " security"]
+
+  common_dom_conf: &COMMON_DOM_CONF # Make logs persistent
+    - [VOLATILE_LOG_DIR, "no"]
+
+    # Generate ext4 image files
+    - [IMAGE_FSTYPES:append, " ext4"]
+
+    # Initramfs configuration
+    - [INITRAMFS_IMAGE, "aos-image-initramfs"]
+    - [INITRAMFS_IMAGE_BUNDLE, "1"]
 
     # Unit model
     - [AOS_UNIT_MODEL, "%{AOS_UNIT_MODEL}"]
@@ -181,8 +179,8 @@ components:
       type: yocto
       work_dir: "%{DOMD_BUILD_DIR}"
       conf:
-        - *CACHE_CONF
         - *COMMON_CONF
+        - *COMMON_DOM_CONF
         - [MACHINE, "%{MACHINE}"]
         - [RPI_SOC_FAMILY, "%{SOC_FAMILY}"]
         - [XT_DOM_NAME, "domd"]
@@ -281,27 +279,20 @@ components:
       type: yocto
       work_dir: "%{INSTALL_BUILD_DIR}"
       conf:
-        - *CACHE_CONF
+        - *COMMON_CONF
         - [MACHINE, "%{MACHINE}"]
         - [CMDLINE_AOS_DISK, "%{DOMD_BLK_DEV}"]
-        # Skip warning about missing "virtualization" distro feature
-        - [SKIP_META_VIRT_SANITY_CHECK, "1"]
-
-        # Do not install kernel image to rootfs to decrease initrd size
-        - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
-
-        # Make logs persistent
-        - [VOLATILE_LOG_DIR, "no"]
-
         - [LICENSE_FLAGS_ACCEPTED, "synaptics-killswitch"]
+
         # Generate ext4 image files rpi-sdimg
         - [SDIMG_VFAT_DEPLOY, "1"]
         - [SDIMG_ROOTFS_TYPE, "ext4"]
         - [RPI_SDIMG_EXTRA_DEPENDS, "initramfs-aos-install:do_install"]
+        - [BOOT_SPACE, "131072"]
 
+        # Initramfs configuration
         - [INITRAMFS_IMAGE, "aos-install-initramfs"]
         - [INITRAMFS_IMAGE_BUNDLE, "1"]
-        - [BOOT_SPACE, "131072"]
 
         # RPI specific
         - [ENABLE_UART, "1"]
@@ -562,7 +553,7 @@ parameters:
     inside:
       overrides:
         common_data:
-          cache_conf:
+          common_conf:
             - [SSTATE_DIR, "${TOPDIR}/../../common_data/sstate"]
             - [DL_DIR, "${TOPDIR}/../../common_data/downloads"]
 
@@ -603,7 +594,7 @@ parameters:
           SELINUX_BOOT_ARGS: "security=selinux"
 
         common_data:
-          common_conf:
+          common_domd_conf:
             - [DISTRO_FEATURES:append, " acl xattr pam selinux"]
             - [FIRST_BOOT_RELABEL, "1"]
             - [PREFERRED_PROVIDER_virtual/refpolicy, "refpolicy-aos"]
@@ -618,7 +609,7 @@ parameters:
           SELINUX_BOOT_ARGS: "security=selinux enforcing=0"
 
         common_data:
-          common_conf:
+          common_domd_conf:
             - [DISTRO_FEATURES:append, " acl xattr pam selinux"]
             - [FIRST_BOOT_RELABEL, "1"]
             - [PREFERRED_PROVIDER_virtual/refpolicy, "refpolicy-aos"]
