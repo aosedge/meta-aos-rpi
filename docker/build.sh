@@ -43,11 +43,8 @@ while [[ "$#" -gt 0 ]]; do
         SELINUX="$2"
         shift 2
         ;;
-    --CACHE_LOCATION)
-        CACHE_LOCATION="$2"
-        shift 2
-        ;;
     *)
+        error_and_exit "Unknown option: $1"
         shift
         ;;
     esac
