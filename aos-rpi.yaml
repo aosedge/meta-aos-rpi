@@ -43,7 +43,7 @@ variables:
   AOS_DOM0_NODE_TYPE: "rpi-dom0"
 
   AOS_BASE_IMAGE: "aos-image-rpi"
-  AOS_INSTALL_IMAGE: "aos-image-install"
+  AOS_INSTALL_IMAGE: "core-image-minimal"
 
 common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
@@ -285,6 +285,7 @@ components:
         - [LICENSE_FLAGS_ACCEPTED, "synaptics-killswitch"]
 
         # Generate ext4 image files rpi-sdimg
+        - [IMAGE_FSTYPES, "rpi-sdimg"]
         - [SDIMG_VFAT_DEPLOY, "1"]
         - [SDIMG_ROOTFS_TYPE, "ext4"]
         - [RPI_SDIMG_EXTRA_DEPENDS, "initramfs-aos-install:do_install"]
@@ -479,6 +480,7 @@ images:
       boot:
         gpt_type: C12A7328-F81F-11D2-BA4B-00A0C93EC93B
         type: raw_image
+        sparse: false
         image_path: "%{YOCTOS_WORK_DIR}/%{INSTALL_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_INSTALL_IMAGE}-%{MACHINE}.rootfs.vfat"
 
       install:
