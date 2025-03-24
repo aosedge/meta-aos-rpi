@@ -24,21 +24,26 @@ read_args() {
 }
 
 wait_for_block_device() {
-    DEVICE=/dev/$1
-    TIMEOUT=5
-    INTERVAL=1
+    device=/dev/$1
+    c=0
+    delay=1
+    timeout=5
 
-    echo "Waiting for device $DEVICE to be ready."
+    echo "Waiting for device $device to be ready..."
 
-    S=0
-    while [ ! -b "$DEVICE" ]; do
-        if [ "$S" -ge "$TIMEOUT" ]; then
-            echo "Device $DEVICE is not available after $TIMEOUT seconds."
+    while [ ! -b "$device" ]; do
+        if [ $((c * delay)) -gt $timeout ]; then
+            echo "Device $device is not available after $timeout seconds."
             return 1
         fi
-        echo "Device $DEVICE is not available yet. Retrying in $INTERVAL sec."
-        sleep $INTERVAL
+
+        echo "Device $device is not available yet. Retrying in $delay sec..."
+
+        sleep $delay
+        c=$((c + 1))
     done
+
+    echo "Device $device is ready."
 
     return 0
 }
