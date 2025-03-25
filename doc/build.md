@@ -73,37 +73,21 @@ The moulin yaml file contains two target for different block devices:
 or
 
 * `boot-nvme` - for SD-Card that contains boot partition and Dom0 zephyr partition;
-* `rootfs-usb` - for nvme device that contains rootfs partitions of DomD and other guest domains.
+* `rootfs-usb` - for NVMe device that contains rootfs partitions of DomD and other guest domains.
 
 The configuration depends on `DOMD_ROOT` option.
 
-### Build boot image for usb
+### Build install image for usb
 
 ```sh
-ninja boot-usb.img
+ninja install-usb.img
 ```
 
-### Build rootfs image for usb
+### Build install image for NVMe
 
 ```sh
-ninja rootfs-usb.img
+ninja install-nvme.img
 ```
-
-You should have `boot-usb.img` and `rootfs-usb.img` files in the build folder.
-
-### Build boot image for nvme
-
-```sh
-ninja boot-nvme.img
-```
-
-### Build rootfs image for nvme
-
-```sh
-ninja rootfs-nvme.img
-```
-
-You should have `boot-nvme.img` and `rootfs-nvme.img` files in the build folder.
 
 ### Build Boot Image and RootFS Image in Docker
 
@@ -140,44 +124,19 @@ cd ./docker
 ./build.sh --ARTIFACTS_DIR ~/aos_artifacts --MACHINE rpi5 --DOMD_ROOT usb
 ```
 
-## Flash images
-
-AosCore image requires two different block devices. It could be either SD card and USB flash or SD card and NVME drive.
-
-### Flash boot image
-
-To flash boot image on SD-card run below command:
+## Flash install image
 
 ```sh
-sudo dd if=boot-usb.img of=/dev/<sd-dev> bs=4M status=progress conv=sparse
+sudo dd if=install-usb.img of=/dev/<sd-dev> bs=4M status=progress
+```
+
+or
+
+```sh
+sudo dd if=install-nvme.img of=/dev/<sd-dev> bs=4M status=progress
 ```
 
 **NOTE:** Be sure to identify correctly `<sd-dev>` which is usually `sda`. For SD-card identification
 Plug/unplug SD-card and check `/dev/` for devices added/removed.
 
 **NOTE:** Ensure existing SD-card partitions unmounted if auto-mount is enabled.
-s
-
-### Flash rootfs image to the USB-flash
-
-To flash USB-flash image run below command:
-
-```sh
-sudo dd if=rootfs-usb.img of=/dev/<usb-dev> bs=4M status=progress conv=sparse
-```
-
-**NOTE:** Be sure to identify correctly `<usb-dev>` which could look like `sdc`.
-For USB-flash identification Plug/unplug USB-flash and check `/dev/` for devices added/removed.
-
-**NOTE:** Ensure existing USB-flash partitions unmounted if auto-mount is enabled.
-
-### Flash rootfs image to the nvme storage
-
-* Create SD-card with official Ubuntu from Raspberry foundation.
-* Copy file `rootfs.img` to the USB-Flash dongle.
-* Boot from SD-card with official RPI image. Plug USB-Flash dongle to your device.
-* Flash `rootfs.img` image:
-
-```sh
-dd if=<usb-dev>/rootfs.img of=/dev/nvme0n1 bs=1M status=progress
-```
