@@ -2,6 +2,21 @@
 
 This repository contains AodEdge Yocto layers for building AosCore example image for Raspberry 5.
 
+## Table of contents
+
+### Install AosCore release image
+
+- [Prerequisites](#prerequisites)
+- [Setup Raspberry Pi 5](#setup-raspberry-pi-5)
+- [Flash AosCore install image to SD card using Raspberry Pi Imager](#flash-aoscore-install-image-to-sd-card-using-raspberry-pi-imager)
+- [Install AosCore image on your device](#install-aoscore-image-on-your-device)
+- [Provision device](#provision-device)
+
+### Manually build AosCore image
+
+- [Manual build](doc/build.md)
+- [Build with docker](doc/docker.md)
+
 ## Prerequisites
 
 This demo requires two separate block devices: one contains Raspberry boot partitions and partition for Dom0 while
