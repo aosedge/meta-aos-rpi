@@ -57,30 +57,30 @@ for boot device and rootfs device respectively. In order to run this demo, the f
 
 4. Select desired image:
 
-   - click **CHOOSE OS** button:
-      <br>![Step 1](doc/pictures/install_step_1.png)
-   - select **AosCore image**:
-      <br>![Step 2](doc/pictures/install_step_2.png)
-   - depend on you setup, select image either for NVMe drive **AosCore for NVMe drive** or **AosCore for USB drive**:
-      <br>![Step 3](doc/pictures/install_step_3.png)
+   - click **CHOOSE OS** button:  
+      ![Step 1](doc/pictures/install_step_1.png)
+   - select **AosCore image**:  
+      ![Step 2](doc/pictures/install_step_2.png)
+   - depend on you setup, select image either for NVMe drive **AosCore for NVMe drive** or **AosCore for USB drive**:  
+      ![Step 3](doc/pictures/install_step_3.png)
 
 5. Select storage:
 
-   - click **CHOOSE STORAGE**:
-      <br>![Step 4](doc/pictures/install_step_4.png)
-   - select your SD card device:
-      <br>![Step 5](doc/pictures/install_step_5.png)
+   - click **CHOOSE STORAGE**:  
+      ![Step 4](doc/pictures/install_step_4.png)
+   - select your SD card device:  
+      ![Step 5](doc/pictures/install_step_5.png)
 
 6. Flash SD card:
 
-   - press **NEXT** button:
-      <br>![Step 6](doc/pictures/install_step_6.png)
-   - confirm flashing SD card device by pressing **YES** on the next dialog box:
-      <br>![Step 7](doc/pictures/install_step_7.png)
-   - wait when writing process is finished:
-      <br>![Step 8](doc/pictures/install_step_8.png)
-   - remove SD card and press **CONTINUE** button:
-      <br>![Step 9](doc/pictures/install_step_9.png)
+   - press **NEXT** button:  
+      ![Step 6](doc/pictures/install_step_6.png)
+   - confirm flashing SD card device by pressing **YES** on the next dialog box:  
+      ![Step 7](doc/pictures/install_step_7.png)
+   - wait when writing process is finished:  
+      ![Step 8](doc/pictures/install_step_8.png)
+   - remove SD card and press **CONTINUE** button:  
+      ![Step 9](doc/pictures/install_step_9.png)
 
 ## Install AosCore image on your device
 
