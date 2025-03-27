@@ -1,7 +1,7 @@
 # meta-aos-rpi
 
-This repository contains AodEdge Yocto layers for building AosCore example image for Raspberry 5. Instruction below
-covers all necessary steps to use published prebuilt release images of AosCore, if you are interested in building
+This repository contains AodEdge Yocto layers for building AosCore example image for Raspberry 5. Instructions below
+cover all necessary steps to use published prebuilt release images of AosCore, if you are interested in building
 images yourself, please refer to [Manual build](doc/build.md) or [Build with docker](doc/docker.md) documents.
 Note that you still need to secure prerequisites, setup and provision your Raspberry Pi 5 as described in the
 corresponding sections below.
