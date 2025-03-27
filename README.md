@@ -20,27 +20,27 @@ This repository contains AodEdge Yocto layers for building AosCore example image
 ## Prerequisites
 
 This demo requires two separate block devices: one contains Raspberry boot partitions and partition for Dom0 while
-another block device contains DomD rootfs. The build system builds two separate images for boot device and rootfs
-device respectively. In order to run this demo, the following hardware is required:
+another block device contains DomD (and possibly other domains) rootfs. The build system builds two separate images
+for boot device and rootfs device respectively. In order to run this demo, the following hardware is required:
 
-1. Raspberry 5 board;
+1. Raspberry Pi 5 board;
 2. [Pi UART Debugger](https://www.waveshare.com/wiki/Pi_UART_Debugger), or any other serial console suitable for
    Raspberry Pi 5;
-3. SD-Card 2 GB minimum;
-4. [Raspberry Pi M.2 HAT+ extension board](https://www.raspberrypi.com/products/m2-hat-plus) and NVMe drive 16 GB
-   minimum, or USB flash drive 16 GB minimum.
+3. SD Card 2GB minimum;
+4. One of the following:
+   - [Raspberry Pi M.2 HAT+ extension board](https://www.raspberrypi.com/products/m2-hat-plus) with installed
+   NVMe drive 16GB minimum (recommended, faster);
+   - USB flash drive 16GB minimum.
 
 ## Setup Raspberry Pi 5
 
 1. Prepare your Raspberry Pi 5 device to be ready to start according to official
 [getting started](https://www.raspberrypi.com/documentation/computers/getting-started.html) manual;
 2. Depends on selected block device:
-   - assemble Raspberry Pi M.2 HAT+ extension board with NVMe drive according to
+   - for the M.2 NVMe drive: assemble Raspberry Pi M.2 HAT+ extension board with NVMe drive according to
      [assembly instruction](https://www.raspberrypi.com/documentation/accessories/m2-hat-plus.html#installation);
-
-   or
-
-   - insert USB flash drive into available USB 3.0 or USB 2.0 connector (depends on your flash drive capability);
+   - for the USB flash drive: insert the USB flash drive into available USB 3.0 or USB 2.0 connector on your Raspberry Pi 5
+     (depends on your flash drive capability);
 3. Connect Pi UART Debugger (or other serial console) and setup your favorite terminal program to work with debug UART
    (see [this instruction](https://www.waveshare.com/wiki/Pi_UART_Debugger) as reference);
 4. Connect Raspberry Pi 5 device to your network or host PC with ethernet cable. Your network or host PC should
@@ -87,7 +87,8 @@ device respectively. In order to run this demo, the following hardware is requir
 
 1. Insert SD card with AosCore install image into your Raspberry Pi 5 device;
 2. Power on the device;
-3. See AosCore installation progress in your favorite terminal program using debug serial console:
+3. Observe AosCore installation progress in your favorite terminal program using debug serial console. Please note
+   <ins>this process takes some time</ins> as system unpacks and deploys multiple images on different storages!
 
    - you should see the following output when installation script is started successfully:
 
