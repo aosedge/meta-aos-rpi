@@ -1,140 +1,184 @@
 # meta-aos-rpi
 
-This repository contains AodEdge Yocto layers for building Aos example image for Raspberry 5.
+This repository contains AodEdge Yocto layers for building AosCore example image for Raspberry 5. Instructions below
+cover all necessary steps to use published prebuilt release images of AosCore, if you are interested in building
+images yourself, please refer to [Manual build](doc/build.md) or [Build with docker](doc/docker.md) documents.
+Note that you still need to secure prerequisites, setup and provision your Raspberry Pi 5 as described in the
+corresponding sections below.
+
+## Table of contents
+
+### Install AosCore release image
+
+- [Prerequisites](#prerequisites)
+- [Setup Raspberry Pi 5](#setup-raspberry-pi-5)
+- [Flash AosCore install image to SD card using Raspberry Pi Imager](#flash-aoscore-install-image-to-sd-card-using-raspberry-pi-imager)
+- [Install AosCore image on your device](#install-aoscore-image-on-your-device)
+- [Provision device](#provision-device)
 
 ## Prerequisites
 
-This demo build requires two separate block devices: one contains Raspberry boot partitions and partition for Dom0
-while another block device contains DomD rootfs. The build system builds two separate images for boot device and rootfs
-device respectively. In order to run this demo, the following hardware is required:
+This demo requires two separate block devices: one contains Raspberry boot partitions and partition for Dom0 while
+another block device contains DomD (and possibly other domains) rootfs. The build system builds two separate images
+for boot device and rootfs device respectively. In order to run this demo, the following hardware is required:
 
-1. Raspberry 5 board
-2. SD-Card 2 GB minimum
-3. USB flash drive 16 GB minimum
-or
-4. Raspberry Pi M.2 HAT+ extension board + NVMe drive 16 GB minimum.
+1. Raspberry Pi 5 board;
+2. [Pi UART Debugger](https://www.waveshare.com/wiki/Pi_UART_Debugger), or any other serial console suitable for
+   Raspberry Pi 5;
+3. SD Card 2GB minimum;
+4. One of the following:
+   - [Raspberry Pi M.2 HAT+ extension board](https://www.raspberrypi.com/products/m2-hat-plus) with installed
+   NVMe drive 16GB minimum (recommended, faster);
+   - USB flash drive 16GB minimum.
 
-## Requirements
+## Setup Raspberry Pi 5
 
-1. Ubuntu 18.0+ or any other Linux distribution which is supported by Poky/OE
+1. Prepare your Raspberry Pi 5 device to be ready to start according to official
+[getting started](https://www.raspberrypi.com/documentation/computers/getting-started.html) manual;
+2. Depends on selected block device:
+   - for the M.2 NVMe drive: assemble Raspberry Pi M.2 HAT+ extension board with NVMe drive according to
+     [assembly instruction](https://www.raspberrypi.com/documentation/accessories/m2-hat-plus.html#installation);
+   - for the USB flash drive: insert the USB flash drive into available USB 3.0 or USB 2.0 connector on your Raspberry Pi 5
+     (depends on your flash drive capability);
+3. Connect Pi UART Debugger (or other serial console) and setup your favorite terminal program to work with debug UART
+   (see [this instruction](https://www.waveshare.com/wiki/Pi_UART_Debugger) as reference);
+4. Connect Raspberry Pi 5 device to your network or host PC with ethernet cable. Your network or host PC should
+   configure Raspberry Pi 5 network using DHCP protocol.
 
-2. Development packages for Yocto. Refer to [Yocto manual]
-   (<https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html#build-host-packages>).
+## Flash AosCore install image to SD card using Raspberry Pi Imager
 
-3. You need `Moulin` of version 0.20 or newer installed in your PC. Recommended way is to install it for your user only:
-   `pip3 install --user git+https://github.com/xen-troops/moulin`. Make sure that your `PATH` environment variable
-    includes `${HOME}/.local/bin`.
+1. Download and install [Raspberry Pi Imager](https://www.raspberrypi.com/software);
+2. Insert the SD card into a card reader on your host PC;
+3. Run Raspberry Pi Imager with `repo` parameter to retrieve the latest AosCore image:
 
-4. Ninja build system: `sudo apt install ninja-build` on Ubuntu
+   ```sh
+   rpi-imager --repo https://raw.githubusercontent.com/aosedge/meta-aos-rpi/main/os_list.json
+   ```
 
-## Fetch
+4. Select desired image:
 
-You can fetch/clone this whole repository, but you actually only need one file from it: `aos-rpi.yaml`.
-During the build `moulin` will fetch this repository again into `yocto/` directory. So, to reduce possible confuse,
-we recommend to download only `aos-rpi.yaml`:
+   - click **CHOOSE OS** button:  
+      ![Step 1](doc/pictures/install_step_1.png)
+   - select **AosCore image**:  
+      ![Step 2](doc/pictures/install_step_2.png)
+   - depend on you setup, select image either for NVMe drive **AosCore for NVMe drive** or **AosCore for USB drive**:  
+      ![Step 3](doc/pictures/install_step_3.png)
 
-```sh
-curl -O https://raw.githubusercontent.com/aosedge/meta-aos-rpi/main/aos-rpi.yaml
-```
+5. Select storage:
 
-## Build
+   - click **CHOOSE STORAGE**:  
+      ![Step 4](doc/pictures/install_step_4.png)
+   - select your SD card device:  
+      ![Step 5](doc/pictures/install_step_5.png)
 
-Moulin is used to generate Ninja build file: `moulin aos-rpi.yaml`. This project provides number of additional
-parameters. You can check them with`--help-config` command line option:
+6. Flash SD card:
 
-```sh
-moulin aos-rpi.yaml --help-config
+   - press **NEXT** button:  
+      ![Step 6](doc/pictures/install_step_6.png)
+   - confirm flashing SD card device by pressing **YES** on the next dialog box:  
+      ![Step 7](doc/pictures/install_step_7.png)
+   - wait when writing process is finished:  
+      ![Step 8](doc/pictures/install_step_8.png)
+   - remove SD card and press **CONTINUE** button:  
+      ![Step 9](doc/pictures/install_step_9.png)
 
-usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permessive,disabled}]
+## Install AosCore image on your device
 
-Config file description: Raspberry 5 with xen dom0less
+1. Insert SD card with AosCore install image into your Raspberry Pi 5 device;
+2. Power on the device;
+3. Observe AosCore installation progress in your favorite terminal program using debug serial console. Please note
+   <ins>this process takes some time</ins> as system unpacks and deploys multiple images on different storages!
 
-options:
-  --VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}
-                        Specifies plugin for VIS automotive data (default: renesassimulator)
-  --DOMD_NODE_TYPE {main,secondary}
-                        Domd node type to build (default: main)
-  --MACHINE {rpi5}      Raspberry Pi machine (default: rpi5)
-  --DOMD_ROOT {usb,nvme}
-                        Domd root device (default: usb)
-  --SELINUX {enabled,permissive,disabled}
-                        Enables SELinux (default: disabled)
-```
+   - you should see the following output when installation script is started successfully:
 
-* `VIS_DATA_PROVIDER` - specifies VIS data provider: `renesassimulator` - Renesas Car simulator, `telemetryemulator` -
-telemetry emulator that reads data from the local file. By default, Renesas Car simulator is used;
+      ```sh
+      ********************************************************************************
+      Welcome to AosEdge install script!
+      ********************************************************************************
 
-* `DOMD_NODE_TYPE` - specifies the DomD node type to build: `main` - main node, `secondary` - secondary node. By default,
-main node is built;
+      ...
+      ```
 
-* `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
+   - on successful install scrip finish, the following output should appear:
 
-* `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
+      ```sh
+      ...
 
-After performing moulin command with desired configuration, it will generate `build.ninja` with all necessary build
-targets.
+      ********************************************************************************
+      Aos image successfully installed!
+      ********************************************************************************
+      ```
 
-The moulin yaml file contains two target for different block devices:
+   - the device will reboot automatically.
 
-* `boot` - for SD-Card that contains boot partition and Dom0 zephyr partition;
-* `rootfs` - for USB flash drive or nvme device (depends on `DOMD_ROOT` option) that contains rootfs partitions of DomD and other guest domains.
+## Provision device
 
-### Build boot image
+1. After installing AosCore image on your device, it should start `Zephyr OS` with AosCore application, see debug
+   console output:
 
-Build boot image:
+   ```sh
+   *** Booting Zephyr OS build 4d91cdd6fd3f ***
+   *** Aos zephyr application: v1.0.0 ***
+   *** Aos core library: v1.0.0 ***
+   *** Aos core size: 1991520 ***
+   ```
 
-```sh
-ninja boot.img
-```
+2. Install Aos provisioning script according to [Aos get started](https://docs.aosedge.tech/docs/quick-start/set-up)
+   instruction;
+3. Obtain Raspberry Pi 5 IP address using your network DHCP server information or by checking the IP address by using
+   `ifconfig` command on AosCore `DomD`:
 
-### Build rootfs image
+   - once booted, `DOM0` (`Zephyr OS`) console is available:
 
-Build rootfs image:
+      ```sh
+      (XEN) *** Serial input to DOM0 (type 'CTRL-a' three times to switch input)
+      ```
 
-```sh
-ninja rootfs.img
-```
+   - press `Ctrl+a` six times in a row to enter into `DOM1` (`DomD`) console:
 
-You should have `boot.img` and `rootfs.img` files in the build folder.
+      ```sh
+      (XEN) *** Serial input to DOM1 (type 'CTRL-a' three times to switch input)
+      ```
 
-## Flash images
+      By pressing `Ctrl+a` six times in a row, you are switching between consoles in a loop: `DOM0`, `DOM1`, `Xen` etc.
 
-This build requires two different
+   - Press `enter` to get a login prompt:
+  
+      ```sh
+      (XEN) main login:
+      ```
 
-### Flash boot image
+   - Enter `root` and press `enter`. Now, you should be logged in `DomD`:
 
-To flash boot image on SD-card run below command:
+      ```sh
+      (XEN) root@main:~#
+      ```
 
-```sh
-sudo dd if=boot.img of=/dev/<sd-dev> bs=4M status=progress conv=sparse
-```
+   - Input `ifconfig` command to get your device IP address (`inet addr`):
 
-**NOTE:** Be sure to identify correctly <sd-dev> which is usually `sda`. For SD-card identification
-Plug/unplug SD-card and check `/dev/` for devices added/removed.
+      ```sh
+      (XEN) root@main:~# ifconfig
+      (XEN) eth0      Link encap:Ethernet  HWaddr 2C:CF:67:32:83:CD  
+      (XEN)           inet addr:192.168.10.124  Bcast:192.168.10.255  Mask:255.255.255.0
+      (XEN)           inet6 addr: fe80::2ecf:67ff:fe32:83cd/64 Scope:Link
+      (XEN)           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+      (XEN)           RX packets:14 errors:0 dropped:0 overruns:0 frame:0
+      (XEN)           TX packets:27 errors:0 dropped:0 overruns:0 carrier:0
+      (XEN)           collisions:0 txqueuelen:1000 
+      (XEN)           RX bytes:1448 (1.4 KiB)  TX bytes:2640 (2.5 KiB)
+      (XEN)           Interrupt:86 
+      ```
 
-**NOTE:** Ensure existing SD-card partitions unmounted if auto-mount is enabled.
-s
+4. Execute provisioning script on your host PC and pass obtained IP address as parameter:
 
-### Flash rootfs image to the USB-flash
+   ```sh
+   aos-prov provision -u 192.168.10.124
 
-To flash USB-flash image run below command:
+   ...
 
-```sh
-sudo dd if=rootfs.img of=/dev/<usb-dev> bs=4M status=progress conv=sparse
-```
+   Finished successfully!
+   You may find your unit on the cloud here: https://oem.aws-stage.epmp-aos.projects.epam.com/oem/units/33520
+   ```
 
-**NOTE:** Be sure to identify correctly <usb-dev> which could look like `sdc`.
-For USB-flash identification Plug/unplug USB-flash and check `/dev/` for devices added/removed.
-
-**NOTE:** Ensure existing USB-flash partitions unmounted if auto-mount is enabled.
-
-### Flash rootfs image to the nvme storage
-
-* Create SD-card with official Ubuntu from Raspberry foundation.
-* Copy file `rootfs.img` to the USB-Flash dongle.
-* Boot from SD-card with official RPI image. Plug USB-Flash dongle to your device.
-* Flash `rootfs.img` image:
-
-```sh
-dd if=<usb-dev>/rootfs.img of=/dev/nvme0n1 bs=1M status=progress
-```
+5. Once provisioning is finished successfully, you should see your unit online on `AosCloud` following link provided by
+   the provisioning script.

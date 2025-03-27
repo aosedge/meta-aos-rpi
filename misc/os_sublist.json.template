@@ -1,0 +1,34 @@
+{
+    "os_list": [
+        {
+            "name": "AosCore for USB drive v{{ .version }} - 64bit",
+            "description": "Pre-configured AosCore image with rootfs on USB drive",
+            "url": "{{ .url_usb }}",
+            "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+            "website": "aosedge.tech",
+            "release_date": "{{ .release_date }}",
+            "extract_size": {{ .extract_size_usb }},
+            "extract_sha256": "{{ .extract_sha256_usb }}",
+            "image_download_size": {{ .image_download_size_usb }},
+            "image_download_sha256": "{{ .image_download_sha256_usb }}",
+            "devices": [
+                "pi5-64bit"
+            ]
+        },
+        {
+            "name": "AosCore for NVMe drive v{{ .version }} - 64bit",
+            "description": "Pre-configured AosCore image with rootfs on NVMe drive",
+            "url": "{{ .url_nvme }}",
+            "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+            "website": "aosedge.tech",
+            "release_date": "{{ .release_date }}",
+            "extract_size": {{ .extract_size_nvme }},
+            "extract_sha256": "{{ .extract_sha256_nvme }}",
+            "image_download_size": {{ .image_download_size_nvme }},
+            "image_download_sha256": "{{ .image_download_sha256_nvme }}",
+            "devices": [
+                "pi5-64bit"
+            ]
+        }
+    ]
+}

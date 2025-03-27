@@ -1,0 +1,114 @@
+name: Aos RPI release
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
+
+jobs:
+  release:
+    runs-on: github-arc-x64-dind
+    env:
+      LANG: "en_US.UTF-8"
+      LANGUAGE: "en_US:en"
+      LC_ALL: "en_US.UTF-8"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: aosedge/meta-aos-rpi
+
+      - name: Set release version
+        id: version
+        run: |
+          tag=$(basename "${{ github.ref }}")
+          version=${tag#"v"}
+          release_date="$(date -I)"
+
+          echo "Version: $version"
+          echo "Release date: $release_date"
+
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "release_date=$release_date" >> $GITHUB_OUTPUT
+
+      - name: Prepare environment
+        run: |
+          (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y))
+          sudo mkdir -p -m 755 /etc/apt/keyrings
+          out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg
+          cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+          sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] \
+          https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+
+          sudo apt update
+          sudo apt install gh gzip locales -y
+          sudo locale-gen en_US.UTF-8
+
+      - name: Build artifacts
+        id: build
+        run: |
+          cd ./docker
+
+          ./build.sh --DOMD_ROOT usb
+
+          echo "extract_size_usb=$(stat -c %s artifacts/install-usb.img)" >> $GITHUB_OUTPUT
+          echo "extract_sha256_usb=$(sha256sum artifacts/install-usb.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+          gzip artifacts/install-usb.img
+
+          echo "image_download_size_usb=$(stat -c %s artifacts/install-usb.img.gz)" >> $GITHUB_OUTPUT
+          echo "image_download_sha256_usb=$(sha256sum artifacts/install-usb.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+          ./build.sh --DOMD_ROOT nvme
+
+          echo "extract_size_nvme=$(stat -c %s artifacts/install-nvme.img)" >> $GITHUB_OUTPUT
+          echo "extract_sha256_nvme=$(sha256sum artifacts/install-nvme.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+          gzip artifacts/install-nvme.img
+
+          echo "image_download_size_nvme=$(stat -c %s artifacts/install-nvme.img.gz)" >> $GITHUB_OUTPUT
+          echo "image_download_sha256_nvme=$(sha256sum artifacts/install-nvme.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+      - name: Generate OS list
+        id: render_template
+        uses: chuhlomin/render-template@v1
+        with:
+          template: misc/os_sublist.json.template
+          vars: |
+            version: "${{ steps.version.outputs.version }}"
+            release_date: "${{ steps.version.outputs.release_date }}"
+            url_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.version }}/install-usb.img.gz"
+            extract_size_usb: ${{ steps.build.outputs.extract_size_usb }}
+            extract_sha256_usb: ${{ steps.build.outputs.extract_sha256_usb }}
+            image_download_size_usb: ${{ steps.build.outputs.image_download_size_usb }}
+            image_download_sha256_usb: ${{ steps.build.outputs.image_download_sha256_usb }}
+            url_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.version }}/install-nvme.img.gz"
+            extract_size_nvme: ${{ steps.build.outputs.extract_size_nvme }}
+            extract_sha256_nvme: ${{ steps.build.outputs.extract_sha256_nvme }}
+            image_download_size_nvme: ${{ steps.build.outputs.image_download_size_nvme }}
+            image_download_sha256_nvme: ${{ steps.build.outputs.image_download_sha256_nvme }}
+
+          result_path: ./docker/artifacts/os_sublist.json
+
+      - name: Publish Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+
+        run: |
+          version="${{ steps.version.outputs.version }}"
+
+          gh release create --draft "$version" --title "Version $version"
+
+          gh release upload "$version" ./docker/artifacts/install-usb.img.gz
+          gh release upload "$version" ./docker/artifacts/install-nvme.img.gz
+          gh release upload "$version" ./docker/artifacts/os_sublist.json
+
+          if [ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]; then
+            gh release edit "$version" --prerelease
+          fi
+
+          gh release edit "$version" --draft=false
