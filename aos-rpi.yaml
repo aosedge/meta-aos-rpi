@@ -189,6 +189,8 @@ components:
         - [PREFERRED_VERSION_xen-tools, "4.19.0+git"]
         - [PREFERRED_VERSION_u-boot, "2024.04"]
 
+        - [EXTRA_IMAGE_FEATURES:remove, " debug-tweaks"]
+
         # Addresses for u-boot
         - [DOMD_IMG_ADDR, "%{DOMD_IMG_ADDR}"]
         - [DOMD_DTB_ADDR, "%{DOMD_DTB_ADDR}"]
