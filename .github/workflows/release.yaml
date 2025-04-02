@@ -90,6 +90,7 @@ jobs:
             extract_sha256_nvme: ${{ steps.build.outputs.extract_sha256_nvme }}
             image_download_size_nvme: ${{ steps.build.outputs.image_download_size_nvme }}
             image_download_sha256_nvme: ${{ steps.build.outputs.image_download_sha256_nvme }}
+            init_format: "systemd"
 
           result_path: ./docker/artifacts/os_sublist.json
 
