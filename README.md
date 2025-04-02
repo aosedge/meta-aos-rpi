@@ -24,7 +24,7 @@ for boot device and rootfs device respectively. In order to run this demo, the f
 
 1. Raspberry Pi 5 board;
 2. [Pi UART Debugger](https://www.waveshare.com/wiki/Pi_UART_Debugger), or any other serial console suitable for
-   Raspberry Pi 5;
+   Raspberry Pi 5. Note that we **require** using SH1.0 3PIN UART Debug port to free up GPIO pins;
 3. SD Card 2GB minimum;
 4. One of the following:
    - [Raspberry Pi M.2 HAT+ extension board](https://www.raspberrypi.com/products/m2-hat-plus) with installed
