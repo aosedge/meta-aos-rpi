@@ -72,6 +72,8 @@ jobs:
           echo "image_download_size_nvme=$(stat -c %s artifacts/install-nvme.img.gz)" >> $GITHUB_OUTPUT
           echo "image_download_sha256_nvme=$(sha256sum artifacts/install-nvme.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
 
+          echo "init_format=systemd" >> $GITHUB_OUTPUT
+
       - name: Generate OS list
         id: render_template
         uses: chuhlomin/render-template@v1
@@ -90,6 +92,7 @@ jobs:
             extract_sha256_nvme: ${{ steps.build.outputs.extract_sha256_nvme }}
             image_download_size_nvme: ${{ steps.build.outputs.image_download_size_nvme }}
             image_download_sha256_nvme: ${{ steps.build.outputs.image_download_sha256_nvme }}
+            init_format: ${{ steps.build.outputs.init_format }}
 
           result_path: ./docker/artifacts/os_sublist.json
 
@@ -112,3 +115,4 @@ jobs:
           fi
 
           gh release edit "$version" --draft=false
+
