@@ -138,13 +138,15 @@ overwritten during the deployment.
       (XEN) *** Serial input to DOM0 (type 'CTRL-a' three times to switch input)
       ```
 
-   - press `Ctrl+a` six times in a row to enter into `DOM1` (`DomD`) console:
+   - press `Ctrl+a` three times (note that it works fine in `cu`, but on `minicom` and maybe other terminals `Ctrl+a`
+     overlaps with terminal's own commands, so you need to press it *six* times or you have to release `Ctrl` each time
+     or whatever - check your terminal's documentation in case of issues) in a row to enter into `DOM1` (`DomD`) console:
 
       ```sh
       (XEN) *** Serial input to DOM1 (type 'CTRL-a' three times to switch input)
       ```
 
-      By pressing `Ctrl+a` six times in a row, you are switching between consoles in a loop: `DOM0`, `DOM1`, `Xen` etc.
+      By repeating the sequence above, you are switching between consoles in a loop: `DOM0`, `DOM1`, `Xen` etc.
 
    - Press `enter` to get a login prompt:
   
