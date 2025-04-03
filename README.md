@@ -31,6 +31,10 @@ for boot device and rootfs device respectively. In order to run this demo, the f
    NVMe drive 16GB minimum (recommended, faster);
    - USB flash drive 16GB minimum.
 
+It is important to ensure that selected either NVMe SSD or Flash USB dirve is clean and **does not contain any boot
+images** so that system will boot from SD card. Also make sure to backup the SD card image because the card will be
+overwritten during the deployment.
+
 ## Setup Raspberry Pi 5
 
 1. Prepare your Raspberry Pi 5 device to be ready to start according to official
