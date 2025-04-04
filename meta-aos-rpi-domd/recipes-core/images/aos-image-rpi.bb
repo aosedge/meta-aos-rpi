@@ -6,6 +6,8 @@ require recipes-core/images/aos-image.inc
 IMAGE_INSTALL:append = " \
     packagegroup-core-ssh-openssh \
     tzdata \
+    glibc-utils \
+    sudo \
 "
 
 IMAGE_INSTALL:append = " \
