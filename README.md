@@ -55,7 +55,7 @@ overwritten during the deployment.
 2. Insert the SD card into a card reader on your host PC;
 3. Run Raspberry Pi Imager with `repo` parameter to retrieve the latest AosCore image:
 
-   ```sh
+   ```console
    rpi-imager --repo https://raw.githubusercontent.com/aosedge/meta-aos-rpi/main/os_list.json
    ```
 
@@ -95,7 +95,7 @@ overwritten during the deployment.
 
    - you should see the following output when installation script is started successfully:
 
-      ```sh
+      ```console
       ********************************************************************************
       Welcome to AosEdge install script!
       ********************************************************************************
@@ -105,7 +105,7 @@ overwritten during the deployment.
 
    - on successful install scrip finish, the following output should appear:
 
-      ```sh
+      ```console
       ...
 
       ********************************************************************************
@@ -120,7 +120,7 @@ overwritten during the deployment.
 1. After installing AosCore image on your device, it should start `Zephyr OS` with AosCore application, see debug
    console output:
 
-   ```sh
+   ```console
    *** Booting Zephyr OS build 4d91cdd6fd3f ***
    *** Aos zephyr application: v1.0.0 ***
    *** Aos core library: v1.0.0 ***
@@ -134,7 +134,7 @@ overwritten during the deployment.
 
    - once booted, `DOM0` (`Zephyr OS`) console is available:
 
-      ```sh
+      ```console
       (XEN) *** Serial input to DOM0 (type 'CTRL-a' three times to switch input)
       ```
 
@@ -142,7 +142,7 @@ overwritten during the deployment.
      overlaps with terminal's own commands, so you need to press it *six* times or you have to release `Ctrl` each time
      or whatever - check your terminal's documentation in case of issues) in a row to enter into `DOM1` (`DomD`) console:
 
-      ```sh
+      ```console
       (XEN) *** Serial input to DOM1 (type 'CTRL-a' three times to switch input)
       ```
 
@@ -150,19 +150,19 @@ overwritten during the deployment.
 
    - Press `enter` to get a login prompt:
   
-      ```sh
+      ```console
       (XEN) main login:
       ```
 
    - Enter `root` and press `enter`. Now, you should be logged in `DomD`:
 
-      ```sh
+      ```console
       (XEN) root@main:~#
       ```
 
    - Input `ifconfig` command to get your device IP address (`inet addr`):
 
-      ```sh
+      ```console
       (XEN) root@main:~# ifconfig
       (XEN) eth0      Link encap:Ethernet  HWaddr 2C:CF:67:32:83:CD  
       (XEN)           inet addr:192.168.10.124  Bcast:192.168.10.255  Mask:255.255.255.0
@@ -177,7 +177,7 @@ overwritten during the deployment.
 
 4. Execute provisioning script on your host PC and pass obtained IP address as parameter:
 
-   ```sh
+   ```console
    aos-prov provision -u 192.168.10.124
 
    ...
