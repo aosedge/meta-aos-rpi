@@ -1,22 +1,36 @@
-# meta-aos-rpi
+# AosCore Yocto metalayer for Raspberry Pi 5
 
-This repository contains AodEdge Yocto layers for building AosCore example image for Raspberry 5. Instructions below
+This repository contains AosEdge Yocto layers for building AosCore example image for Raspberry 5. Instructions below
 cover all necessary steps to use published prebuilt release images of AosCore, if you are interested in building
 images yourself, please refer to [Manual build](doc/build.md) or [Build with docker](doc/docker.md) documents.
 Note that you still need to secure prerequisites, setup and provision your Raspberry Pi 5 as described in the
 corresponding sections below.
 
-## Table of contents
+**NOTE:** This requires user registration on [AosEdge](https://aosedge.tech/), if you are not registered, please
+[sign up](https://aosedge.tech/en/sign-up).
 
-### Install AosCore release image
+## What is inside the image
+The image contains a reference system that allows implementation of services orchestration on mixed-safety designs.
+To learn more about the approach, please check out [AosEdge documentation](https://docs.aosedge.tech).
 
-- [Prerequisites](#prerequisites)
+The system runs our [Yocto](https://www.yoctoproject.org) based Linux distro and [Zephyr RTOS](https://www.zephyrproject.org)
+as guest domains on top of [Xen hypervisor](https://xenproject.org).  
+
+![System architecture](doc/pictures/architecture.svg)
+
+Such configuration allows trying orchestration of both traditional Linux containers and unikernels
+(e.g. see [Unikraft](https://unikraft.org)) as well as RTOS runtimes in future.
+
+## Installing AosCore release image
+
+### Table of contents
+- [Hardware prerequisites](#hardware-prerequisites)
 - [Setup Raspberry Pi 5](#setup-raspberry-pi-5)
 - [Flash AosCore install image to SD card using Raspberry Pi Imager](#flash-aoscore-install-image-to-sd-card-using-raspberry-pi-imager)
 - [Install AosCore image on your device](#install-aoscore-image-on-your-device)
-- [Provision device](#provision-device)
+- [Provision device with AosCloud](#provision-device-with-aoscloud)
 
-## Prerequisites
+### Hardware prerequisites
 
 This demo requires two separate block devices: one contains Raspberry boot partitions and partition for Dom0 while
 another block device contains DomD (and possibly other domains) rootfs. The build system builds two separate images
@@ -31,25 +45,25 @@ for boot device and rootfs device respectively. In order to run this demo, the f
    NVMe drive 16GB minimum (recommended, faster);
    - USB flash drive 16GB minimum.
 
-It is important to ensure that selected either NVMe SSD or Flash USB dirve is clean and **does not contain any boot
-images** so that system will boot from SD card. Also make sure to backup the SD card image because the card will be
+It is important to ensure that the selected NVMe SSD or Flash USB drive is clean and **does not contain any boot
+images** so that system will boot from SD card. Also make sure to back up the SD card image because the card will be
 overwritten during the deployment.
 
-## Setup Raspberry Pi 5
+### Setup Raspberry Pi 5
 
 1. Prepare your Raspberry Pi 5 device to be ready to start according to official
 [getting started](https://www.raspberrypi.com/documentation/computers/getting-started.html) manual;
-2. Depends on selected block device:
+2. Depends on the selected block device:
    - for the M.2 NVMe drive: assemble Raspberry Pi M.2 HAT+ extension board with NVMe drive according to
      [assembly instruction](https://www.raspberrypi.com/documentation/accessories/m2-hat-plus.html#installation);
    - for the USB flash drive: insert the USB flash drive into available USB 3.0 or USB 2.0 connector on your Raspberry Pi 5
      (depends on your flash drive capability);
-3. Connect Pi UART Debugger (or other serial console) and setup your favorite terminal program to work with debug UART
+3. Connect Pi UART Debugger (or other serial console) and set up your favorite terminal program to work with debug UART
    (see [this instruction](https://www.waveshare.com/wiki/Pi_UART_Debugger) as reference);
 4. Connect Raspberry Pi 5 device to your network or host PC with ethernet cable. Your network or host PC should
    configure Raspberry Pi 5 network using DHCP protocol.
 
-## Flash AosCore install image to SD card using Raspberry Pi Imager
+### Flash AosCore install image to SD card using Raspberry Pi Imager
 
 1. Download and install [Raspberry Pi Imager](https://www.raspberrypi.com/software);
 2. Insert the SD card into a card reader on your host PC;
@@ -65,7 +79,7 @@ overwritten during the deployment.
       ![Step 1](doc/pictures/install_step_1.png)
    - select **AosCore image**:  
       ![Step 2](doc/pictures/install_step_2.png)
-   - depend on you setup, select image either for NVMe drive **AosCore for NVMe drive** or **AosCore for USB drive**:  
+   - depend on your setup, select image either for NVMe drive **AosCore for NVMe drive** or **AosCore for USB drive**:  
       ![Step 3](doc/pictures/install_step_3.png)
 
 5. Select storage:
@@ -86,7 +100,7 @@ overwritten during the deployment.
    - remove SD card and press **CONTINUE** button:  
       ![Step 9](doc/pictures/install_step_9.png)
 
-## Install AosCore image on your device
+### Install AosCore image on your device
 
 1. Insert SD card with AosCore install image into your Raspberry Pi 5 device;
 2. Power on the device;
@@ -115,7 +129,7 @@ overwritten during the deployment.
 
    - the device will reboot automatically.
 
-## Provision device
+### Provision device with AosCloud
 
 1. After installing AosCore image on your device, it should start `Zephyr OS` with AosCore application, see debug
    console output:
@@ -160,7 +174,7 @@ overwritten during the deployment.
       (XEN) root@main:~#
       ```
 
-   - Input `ifconfig` command to get your device IP address (`inet addr`):
+   - Input `ifconfig` command to get your device IP address (see `inet addr`):
 
       ```console
       (XEN) root@main:~# ifconfig
@@ -179,12 +193,13 @@ overwritten during the deployment.
 
    ```console
    aos-prov provision -u 192.168.10.124
-
-   ...
-
-   Finished successfully!
-   You may find your unit on the cloud here: https://oem.aws-stage.epmp-aos.projects.epam.com/oem/units/33520
    ```
 
 5. Once provisioning is finished successfully, you should see your unit online on `AosCloud` following link provided by
-   the provisioning script.
+   the provisioning script as in example below:
+
+   ```console
+   Finished successfully!
+   You may find your unit on the cloud here: https://aoscloud.io/oem/units/33520
+   ```
+
