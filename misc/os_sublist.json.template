@@ -13,7 +13,8 @@
             "image_download_sha256": "{{ .image_download_sha256_usb }}",
             "devices": [
                 "pi5-64bit"
-            ]
+            ],
+            "init_format":"systemd"
         },
         {
             "name": "AosCore for NVMe drive v{{ .version }} - 64bit",
@@ -28,7 +29,8 @@
             "image_download_sha256": "{{ .image_download_sha256_nvme }}",
             "devices": [
                 "pi5-64bit"
-            ]
+            ],
+            "init_format":"systemd"
         }
     ]
 }
