@@ -561,6 +561,18 @@ parameters:
           common_conf:
             - [SSTATE_DIR, "${TOPDIR}/../../common_data/sstate"]
             - [DL_DIR, "${TOPDIR}/../../common_data/downloads"]
+  
+  DEBUG_TWEAKS:
+    desc: "Allow configure build with debug-tweaks."
+    disabled:
+      default: true
+      overrides:
+        common_data:
+          common_conf:
+          - [EXTRA_IMAGE_FEATURES:remove, " debug-tweaks"]
+    
+    enabled:
+      default: false   
 
   DOMD_ROOT:
     desc: "Domd root device"
