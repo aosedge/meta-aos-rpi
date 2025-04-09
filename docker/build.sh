@@ -10,6 +10,7 @@ MACHINE="rpi5"
 DOMD_ROOT="usb"
 SELINUX="disabled"
 CACHE_LOCATION="inside"
+DEBUG_TWEAKS="disabled"
 
 error_and_exit() {
     echo "$1" >&2
@@ -35,7 +36,11 @@ while [[ "$#" -gt 0 ]]; do
         MACHINE="$2"
         shift 2
         ;;
-    --DOMD_ROOT)
+    --DEBUG_TWEAKS)
+        DEBUG_TWEAKS="$2"
+        shift 2
+        ;;
+     --DOMD_ROOT)
         DOMD_ROOT="$2"
         shift 2
         ;;
@@ -87,6 +92,7 @@ CMD="moulin /meta-aos-rpi/aos-rpi.yaml"
 [[ -n "$DOMD_ROOT" ]] && CMD+=" --DOMD_ROOT=$DOMD_ROOT"
 [[ -n "$SELINUX" ]] && CMD+=" --SELINUX=$SELINUX"
 [[ -n "$CACHE_LOCATION" ]] && CMD+=" --CACHE_LOCATION=$CACHE_LOCATION"
+[[ -n "$DEBUG_TWEAKS" ]] && CMD+=" --DEBUG_TWEAKS=$DEBUG_TWEAKS"
 CMD+=" && ninja install-$DOMD_ROOT.img"
 
 if docker exec "$CONTAINER_NAME" bash -c "$CMD"; then
