@@ -24,10 +24,6 @@ while [[ "$#" -gt 0 ]]; do
         ARTIFACTS_DIR="$2"
         shift 2
         ;;
-    --VIS_DATA_PROVIDER)
-        VIS_DATA_PROVIDER="$2"
-        shift 2
-        ;;
     --DOMD_NODE_TYPE)
         DOMD_NODE_TYPE="$2"
         shift 2
@@ -86,7 +82,6 @@ fi
 echo "Building install image..."
 
 CMD="moulin /meta-aos-rpi/aos-rpi.yaml"
-[[ -n "$VIS_DATA_PROVIDER" ]] && CMD+=" --VIS_DATA_PROVIDER=$VIS_DATA_PROVIDER"
 [[ -n "$DOMD_NODE_TYPE" ]] && CMD+=" --DOMD_NODE_TYPE=$DOMD_NODE_TYPE"
 [[ -n "$MACHINE" ]] && CMD+=" --MACHINE=$MACHINE"
 [[ -n "$DOMD_ROOT" ]] && CMD+=" --DOMD_ROOT=$DOMD_ROOT"
