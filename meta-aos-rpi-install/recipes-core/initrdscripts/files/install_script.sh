@@ -74,6 +74,7 @@ update_user() {
             sed -i "s/^aos:/$user:/; s/\/home\/aos/\/home\/$user/" "/flash1/etc/passwd"
             escaped_password=$(printf '%s\n' "$password" | sed 's/[&/\]/\\&/g')
             sed -i "s/^aos:[^:]*/$user:$escaped_password/" "/flash1/etc/shadow"
+            sed -i "s/\baos\b/$user/g" "/flash1/etc/group"
             if [ -d "/flash1/home/aos" ]; then
                 mv "/flash1/home/aos" "/flash1/home/$user"
             fi
