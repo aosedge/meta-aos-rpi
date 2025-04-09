@@ -93,12 +93,18 @@ overwritten during the deployment.
 
    - press **NEXT** button:  
       ![Step 6](doc/pictures/install_step_6.png)
-   - confirm flashing SD card device by pressing **YES** on the next dialog box:  
+   - сhoose **EDIT SETTINGS** if you wish to set a username and password for logging into the device.
+      **ATTENTION:** username and password are required otherwise, you will not be able to log into the Raspberry Pi:  
       ![Step 7](doc/pictures/install_step_7.png)
-   - wait when writing process is finished:  
+   - navigate to the 'Set username and password' section, select it, and set the username and password
+   that will be used to log in to the system on the device. Press **SAVE** to apply the changes:  
       ![Step 8](doc/pictures/install_step_8.png)
-   - remove SD card and press **CONTINUE** button:  
+   - press **YES** button to begin flashing the SD card:  
       ![Step 9](doc/pictures/install_step_9.png)
+   - wait when writing process is finished:  
+      ![Step 10](doc/pictures/install_step_10.png)
+   - remove SD card and press **CONTINUE** button:  
+      ![Step 11](doc/pictures/install_step_11.png)
 
 ### Install AosCore image on your device
 
