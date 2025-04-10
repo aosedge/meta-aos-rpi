@@ -10,11 +10,12 @@ corresponding sections below.
 [sign up](https://aosedge.tech/en/sign-up).
 
 ## What is inside the image
+
 The image contains a reference system that allows implementation of services orchestration on mixed-safety designs.
 To learn more about the approach, please check out [AosEdge documentation](https://docs.aosedge.tech).
 
 The system runs our [Yocto](https://www.yoctoproject.org) based Linux distro and [Zephyr RTOS](https://www.zephyrproject.org)
-as guest domains on top of [Xen hypervisor](https://xenproject.org).  
+as guest domains on top of [Xen hypervisor](https://xenproject.org).
 
 ![System architecture](doc/pictures/architecture.svg)
 
@@ -24,6 +25,7 @@ Such configuration allows trying orchestration of both traditional Linux contain
 ## Installing AosCore release image
 
 ### Table of contents
+
 - [Hardware prerequisites](#hardware-prerequisites)
 - [Setup Raspberry Pi 5](#setup-raspberry-pi-5)
 - [Flash AosCore install image to SD card using Raspberry Pi Imager](#flash-aoscore-install-image-to-sd-card-using-raspberry-pi-imager)
@@ -184,7 +186,7 @@ overwritten during the deployment.
 
       ```console
       (XEN) root@main:~# ifconfig
-      (XEN) eth0      Link encap:Ethernet  HWaddr 2C:CF:67:32:83:CD  
+      (XEN) eth0      Link encap:Ethernet  HWaddr 2C:CF:67:32:83:CD
       (XEN)           inet addr:192.168.10.124  Bcast:192.168.10.255  Mask:255.255.255.0
       (XEN)           inet6 addr: fe80::2ecf:67ff:fe32:83cd/64 Scope:Link
       (XEN)           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
@@ -208,4 +210,3 @@ overwritten during the deployment.
    Finished successfully!
    You may find your unit on the cloud here: https://aoscloud.io/oem/units/33520
    ```
-
