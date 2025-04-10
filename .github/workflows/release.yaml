@@ -82,12 +82,12 @@ jobs:
           vars: |
             version: "${{ steps.version.outputs.version }}"
             release_date: "${{ steps.version.outputs.release_date }}"
-            url_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.version }}/install-usb.img.gz"
+            url_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-usb.img.gz"
             extract_size_usb: ${{ steps.build.outputs.extract_size_usb }}
             extract_sha256_usb: ${{ steps.build.outputs.extract_sha256_usb }}
             image_download_size_usb: ${{ steps.build.outputs.image_download_size_usb }}
             image_download_sha256_usb: ${{ steps.build.outputs.image_download_sha256_usb }}
-            url_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.version }}/install-nvme.img.gz"
+            url_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-nvme.img.gz"
             extract_size_nvme: ${{ steps.build.outputs.extract_size_nvme }}
             extract_sha256_nvme: ${{ steps.build.outputs.extract_sha256_nvme }}
             image_download_size_nvme: ${{ steps.build.outputs.image_download_size_nvme }}
