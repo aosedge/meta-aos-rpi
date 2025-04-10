@@ -27,9 +27,11 @@ jobs:
           version=${tag#"v"}
           release_date="$(date -I)"
 
+          echo "Release tag: $tag"
           echo "Version: $version"
           echo "Release date: $release_date"
 
+          echo "tag=$tag" >> $GITHUB_OUTPUT
           echo "version=$version" >> $GITHUB_OUTPUT
           echo "release_date=$release_date" >> $GITHUB_OUTPUT
 
@@ -99,16 +101,17 @@ jobs:
           GH_REPO: ${{ github.repository }}
 
         run: |
+          tag="${{ steps.version.outputs.tag }}"
           version="${{ steps.version.outputs.version }}"
 
-          gh release create --draft "$version" --title "Version $version"
+          gh release create --draft "$tag" --title "Version $version"
 
-          gh release upload "$version" ./docker/artifacts/install-usb.img.gz
-          gh release upload "$version" ./docker/artifacts/install-nvme.img.gz
-          gh release upload "$version" ./docker/artifacts/os_sublist.json
+          gh release upload "$tag" ./docker/artifacts/install-usb.img.gz
+          gh release upload "$tag" ./docker/artifacts/install-nvme.img.gz
+          gh release upload "$tag" ./docker/artifacts/os_sublist.json
 
           if [ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]; then
-            gh release edit "$version" --prerelease
+            gh release edit "$tag" --prerelease
           fi
 
-          gh release edit "$version" --draft=false
+          gh release edit "$tag" --draft=false
