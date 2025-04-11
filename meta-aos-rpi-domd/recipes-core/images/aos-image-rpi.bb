@@ -26,7 +26,14 @@ enable_sudo_group() {
     sed -i 's/^#\s*\(%sudo\s*ALL=(ALL:ALL)\s*ALL\)/\1/'  ${IMAGE_ROOTFS}/etc/sudoers
 }
 
-ROOTFS_POSTPROCESS_COMMAND += "enable_sudo_group;"
+update_user_profile() {
+    echo 'PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin' >> ${IMAGE_ROOTFS}/home/aos/.profile
+}
+
+ROOTFS_POSTPROCESS_COMMAND:append = " \ 
+    enable_sudo_group; \
+    update_user_profile; \
+"
 
 # Set fixed rootfs size
 IMAGE_ROOTFS_SIZE ?= "1048576"
