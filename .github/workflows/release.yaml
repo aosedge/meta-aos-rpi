@@ -27,9 +27,11 @@ jobs:
           version=${tag#"v"}
           release_date="$(date -I)"
 
+          echo "Release tag: $tag"
           echo "Version: $version"
           echo "Release date: $release_date"
 
+          echo "tag=$tag" >> $GITHUB_OUTPUT
           echo "version=$version" >> $GITHUB_OUTPUT
           echo "release_date=$release_date" >> $GITHUB_OUTPUT
 
@@ -80,12 +82,12 @@ jobs:
           vars: |
             version: "${{ steps.version.outputs.version }}"
             release_date: "${{ steps.version.outputs.release_date }}"
-            url_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.version }}/install-usb.img.gz"
+            url_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-usb.img.gz"
             extract_size_usb: ${{ steps.build.outputs.extract_size_usb }}
             extract_sha256_usb: ${{ steps.build.outputs.extract_sha256_usb }}
             image_download_size_usb: ${{ steps.build.outputs.image_download_size_usb }}
             image_download_sha256_usb: ${{ steps.build.outputs.image_download_sha256_usb }}
-            url_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.version }}/install-nvme.img.gz"
+            url_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-nvme.img.gz"
             extract_size_nvme: ${{ steps.build.outputs.extract_size_nvme }}
             extract_sha256_nvme: ${{ steps.build.outputs.extract_sha256_nvme }}
             image_download_size_nvme: ${{ steps.build.outputs.image_download_size_nvme }}
@@ -99,16 +101,17 @@ jobs:
           GH_REPO: ${{ github.repository }}
 
         run: |
+          tag="${{ steps.version.outputs.tag }}"
           version="${{ steps.version.outputs.version }}"
 
-          gh release create --draft "$version" --title "Version $version"
+          gh release create --draft "$tag" --title "Version $version"
 
-          gh release upload "$version" ./docker/artifacts/install-usb.img.gz
-          gh release upload "$version" ./docker/artifacts/install-nvme.img.gz
-          gh release upload "$version" ./docker/artifacts/os_sublist.json
+          gh release upload "$tag" ./docker/artifacts/install-usb.img.gz
+          gh release upload "$tag" ./docker/artifacts/install-nvme.img.gz
+          gh release upload "$tag" ./docker/artifacts/os_sublist.json
 
           if [ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]; then
-            gh release edit "$version" --prerelease
+            gh release edit "$tag" --prerelease
           fi
 
-          gh release edit "$version" --draft=false
+          gh release edit "$tag" --draft=false

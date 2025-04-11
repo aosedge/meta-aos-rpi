@@ -20,9 +20,20 @@ EXTRA_USERS_PARAMS = " \
     usermod -a -G sudo aos; \
 "
 
-do_install:append() {
-    sed -i 's/^#\s*\(%sudo\s*ALL=(ALL:ALL)\s*ALL\)/\1/'  ${D}/${sysconfdir}/sudoers
+enable_sudo_group() {
+    # Uncomment the following line from sudoers:
+    #   %sudo   ALL=(ALL:ALL) ALL
+    sed -i 's/^#\s*\(%sudo\s*ALL=(ALL:ALL)\s*ALL\)/\1/'  ${IMAGE_ROOTFS}/etc/sudoers
 }
+
+update_user_profile() {
+    echo 'PATH=$PATH:/usr/local/sbin:/usr/sbin:/sbin' >> ${IMAGE_ROOTFS}/home/aos/.profile
+}
+
+ROOTFS_POSTPROCESS_COMMAND:append = " \ 
+    enable_sudo_group; \
+    update_user_profile; \
+"
 
 # Set fixed rootfs size
 IMAGE_ROOTFS_SIZE ?= "1048576"
