@@ -14,7 +14,7 @@
             "devices": [
                 "pi5-64bit"
             ],
-            "init_format":"systemd"
+            "init_format": "systemd"
         },
         {
             "name": "AosCore for NVMe drive v{{ .version }} - 64bit",
@@ -30,7 +30,7 @@
             "devices": [
                 "pi5-64bit"
             ],
-            "init_format":"systemd"
+            "init_format": "systemd"
         }
     ]
 }
