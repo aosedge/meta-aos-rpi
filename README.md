@@ -38,18 +38,25 @@ This demo requires two separate block devices: one contains Raspberry boot parti
 another block device contains DomD (and possibly other domains) rootfs. The build system builds two separate images
 for boot device and rootfs device respectively. In order to run this demo, the following hardware is required:
 
-1. Raspberry Pi 5 board;
-2. [Pi UART Debugger](https://www.waveshare.com/wiki/Pi_UART_Debugger), or any other serial console suitable for
-   Raspberry Pi 5. Note that we **require** using SH1.0 3PIN UART Debug port to free up GPIO pins;
-3. SD Card 2GB minimum;
-4. One of the following:
+1. Raspberry Pi 5 8GB board with a proper power supply. Note that we **require** 8GB version due to the memory mapping;
+2. It is not strictly necessary to have the following parts, but we **strongly recommend** adding:
+   - [Pi RTC Battery](https://www.raspberrypi.com/products/rtc-battery/) to avoid issues with AosEdge certificates;
+   - [Pi Active Cooler](https://www.raspberrypi.com/products/active-cooler/) so we can put some real CPU load;
+3. [Pi UART Debugger](https://www.waveshare.com/wiki/Pi_UART_Debugger), or any other serial console suitable for
+   Raspberry Pi 5. Note that we **require** using SH1.0 3PIN UART Debug port to free up GPIO pins; 
+4. SD Card 2GB or bigger. If unsure, please check out [Raspberry Pi official SD cards](https://www.raspberrypi.com/documentation/accessories/sd-cards.html)
+   or [SanDisk Extreme SD cards](https://shop.sandisk.com/en-ua/products/memory-cards/microsd-cards/sandisk-extreme-uhs-i-microsd?sku=SDSQXAF-032G-GN6MA);
+5. One of the following:
    - [Raspberry Pi M.2 HAT+ extension board](https://www.raspberrypi.com/products/m2-hat-plus) with installed
-   NVMe drive 16GB minimum (recommended, faster);
+   NVMe drive 16GB minimum - this option is **strongly recommended** because it is way faster than USB Flash;
    - USB flash drive 16GB minimum.
 
-It is important to ensure that the selected NVMe SSD or Flash USB drive is clean and **does not contain any boot
-images** so that system will boot from SD card. Also make sure to back up the SD card image because the card will be
-overwritten during the deployment.
+   It is important to ensure that the selected NVMe SSD or Flash USB drive is clean and **does not contain any boot
+   images** so that system will boot from SD card. Also make sure to back up the SD card image because the card will be
+   overwritten during the deployment.
+
+Ensure your PC or laptop has a 1G Ethernet port, a USB-A port, and a micro SD card adapter.
+If you do not have those please consider getting a [docking station](https://eu.ugreen.com/products/ugreen-usb-c-7-in-1-hub-with-4k-60hz-hdmi).
 
 ### Setup Raspberry Pi 5
 
