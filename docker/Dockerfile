@@ -53,4 +53,6 @@ RUN tar xvf zephyr-sdk-${ZEPHYR_SDK_VERSION}_linux-x86_64_minimal.tar.xz -C /opt
 RUN rm -f zephyr-sdk-${ZEPHYR_SDK_VERSION}_linux-x86_64_minimal.tar.xz
 RUN cd /opt/zephyr-sdk-${ZEPHYR_SDK_VERSION} && ./setup.sh -t aarch64-zephyr-elf -h -c
 
-USER user
+USER yocto
+
+WORKDIR /home/yocto/workspace
