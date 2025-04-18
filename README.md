@@ -14,6 +14,8 @@ corresponding sections below.
 The image contains a reference system that allows implementation of services orchestration on mixed-safety designs.
 To learn more about the approach, please check out [AosEdge documentation](https://docs.aosedge.tech).
 
+### System configuration
+
 The system runs our [Yocto](https://www.yoctoproject.org) based Linux distro and [Zephyr RTOS](https://www.zephyrproject.org)
 as guest domains on top of [Xen hypervisor](https://xenproject.org).
 
@@ -21,6 +23,21 @@ as guest domains on top of [Xen hypervisor](https://xenproject.org).
 
 Such configuration allows trying orchestration of both traditional Linux containers and unikernels
 (e.g. see [Unikraft](https://unikraft.org)) as well as RTOS runtimes in future.
+
+### Hardware assignment
+
+Hardware is split between Zephyr RTOS running in Dom0 and Linux OS running in DomD according to the table below:
+
+| Xen        | Dom0 - Zephyr | DomD - Linux  |
+|------------|---------------|---------------|
+| Debug UART | UART0         | MIP0          |
+|            | SDIO1         | PCIEX         |
+|            |               | PCIE1         | (if NVME was selected)
+|            | GIC, GPIO2,   | USB0, USB1    | (if USB was selected)
+|            | AXI BUS       | WiFi, ETH     | (if WIFI was selected)
+|            | SPI10, I2C10  | MSI, PCIE2,   |
+|            |               | RP1, GPIO(RP1)|
+|            |               | CLOCKS(RP1)   |
 
 ## Installing AosCore release image
 
