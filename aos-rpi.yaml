@@ -356,7 +356,7 @@ components:
       script: "../yocto/meta-aos/scripts/fota_builder.py"
       args: "-v"
       target_images:
-        - "../output/fota/%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-full-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        - "../output/fota/fota-full-%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -372,10 +372,9 @@ components:
           type: "full"
           description: "DomD rootfs image"
           version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
           exclude:
             - "var/*"
-
-          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
   fota-incremental:
     builder:
@@ -384,7 +383,7 @@ components:
       script: "../yocto/meta-aos/scripts/fota_builder.py"
       args: "-v"
       target_images:
-        - "../output/fota/%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        - "../output/fota/fota-incremental-%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"

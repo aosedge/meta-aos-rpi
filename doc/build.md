@@ -117,3 +117,21 @@ ninja layers
 ```
 
 Aos layers will be located in `output/layers` folder.
+
+## Build FOTA
+
+To build FOTA input the next commands depends on FOTA type:
+
+For full rootfs update:
+
+```console
+ninja fota-full
+```
+
+For incremental rootfs update:
+
+```console
+ninja fota-incremental
+```
+
+FOTA bundles will be located in `output/fota` folder.
