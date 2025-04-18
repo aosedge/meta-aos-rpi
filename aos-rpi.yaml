@@ -335,9 +335,7 @@ components:
       work_dir: "workdir"
       script: "../yocto/meta-aos/scripts/layer_builder.py"
       target_images:
-        - "../output/layers/nodejs-layer.tar"
-        - "../output/layers/pylibs-layer.tar"
-        - "../output/layers/libvis-layer.tar"
+        - "../output/layers/aos-pylibs-layer-%{MACHINE}-1.0.0.tar.gz"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -348,15 +346,8 @@ components:
         output_dir: "../output/layers"
         base_image: "%{AOS_BASE_IMAGE}"
         items:
-          nodejs-layer:
-            enabled: false
-            target: "aos-nodejs-layer"
-
           pylibs-layer:
             target: "aos-pylibs-layer"
-
-          libvis-layer:
-            target: "aos-libvis-layer"
 
   fota-full:
     builder:
