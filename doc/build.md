@@ -19,7 +19,7 @@ You can fetch/clone this whole repository, but you actually only need one file f
 During the build `moulin` will fetch this repository again into `yocto/` directory. So, to reduce possible confuse,
 we recommend to download only `aos-rpi.yaml`:
 
-```sh
+```console
 curl -O https://raw.githubusercontent.com/aosedge/meta-aos-rpi/main/aos-rpi.yaml
 ```
 
@@ -28,7 +28,7 @@ curl -O https://raw.githubusercontent.com/aosedge/meta-aos-rpi/main/aos-rpi.yaml
 Moulin is used to generate Ninja build file: `moulin aos-rpi.yaml`. This project provides number of additional
 parameters. You can check them with`--help-config` command line option:
 
-```sh
+```console
 moulin aos-rpi.yaml --help-config
 
 usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
@@ -79,25 +79,27 @@ The configuration depends on `DOMD_ROOT` option.
 
 ### Build install image for usb
 
-```sh
+```console
+moulin aos-rpi.yaml --DOMD_ROOT=usb
 ninja install-usb.img
 ```
 
 ### Build install image for NVMe
 
-```sh
+```console
+moulin aos-rpi.yaml --DOMD_ROOT=nvme
 ninja install-nvme.img
 ```
 
 ## Flash install image
 
-```sh
+```console
 sudo dd if=install-usb.img of=/dev/<sd-dev> bs=4M status=progress
 ```
 
 or
 
-```sh
+```console
 sudo dd if=install-nvme.img of=/dev/<sd-dev> bs=4M status=progress
 ```
 
