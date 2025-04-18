@@ -62,8 +62,12 @@ overwritten during the deployment.
      (depends on your flash drive capability);
 3. Connect Pi UART Debugger (or other serial console) and set up your favorite terminal program to work with debug UART
    (see [this instruction](https://www.waveshare.com/wiki/Pi_UART_Debugger) as reference);
-4. Connect Raspberry Pi 5 device to your network or host PC with ethernet cable. Your network or host PC should
-   configure Raspberry Pi 5 network using DHCP protocol.
+4. Connect Raspberry Pi 5 device to your host PC or laptop with an Ethernet cable. To access AosEdge, Raspberry Pi 5 requires
+   an Internet connection. Ensure your PC or laptop is online and create a bridge between the Ethernet port connected to the
+   device and the Internet interface. Instructions for setting up a network bridge are available on the Internet, e.g. for
+   [Windows](https://www.thewindowsclub.com/create-a-network-bridge-windows) and
+   [MacOS](https://support.apple.com/guide/mac-help/share-internet-connection-mac-network-users-mchlp1540/mac).
+   Optionally, you can connect the device to your Ethernet LAN.
 
 ### Flash AosCore install image to SD card using Raspberry Pi Imager
 
