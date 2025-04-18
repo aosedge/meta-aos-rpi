@@ -28,12 +28,17 @@ Such configuration allows trying orchestration of both traditional Linux contain
 
 Hardware is split between Zephyr RTOS running in Dom0 and Linux OS running in DomD according to the table below:
 
-| Xen        | Dom0 - Zephyr | DomD - Linux |
-|------------|---------------|--------------|
-| Debug UART | UART0         | MIP0         |
-|            | SDIO1, PCIE1  | PCIEX        |
-|            |               | USB0, USB1   |
-|            |               | WiFi, BT     |
+| Xen        | Dom0 - Zephyr | DomD - Linux  |
+|------------|---------------|---------------|
+| Debug UART | UART0         | MIP0          |
+|            | SDIO1         | PCIEX         |
+|            |               | SDIO1         | (if MMC was selected)
+|            |               | PCIE1         | (if NVME was selected)
+|            | GIC, GPIO2,   | USB0, USB1    | (if USB was selected)
+|            | AXI BUS       | WiFi, ETH     | (if WIFI was selected)
+|            |               | MSI, PCIE2,   |
+|            |               | RP1, GPIO(RP1)|
+|            |               | CLOCKS(RP1)   |
 
 ## Installing AosCore release image
 
