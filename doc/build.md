@@ -107,3 +107,13 @@ sudo dd if=install-nvme.img of=/dev/<sd-dev> bs=4M status=progress
 Plug/unplug SD-card and check `/dev/` for devices added/removed.
 
 **NOTE:** Ensure existing SD-card partitions unmounted if auto-mount is enabled.
+
+## Build layers
+
+To build example Aos layers use the following command:
+
+```console
+ninja layers
+```
+
+Aos layers will be located in `output/layers` folder.
