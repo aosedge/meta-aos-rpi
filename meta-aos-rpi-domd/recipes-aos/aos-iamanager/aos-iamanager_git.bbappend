@@ -38,3 +38,9 @@ do_install:append:aos-main-node() {
     install -m 0644 ${WORKDIR}/grpc-dns-resolver.conf ${D}${sysconfdir}/systemd/system/${PN}-provisioning.service.d/20-grpc-dns-resolver.conf
     install -m 0644 ${WORKDIR}/remove-deprovision.conf ${D}${sysconfdir}/systemd/system/${PN}-provisioning.service.d/20-remove-deprovision.conf
 }
+
+# Do not install headers files
+# This is temporary solution and should be removed when switching to new repo approach
+do_install:append() {
+    rm -rf ${D}${includedir}
+}
