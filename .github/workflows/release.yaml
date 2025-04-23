@@ -67,12 +67,12 @@ jobs:
           docker/run_docker.sh -n -w build -- ninja install-usb.img
 
           echo "extract_size_usb=$(stat -c %s build/install-usb.img)" >> $GITHUB_OUTPUT
-          echo "extract_sha256_usb=$(sha256sum build//install-usb.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+          echo "extract_sha256_usb=$(sha256sum build/install-usb.img | awk '{print $1}')" >> $GITHUB_OUTPUT
 
           gzip build/install-usb.img
 
-          echo "image_download_size_usb=$(stat -c %s build//install-usb.img.gz)" >> $GITHUB_OUTPUT
-          echo "image_download_sha256_usb=$(sha256sum build//install-usb.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
+          echo "image_download_size_usb=$(stat -c %s build/install-usb.img.gz)" >> $GITHUB_OUTPUT
+          echo "image_download_sha256_usb=$(sha256sum build/install-usb.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
 
           docker/run_docker.sh -n -w build -- moulin aos-rpi.yaml --DOMD_ROOT=nvme --CACHE_LOCATION=inside
           docker/run_docker.sh -n -w build -- ninja install-nvme.img
