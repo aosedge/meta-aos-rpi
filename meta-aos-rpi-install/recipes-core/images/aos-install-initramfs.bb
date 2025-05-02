@@ -17,6 +17,6 @@ IMAGE_ROOTFS_SIZE = "8192"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 
 COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*)-(linux.*)' 
-PACKAGE_INSTALL = "${VIRTUAL-RUNTIME_base-utils} initramfs-aos-install"
+PACKAGE_INSTALL = "${VIRTUAL-RUNTIME_base-utils} initramfs-aos-install util-linux raspi-utils rpi-eeprom"
 
 inherit image
