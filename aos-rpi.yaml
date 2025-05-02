@@ -288,7 +288,7 @@ components:
         - [IMAGE_FSTYPES, "rpi-sdimg"]
         - [SDIMG_VFAT_DEPLOY, "1"]
         - [SDIMG_ROOTFS_TYPE, "ext4"]
-        - [BOOT_SPACE, "131072"]
+        - [BOOT_SPACE, "262144"]
         - [
             RPI_SDIMG_EXTRA_DEPENDS,
             "initramfs-aos-install:do_install rpi-cmdline:do_deploy rpi-config:do_deploy",
@@ -297,6 +297,7 @@ components:
         # Initramfs configuration
         - [INITRAMFS_IMAGE, "aos-install-initramfs"]
         - [INITRAMFS_IMAGE_BUNDLE, "1"]
+        - [INITRAMFS_MAXSIZE, "524288"]
 
         # RPI specific
         - [ENABLE_UART, "1"]
