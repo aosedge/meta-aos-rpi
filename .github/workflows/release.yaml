@@ -1,4 +1,6 @@
 name: Aos RPI release
+permissions:
+  contents: write
 on:
   workflow_dispatch:
   push:
