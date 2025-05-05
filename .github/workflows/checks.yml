@@ -1,0 +1,38 @@
+name: PR checks
+
+on: [push]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - name: Set up linters
+      run: |
+        sudo apt-get update && sudo apt-get install markdownlint pylint -y --no-install-recommends
+        export PATH="$HOME/.local/bin/:$PATH"
+        pip3 install --break-system-packages --user oelint_adv --no-cache-dir
+        wget -O "$HOME/.local/bin/hadolint" https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+        chmod a+x "$HOME/.local/bin/hadolint"
+    - name: Checking Dockerfiles with Hadolint
+      run: |
+        hadolint $(git ls-files '*/Dockerfile')
+    - name: Checking shell scripts with shellcheck
+      uses: ludeeus/action-shellcheck@master
+      with:
+        format: gcc
+    - name: Analysing Bitbake scripts with oelint-adv
+      run: |
+        oelint-adv $(git ls-files '*.bb' '*.bbappend') --color --quiet
+    - name: Analysing the code with pylint
+      run: |
+        pylint $(git ls-files '*.py')
+    - name: Analysing the docs with markdownlint
+      run: |
+        mdl $(git ls-files '*.md') -s .style.rb
