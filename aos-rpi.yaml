@@ -181,6 +181,7 @@ components:
       conf:
         - *COMMON_CONF
         - *COMMON_DOM_CONF
+        - [DISTRO, "aos-core"]
         - [MACHINE, "%{MACHINE}"]
         - [RPI_SOC_FAMILY, "%{SOC_FAMILY}"]
         - [XT_DOM_NAME, "domd"]
