@@ -38,7 +38,8 @@ This demo requires two separate block devices: one contains Raspberry boot parti
 another block device contains DomD (and possibly other domains) rootfs. The build system builds two separate images
 for boot device and rootfs device respectively. In order to run this demo, the following hardware is required:
 
-1. Raspberry Pi 5 8GB board with a proper power supply. Note that we **require** 8GB version due to the memory mapping;
+1. Raspberry Pi 5 8GB board with a proper power supply. Note that we **require** 8GB version due to the memory mapping.
+**IMPORTANT**: during the installation, system EEPROM will be automatically updated to the latest available official version;
 2. It is not strictly necessary to have the following parts, but we **strongly recommend** adding:
    - [Pi RTC Battery](https://www.raspberrypi.com/products/rtc-battery/) to avoid issues with AosEdge certificates;
    - [Pi Active Cooler](https://www.raspberrypi.com/products/active-cooler/) so we can put some real CPU load;
