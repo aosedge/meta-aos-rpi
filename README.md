@@ -63,7 +63,7 @@ for boot device and rootfs device respectively. In order to run this demo, the f
    - [Pi RTC Battery](https://www.raspberrypi.com/products/rtc-battery/) to avoid issues with AosEdge certificates;
    - [Pi Active Cooler](https://www.raspberrypi.com/products/active-cooler/) so we can put some real CPU load;
 3. [Pi UART Debugger](https://www.waveshare.com/wiki/Pi_UART_Debugger), or any other serial console suitable for
-   Raspberry Pi 5. Note that we **require** using SH1.0 3PIN UART Debug port to free up GPIO pins; 
+   Raspberry Pi 5. Note that we **require** using SH1.0 3PIN UART Debug port to free up GPIO pins;
 4. SD Card 2GB or bigger. If unsure, please check out [Raspberry Pi official SD cards](https://www.raspberrypi.com/documentation/accessories/sd-cards.html)
    or [SanDisk Extreme SD cards](https://shop.sandisk.com/en-ua/products/memory-cards/microsd-cards/sandisk-extreme-uhs-i-microsd?sku=SDSQXAF-032G-GN6MA);
 5. One of the following:
@@ -80,11 +80,15 @@ If you do not have those please consider getting a [docking station](https://eu.
 
 ### Setup Raspberry Pi 5
 
-1. Prepare your Raspberry Pi 5 device to be ready to start according to official
-[getting started](https://www.raspberrypi.com/documentation/computers/getting-started.html) manual;
+1. Prepare your Raspberry Pi 5 device to be ready to start. You can check how to connect power, ethernet SD card and
+   other peripherals in the official
+   [getting started](https://www.raspberrypi.com/documentation/computers/getting-started.html) manual;
 2. Depends on the selected block device:
    - for the M.2 NVMe drive: assemble Raspberry Pi M.2 HAT+ extension board with NVMe drive according to
-     [assembly instruction](https://www.raspberrypi.com/documentation/accessories/m2-hat-plus.html#installation);
+     [assembly instruction](https://www.raspberrypi.com/documentation/accessories/m2-hat-plus.html#installation).
+
+     **NOTE**: It is not necessary to update Raspberry Pi firmware as stated in the above document as it will be
+     automatically updated during installation of AosEdge image;
    - for the USB flash drive: insert the USB flash drive into available USB 3.0 or USB 2.0 connector on your Raspberry Pi 5
      (depends on your flash drive capability);
 3. Connect Pi UART Debugger (or other serial console) and set up your favorite terminal program to work with debug UART
@@ -203,7 +207,8 @@ If you do not have those please consider getting a [docking station](https://eu.
       (XEN) main login:
       ```
 
-   - Enter `root` and press `enter`. Now, you should be logged in `DomD`:
+   - Enter your user name and password that was set during flashing AosEdge install image to SD-Card. Now, you should
+     be logged in `DomD`:
 
       ```console
       (XEN) root@main:~#
@@ -237,3 +242,11 @@ If you do not have those please consider getting a [docking station](https://eu.
    Finished successfully!
    You may find your unit on the cloud here: https://aoscloud.io/oem/units/33520
    ```
+
+6. AosEdge image requires internet connection with the cloud for normal operation. To ensure that internet connection
+available on the device, login into `DomD` using serial console as described in
+[previous chapter](#provision-device-with-aoscloud). Ping `google.com`:
+
+```console
+ping google.com
+```
