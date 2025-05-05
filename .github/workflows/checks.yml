@@ -1,0 +1,74 @@
+name: PR checks
+
+on: [push]
+
+permissions:
+  contents: read
+
+jobs:
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Shellcheck
+      uses: ludeeus/action-shellcheck@master
+      with:
+        format: gcc
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install markdownlint -y --no-install-recommends
+    - name: Markdownlint
+      run: mdl $(git ls-files '*.md') -s .style.rb
+  dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Install dependencies
+      run: |
+        mkdir -p "$HOME/.local/bin"
+        wget -q -O "$HOME/.local/bin/hadolint" https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+        chmod a+x "$HOME/.local/bin/hadolint"
+        export PATH="$HOME/.local/bin/:$PATH"
+    - name: Hadolint
+      run: hadolint $(git ls-files '*/Dockerfile')
+  python:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install pylint -y --no-install-recommends
+    - name: Pylint
+      run: pylint $(git ls-files '*.py')
+  bitbake:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get YAML
+      uses: actions/checkout@v4
+      with:
+        sparse-checkout: aos-rpi.yaml
+        sparse-checkout-cone-mode: false
+    - name: Install dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install chrpath diffstat ninja-build -y --no-install-recommends
+        pip3 install --break-system-packages --user oelint_adv --no-cache-dir
+        pip3 install --break-system-packages --user git+https://github.com/xen-troops/moulin --no-cache-dir
+        export PATH="$HOME/.local/bin/:$PATH"
+    - name: Fetch all layers
+      run: |
+        moulin aos-rpi.yaml
+        ninja fetch-domd
+    - name: Checkout
+      uses: actions/checkout@master
+      with:
+        path: yocto/meta-aos-rpi/
+    - name: OE-lint
+      run: |
+        ninja conf-domd
+        oelint-adv $(git --work-tree=yocto/meta-aos-rpi ls-files '*.bb' '*.bbappend' 'layer.conf' | awk '{print "yocto/meta-aos-rpi/" $0}') --color --quiet --mode all
