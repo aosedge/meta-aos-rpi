@@ -6,6 +6,9 @@ images yourself, please refer to [Manual build](doc/build.md) or [Build with doc
 Note that you still need to secure prerequisites, setup and provision your Raspberry Pi 5 as described in the
 corresponding sections below.
 
+Some useful info such as remote access, retrieving logs etc. can be found in [troubleshooting](doc/troubleshooting.md)
+document.
+
 **NOTE:** This requires user registration on [AosEdge](https://aosedge.tech/), if you are not registered, please
 [sign up](https://aosedge.tech/en/sign-up).
 
