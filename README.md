@@ -62,7 +62,9 @@ another block device contains DomD (and possibly other domains) rootfs. The buil
 for boot device and rootfs device respectively. In order to run this demo, the following hardware is required:
 
 1. Raspberry Pi 5 8GB board with a proper power supply. Note that we **require** 8GB version due to the memory mapping.
-**IMPORTANT**: during the installation, system EEPROM will be automatically updated to the latest available official version;
+
+   **IMPORTANT**: during the installation, system EEPROM will be automatically updated to the latest available official
+   version;
 2. It is not strictly necessary to have the following parts, but we **strongly recommend** adding:
    - [Pi RTC Battery](https://www.raspberrypi.com/products/rtc-battery/) to avoid issues with AosEdge certificates;
    - [Pi Active Cooler](https://www.raspberrypi.com/products/active-cooler/) so we can put some real CPU load;
@@ -93,13 +95,14 @@ If you do not have those please consider getting a [docking station](https://eu.
 
      **NOTE**: It is not necessary to update Raspberry Pi firmware as stated in the above document as it will be
      automatically updated during installation of AosEdge image;
-   - for the USB flash drive: insert the USB flash drive into available USB 3.0 or USB 2.0 connector on your Raspberry Pi 5
-     (depends on your flash drive capability);
+   - for the USB flash drive: insert the USB flash drive into available USB 3.0 or USB 2.0 connector on your Raspberry
+     Pi 5 (depends on your flash drive capability);
 3. Connect Pi UART Debugger (or other serial console) and set up your favorite terminal program to work with debug UART
    (see [this instruction](https://www.waveshare.com/wiki/Pi_UART_Debugger) as reference);
-4. Connect Raspberry Pi 5 device to your host PC or laptop with an Ethernet cable. To access AosEdge, Raspberry Pi 5 requires
-   an Internet connection. Ensure your PC or laptop is online and create a bridge between the Ethernet port connected to the
-   device and the Internet interface. Instructions for setting up a network bridge are available on the Internet, e.g. for
+4. Connect Raspberry Pi 5 device to your host PC or laptop with an Ethernet cable. To access AosEdge, Raspberry Pi 5
+   requires an Internet connection. Ensure your PC or laptop is online and create a bridge between the Ethernet port
+   connected to the device and the Internet interface. Instructions for setting up a network bridge are available on the
+   Internet, e.g. for
    [Windows](https://www.thewindowsclub.com/create-a-network-bridge-windows), Ubuntu 22.04
    [Linux](https://chrisjhart.com/Bridge-Network-Interfaces-on-Ubuntu-22.04) and
    [MacOS](https://support.apple.com/guide/mac-help/share-internet-connection-mac-network-users-mchlp1540/mac).
@@ -203,7 +206,8 @@ If you do not have those please consider getting a [docking station](https://eu.
 
    - press `Ctrl+a` three times (note that it works fine in `cu`, but on `minicom` and maybe other terminals `Ctrl+a`
      overlaps with terminal's own commands, so you need to press it *six* times or you have to release `Ctrl` each time
-     or whatever - check your terminal's documentation in case of issues) in a row to enter into `DOM1` (`DomD`) console:
+     or whatever - check your terminal's documentation in case of issues) in a row to enter into `DOM1` (`DomD`)
+     console:
 
       ```console
       (XEN) *** Serial input to DOM1 (type 'CTRL-a' three times to switch input)
