@@ -29,7 +29,7 @@ variables:
   # Aos config
 
   # Aos unit configuration
-  AOS_UNIT_MODEL: "rpi-dynamic"
+  AOS_UNIT_MODEL: "aos-rpi"
   AOS_UNIT_VERSION: "1.0"
 
   # Version configuration
@@ -181,6 +181,7 @@ components:
       conf:
         - *COMMON_CONF
         - *COMMON_DOM_CONF
+        - [DISTRO, "aos-core"]
         - [MACHINE, "%{MACHINE}"]
         - [RPI_SOC_FAMILY, "%{SOC_FAMILY}"]
         - [XT_DOM_NAME, "domd"]
@@ -266,6 +267,23 @@ components:
         - "tmp/deploy/images/%{MACHINE}/aos/boot/version"
         - "tmp/deploy/images/%{MACHINE}/aos/ta"
 
+  aos-sdk:
+    builder:
+      type: custom_script
+      work_dir: "workdir"
+      script: "../yocto/meta-aos-rpi/meta-aos-rpi-domd/scripts/sdk_builder.py"
+      target_images:
+        - "../output/sdk/aos-vm-dev-glibc-x86_64-%{AOS_BASE_IMAGE}-core2-64-%{MACHINE}-toolchain-5.0.8.sh"
+
+      additional_deps:
+        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
+
+      sdk:
+        yocto_dir: "../%{YOCTOS_WORK_DIR}"
+        build_dir: "%{DOMD_BUILD_DIR}"
+        output_dir: "../output/sdk"
+        base_image: "%{AOS_BASE_IMAGE}"
+
   install:
     default: true
     build-dir: "%{YOCTOS_WORK_DIR}"
@@ -288,7 +306,7 @@ components:
         - [IMAGE_FSTYPES, "rpi-sdimg"]
         - [SDIMG_VFAT_DEPLOY, "1"]
         - [SDIMG_ROOTFS_TYPE, "ext4"]
-        - [BOOT_SPACE, "131072"]
+        - [BOOT_SPACE, "262144"]
         - [
             RPI_SDIMG_EXTRA_DEPENDS,
             "initramfs-aos-install:do_install rpi-cmdline:do_deploy rpi-config:do_deploy",
@@ -297,6 +315,7 @@ components:
         # Initramfs configuration
         - [INITRAMFS_IMAGE, "aos-install-initramfs"]
         - [INITRAMFS_IMAGE_BUNDLE, "1"]
+        - [INITRAMFS_MAXSIZE, "524288"]
 
         # RPI specific
         - [ENABLE_UART, "1"]
@@ -334,9 +353,7 @@ components:
       work_dir: "workdir"
       script: "../yocto/meta-aos/scripts/layer_builder.py"
       target_images:
-        - "../output/layers/nodejs-layer.tar"
-        - "../output/layers/pylibs-layer.tar"
-        - "../output/layers/libvis-layer.tar"
+        - "../output/layers/aos-pylibs-layer-%{MACHINE}-1.0.0.tar.gz"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -347,15 +364,8 @@ components:
         output_dir: "../output/layers"
         base_image: "%{AOS_BASE_IMAGE}"
         items:
-          nodejs-layer:
-            enabled: false
-            target: "aos-nodejs-layer"
-
           pylibs-layer:
             target: "aos-pylibs-layer"
-
-          libvis-layer:
-            target: "aos-libvis-layer"
 
   fota-full:
     builder:
@@ -364,7 +374,7 @@ components:
       script: "../yocto/meta-aos/scripts/fota_builder.py"
       args: "-v"
       target_images:
-        - "../output/fota/%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-full-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        - "../output/fota/%{AOS_DOMD_NODE_TYPE}-fota-full-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -380,10 +390,9 @@ components:
           type: "full"
           description: "DomD rootfs image"
           version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
           exclude:
             - "var/*"
-
-          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
   fota-incremental:
     builder:
@@ -392,7 +401,7 @@ components:
       script: "../yocto/meta-aos/scripts/fota_builder.py"
       args: "-v"
       target_images:
-        - "../output/fota/%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        - "../output/fota/%{AOS_DOMD_NODE_TYPE}-fota-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -515,7 +524,7 @@ parameters:
       overrides:
         variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
-          AOS_DOMD_NODE_TYPE: "rpi-main-domd"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-domd"
 
         components:
           domd:
@@ -528,7 +537,7 @@ parameters:
       overrides:
         variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
-          AOS_DOMD_NODE_TYPE: "rpi-secondary-domd"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-domd"
 
         components:
           domd:

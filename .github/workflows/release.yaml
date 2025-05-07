@@ -1,4 +1,6 @@
 name: Aos RPI release
+permissions:
+  contents: write
 on:
   workflow_dispatch:
   push:
@@ -52,27 +54,48 @@ jobs:
       - name: Build artifacts
         id: build
         run: |
-          cd ./docker
+          echo "Build docker"
 
-          ./build.sh --DOMD_ROOT usb
+          docker/build_docker.sh -f docker/Dockerfile
 
-          echo "extract_size_usb=$(stat -c %s artifacts/install-usb.img)" >> $GITHUB_OUTPUT
-          echo "extract_sha256_usb=$(sha256sum artifacts/install-usb.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+          echo "Build images"
 
-          gzip artifacts/install-usb.img
+          mkdir build
+          cp aos-rpi.yaml build/
 
-          echo "image_download_size_usb=$(stat -c %s artifacts/install-usb.img.gz)" >> $GITHUB_OUTPUT
-          echo "image_download_sha256_usb=$(sha256sum artifacts/install-usb.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
+          docker/run_docker.sh -n -w build -- moulin aos-rpi.yaml --DOMD_ROOT=usb --CACHE_LOCATION=inside
+          docker/run_docker.sh -n -w build -- ninja install-usb.img
 
-          ./build.sh --DOMD_ROOT nvme
+          echo "extract_size_usb=$(stat -c %s build/install-usb.img)" >> $GITHUB_OUTPUT
+          echo "extract_sha256_usb=$(sha256sum build/install-usb.img | awk '{print $1}')" >> $GITHUB_OUTPUT
 
-          echo "extract_size_nvme=$(stat -c %s artifacts/install-nvme.img)" >> $GITHUB_OUTPUT
-          echo "extract_sha256_nvme=$(sha256sum artifacts/install-nvme.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+          gzip build/install-usb.img
 
-          gzip artifacts/install-nvme.img
+          echo "image_download_size_usb=$(stat -c %s build/install-usb.img.gz)" >> $GITHUB_OUTPUT
+          echo "image_download_sha256_usb=$(sha256sum build/install-usb.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
 
-          echo "image_download_size_nvme=$(stat -c %s artifacts/install-nvme.img.gz)" >> $GITHUB_OUTPUT
-          echo "image_download_sha256_nvme=$(sha256sum artifacts/install-nvme.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
+          docker/run_docker.sh -n -w build -- moulin aos-rpi.yaml --DOMD_ROOT=nvme --CACHE_LOCATION=inside
+          docker/run_docker.sh -n -w build -- ninja install-nvme.img
+
+          echo "extract_size_nvme=$(stat -c %s build/install-nvme.img)" >> $GITHUB_OUTPUT
+          echo "extract_sha256_nvme=$(sha256sum build/install-nvme.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+          gzip build/install-nvme.img
+
+          echo "image_download_size_nvme=$(stat -c %s build/install-nvme.img.gz)" >> $GITHUB_OUTPUT
+          echo "image_download_sha256_nvme=$(sha256sum build/install-nvme.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+          echo "Build layers"
+
+          docker/run_docker.sh -n -w build -- ninja layers
+
+          echo "Build FOTA"
+
+          docker/run_docker.sh -n -w build -- ninja fota-full
+
+          echo "Build SDK"
+
+          docker/run_docker.sh -n -w build -- ninja aos-sdk
 
       - name: Generate OS list
         id: render_template
@@ -93,7 +116,7 @@ jobs:
             image_download_size_nvme: ${{ steps.build.outputs.image_download_size_nvme }}
             image_download_sha256_nvme: ${{ steps.build.outputs.image_download_sha256_nvme }}
 
-          result_path: ./docker/artifacts/os_sublist.json
+          result_path: build/os_sublist.json
 
       - name: Publish Release
         env:
@@ -106,11 +129,26 @@ jobs:
 
           gh release create --draft "$tag" --title "Version $version"
 
-          gh release upload "$tag" ./docker/artifacts/install-usb.img.gz
-          gh release upload "$tag" ./docker/artifacts/install-nvme.img.gz
-          gh release upload "$tag" ./docker/artifacts/os_sublist.json
+          gh release upload "$tag" build/install-usb.img.gz
+          gh release upload "$tag" build/install-nvme.img.gz
+          gh release upload "$tag" build/os_sublist.json
 
-          if [ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]; then
+
+          for file in build/output/layers/*; do
+            gh release upload "$tag" "$file"
+          done
+
+          for file in build/output/fota/*; do
+            gh release upload "$tag" "$file"
+          done
+
+          for file in build/output/sdk/*.sh; do
+            gh release upload "$tag" "$file"
+          done
+
+          gh release upload "$tag" misc/unitconfig.json
+
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             gh release edit "$tag" --prerelease
           fi
 

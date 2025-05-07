@@ -1,33 +1,27 @@
 # Build with docker
 
-You can build install images inside a docker container by simply running the following command:
+You can build Aos RPI image inside a docker container with all required packages installed.
 
-```sh
-cd ./docker
-./build.sh
+First, the docker image should be build:
+
+```console
+docker/build_docker.sh -f docker/Dockerfile
 ```
 
-You can also pass the following arguments:
+Then use the same commands as for native build as position arguments for run cocker script. Docker build doesn't
+support outside cache location. Though, `CACHE_LOCATION` parameter should be set to `inside`. See
+[Manual build](build.md#build) for details.
 
-| Argument             | Description |Mandatory|
-|----------------------|-------------|---------|
-| `--ARTIFACTS_DIR`       | Path to the directory where the build results will be stored. |NO|
-| `--VIS_DATA_PROVIDER`   | Same value as described in the [Build](build.md#build) section. |NO|
-| `--DOMD_NODE_TYPE`      | Same value as described in the [Build](build.md#build) section. |NO|
-| `--MACHINE`             | Same value as described in the [Build](build.md#build) section. |NO|
-| `--DOMD_ROOT`           | Same value as described in the [Build](build.md#build) section. |NO|
-| `--SELINUX`             | Same value as described in the [Build](build.md#build) section. |NO|
+## Build install image for usb
 
-Example command:
-
-```sh
-cd ./docker
-./build.sh --DOMD_ROOT usb
+```console
+moulin aos-rpi.yaml --DOMD_ROOT=usb
+ninja install-usb.img
 ```
 
-or
+## Build install image for NVMe
 
-```sh
-cd ./docker
-./build.sh --DOMD_ROOT nvme
+```console
+moulin aos-rpi.yaml --DOMD_ROOT=nvme
+ninja install-nvme.img
 ```

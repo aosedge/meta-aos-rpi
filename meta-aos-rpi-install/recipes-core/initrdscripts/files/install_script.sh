@@ -22,6 +22,23 @@ mount -t devtmpfs dev /dev
 
 echo "Initializing the file system..."
 
+update_eeprom() {
+    mkdir -p /boot
+    mount -t auto /dev/mmcblk0p1 /boot
+    
+    output=$(rpi-eeprom-update -a)
+    if echo "$output" | grep -q "update available"; then
+        echo "EEPROM update was applied. Rebooting the system..."
+        
+        sleep 5
+        exec reboot -f
+    else 
+        echo "EEPROM is already up to date. No action required."
+    fi
+
+    umount /boot
+}
+
 read_args() {
     [ -z "$CMDLINE" ] && CMDLINE=$(cat /proc/cmdline)
     for arg in $CMDLINE; do
@@ -95,6 +112,8 @@ BLOCK_DEVICE_AOS_PARTITION="${BLOCK_DEVICE}3"
 BLOCK_DEVICE="${BLOCK_DEVICE%p}"
 
 wait_for_block_device "$BLOCK_DEVICE"
+
+update_eeprom
 
 echo "Preparing the SD card..."
 
