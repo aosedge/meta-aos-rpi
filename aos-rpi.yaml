@@ -29,7 +29,7 @@ variables:
   # Aos config
 
   # Aos unit configuration
-  AOS_UNIT_MODEL: "rpi-dynamic"
+  AOS_UNIT_MODEL: "aos-rpi"
   AOS_UNIT_VERSION: "1.0"
 
   # Version configuration
@@ -374,7 +374,7 @@ components:
       script: "../yocto/meta-aos/scripts/fota_builder.py"
       args: "-v"
       target_images:
-        - "../output/fota/fota-full-%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        - "../output/fota/%{AOS_DOMD_NODE_TYPE}-fota-full-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -401,7 +401,7 @@ components:
       script: "../yocto/meta-aos/scripts/fota_builder.py"
       args: "-v"
       target_images:
-        - "../output/fota/fota-incremental-%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        - "../output/fota/%{AOS_DOMD_NODE_TYPE}-fota-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -524,7 +524,7 @@ parameters:
       overrides:
         variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
-          AOS_DOMD_NODE_TYPE: "rpi-main-domd"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-domd"
 
         components:
           domd:
@@ -537,7 +537,7 @@ parameters:
       overrides:
         variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
-          AOS_DOMD_NODE_TYPE: "rpi-secondary-domd"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-domd"
 
         components:
           domd:
