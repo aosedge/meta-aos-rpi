@@ -34,8 +34,8 @@ variables:
 
   # Version configuration
 
-  AOS_BUNDLE_IMAGE_VERSION: "1.0.5"
-  AOS_ROOTFS_REF_VERSION: "1.0.4"
+  AOS_BUNDLE_IMAGE_VERSION: "1.0.6"
+  AOS_ROOTFS_REF_VERSION: "1.0.5"
 
   # Aos node configuration
 
@@ -77,7 +77,7 @@ common_data:
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "v1.0.5"
+      rev: "v1.0.6"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
