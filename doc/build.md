@@ -31,7 +31,8 @@ parameters. You can check them with`--help-config` command line option:
 ```console
 moulin aos-rpi.yaml --help-config
 
-usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
+usage: moulin aos-rpi.yaml [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}]
+                           [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
 
 Config file description: AosCore build for Raspberry Pi 5
@@ -51,10 +52,10 @@ options:
 ```
 
 * `VIS_DATA_PROVIDER` - specifies VIS data provider: `renesassimulator` - Renesas Car simulator, `telemetryemulator` -
-telemetry emulator that reads data from the local file. By default, Renesas Car simulator is used;
+   telemetry emulator that reads data from the local file. By default, Renesas Car simulator is used;
 
 * `DOMD_NODE_TYPE` - specifies the DomD node type to build: `main` - main node, `secondary` - secondary node. By default,
-main node is built;
+   main node is built;
 
 * `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
 
