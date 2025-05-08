@@ -1,7 +1,7 @@
 IMAGE_NAME = "initramfs-${XT_DOM_NAME}"
 IMAGE_NAME_SUFFIX = ""
 
-AOS_INITRAMFS_SCRIPTS += " \
+AOS_INITRAMFS_SCRIPTS += "\
     initramfs-module-lvm \
     initramfs-module-nfsrootfs \
     initramfs-module-opendisk \
