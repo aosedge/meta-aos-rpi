@@ -49,7 +49,7 @@ options:
 ```
 
 * `DOMD_NODE_TYPE` - specifies the DomD node type to build: `main` - main node, `secondary` - secondary node. By default,
-main node is built;
+   main node is built;
 
 * `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
 
