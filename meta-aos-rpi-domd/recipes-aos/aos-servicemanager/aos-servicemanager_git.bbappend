@@ -1,15 +1,11 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI += " \
+SRC_URI += "\
     file://optee-identity.conf \
 "
 
-FILES:${PN} += " \
-    ${sysconfdir} \
-"
-
 # Base layer for services
-RDEPENDS:${PN} += " \
+RDEPENDS:${PN} += "\
     python3 \
     python3-core \
 "

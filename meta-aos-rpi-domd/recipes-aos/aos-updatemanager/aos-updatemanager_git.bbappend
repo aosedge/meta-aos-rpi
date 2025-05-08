@@ -2,21 +2,17 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS:prepend:aos-main-node := "${THISDIR}/files/main-node:"
 FILESEXTRAPATHS:prepend:aos-secondary-node := "${THISDIR}/files/secondary-node:"
 
-
-SRC_URI += " \
+SRC_URI += "\
     file://optee-identity.conf \
     file://reboot-on-failure.conf \
     file://aos-reboot.service \
 "
 
-FILES:${PN} += " \
-    ${bindir} \
-    ${sysconfdir} \
+FILES:${PN} += "\
     ${systemd_system_unitdir} \
 "
 
-
-AOS_UM_UPDATE_MODULES = " \
+AOS_UM_UPDATE_MODULES = "\
     updatemodules/overlayxenstore \
     updatemodules/ubootdualpart \
 "
