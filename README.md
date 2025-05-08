@@ -216,7 +216,7 @@ If you do not have those please consider getting a [docking station](https://eu.
       By repeating the sequence above, you are switching between consoles in a loop: `DOM0`, `DOM1`, `Xen` etc.
 
    - Press `enter` to get a login prompt:
-  
+
       ```console
       (XEN) main login:
       ```
@@ -238,9 +238,9 @@ If you do not have those please consider getting a [docking station](https://eu.
       (XEN)           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
       (XEN)           RX packets:14 errors:0 dropped:0 overruns:0 frame:0
       (XEN)           TX packets:27 errors:0 dropped:0 overruns:0 carrier:0
-      (XEN)           collisions:0 txqueuelen:1000 
+      (XEN)           collisions:0 txqueuelen:1000
       (XEN)           RX bytes:1448 (1.4 KiB)  TX bytes:2640 (2.5 KiB)
-      (XEN)           Interrupt:86 
+      (XEN)           Interrupt:86
       ```
 
 4. Execute provisioning script on your host PC and pass obtained IP address as parameter:
@@ -258,9 +258,9 @@ If you do not have those please consider getting a [docking station](https://eu.
    ```
 
 6. AosEdge image requires internet connection with the cloud for normal operation. To ensure that internet connection
-available on the device, login into `DomD` using serial console as described in
-[previous chapter](#provision-device-with-aoscloud). Ping `google.com`:
+   available on the device, login into `DomD` using serial console as described in
+   [previous chapter](#provision-device-with-aoscloud). Ping `google.com`:
 
-```console
-ping google.com
-```
+   ```console
+   ping google.com
+   ```
