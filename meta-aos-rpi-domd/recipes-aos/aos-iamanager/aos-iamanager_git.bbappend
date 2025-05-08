@@ -9,22 +9,18 @@ SRC_URI:append:aos-main-node = " \
     file://remove-deprovision.conf \
 "
 
-AOS_IAM_IDENT_MODULES:aos-main-node = " \
+AOS_IAM_IDENT_MODULES:aos-main-node = "\
     identhandler/modules/visidentifier \
 "
 
-AOS_IAM_CERT_MODULES = " \
+AOS_IAM_CERT_MODULES = "\
     certhandler/modules/pkcs11module \
 "
 
-FILES:${PN} += " \
-    ${sysconfdir} \
-"
-
-RDEPENDS:${PN} += " \
-    optee-os-ta \
-    optee-client \
+RDEPENDS:${PN} += "\
     aos-setupdisk \
+    optee-client \
+    optee-os-ta \
 "
 
 do_install:append:aos-main-node() {
