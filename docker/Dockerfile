@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \ 
     unzip \
     wget \
+    xz-utils \
     zstd
 
 RUN locale-gen en_US.UTF-8 && \
