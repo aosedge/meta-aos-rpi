@@ -10,24 +10,42 @@ ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ar \
+    as \
+    bunzip2 \
+    bzip2 \
     chrpath \
     cmake \
     cpio \
+    cpp \
     curl \
     diffstat \
     dosfstools \
     file \
+    g++ \
     gawk \
+    gcc \
     git \
     git-lfs \
     gperf \
+    ld \
     liblz4-tool \
     locales \
     locales-all \
+    make \
     mtools \
     ninja-build \
+    nm \
+    objcopy \
+    objdump \
+    patch \
     python3 \
     python3-pip \ 
+    ranlib \
+    readelf \
+    rpcgen \
+    strings \
+    strip \
     unzip \
     wget \
     xz-utils \
