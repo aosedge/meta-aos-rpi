@@ -10,6 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     chrpath \
     cmake \
     cpio \
