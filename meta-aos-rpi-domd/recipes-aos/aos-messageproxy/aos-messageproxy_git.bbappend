@@ -1,11 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI += " \
+SRC_URI += "\
     file://optee-identity.conf \
-"
-
-FILES:${PN} += " \
-    ${sysconfdir} \
 "
 
 do_install:append() {
