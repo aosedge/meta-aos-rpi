@@ -1,7 +1,7 @@
 IMAGE_NAME = "initramfs-${XT_DOM_NAME}"
 IMAGE_NAME_SUFFIX = ""
 
-AOS_INITRAMFS_SCRIPTS += " \
+AOS_INITRAMFS_SCRIPTS += "\
     initramfs-module-lvm \
     initramfs-module-nfsrootfs \
     initramfs-module-opendisk \
@@ -11,7 +11,9 @@ AOS_INITRAMFS_SCRIPTS += " \
     lvm2 \
 "
 
-python () {
+python set_initramfs_size() {
     if 'selinux' in d.getVar('DISTRO_FEATURES').split():
         d.setVar('INITRAMFS_MAXSIZE', '262144')
 }
+
+addtask set_initramfs_size before configure
