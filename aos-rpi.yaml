@@ -72,12 +72,12 @@ common_data:
       rev: "master"
 
     - type: git
-      url: "https://github.com/aosedge/meta-aos"
-      rev: "develop"
+      url: "https://github.com/mlohvynenko/meta-aos"
+      rev: "feature_move_kuksa"
 
     - type: git
-      url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "develop"
+      url: "https://github.com/mlohvynenko/meta-aos-rpi.git"
+      rev: "feature_kuksa"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
