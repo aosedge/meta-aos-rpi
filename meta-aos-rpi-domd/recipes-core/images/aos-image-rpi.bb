@@ -10,6 +10,7 @@ inherit extrausers
 
 IMAGE_INSTALL:append = " \
     packagegroup-core-ssh-openssh \
+    netconfig \
     tzdata \
     sudo \
 "
