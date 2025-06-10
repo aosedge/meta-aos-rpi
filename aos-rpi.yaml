@@ -38,8 +38,12 @@ variables:
   AOS_ROOTFS_REF_VERSION: "0.0.0"
 
   # Aos node configuration
+  MAIN_NODE_HOSTNAME: "main"
 
-  AOS_MAIN_NODE_IP: "127.0.0.1"
+  # Network configuration
+  MAIN_NODE_IP: "10.0.0.100"
+
+  # Aos node configuration
   AOS_DOM0_NODE_TYPE: "rpi-dom0"
 
   AOS_BASE_IMAGE: "aos-image-rpi"
@@ -127,9 +131,6 @@ common_data:
     # Image versions
     - [AOS_ROOTFS_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
     - [AOS_BOOT_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
-
-    # Node configuration
-    - [AOS_HOSTS, "%{AOS_MAIN_NODE_IP}=wwwivi"]
 
     # Requires to properly generate Aos FOTA
     - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
@@ -518,6 +519,8 @@ parameters:
             builder:
               conf:
                 - [AOS_MAIN_NODE, "1"]
+                - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
+                - [AOS_NODE_GW_IP, "10.0.0.1"]
 
     "secondary":
       overrides:
@@ -530,10 +533,7 @@ parameters:
             builder:
               conf:
                 - [AOS_MAIN_NODE, "0"]
-                - [
-                    AOS_HOSTS:append,
-                    " %{AOS_MAIN_NODE_IP}=${AOS_MAIN_NODE_HOSTNAME}",
-                  ]
+                - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
 
   MACHINE:
     desc: "Raspberry Pi machine"
@@ -632,3 +632,24 @@ parameters:
 
     disabled:
       default: true
+
+  USE_DHCP:
+    desc: "Use DHCP for network configuration"
+    "yes":
+      default: true
+      overrides:
+        components:
+          domd:
+            builder:
+              conf:
+                - [AOS_USE_DHCP, "1"]
+                - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
+                - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
+
+    "no":
+      overrides:
+        components:
+          domd:
+            builder:
+              conf:
+                - [AOS_USE_DHCP, "0"]
