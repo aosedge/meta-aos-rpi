@@ -232,11 +232,11 @@ If you do not have those please consider getting a [docking station](https://eu.
 
       ```console
       (XEN) root@main:~# ip r
-      (XEN) default via 192.168.50.1 dev eth0  src 192.168.50.6  metric 1024 
-      (XEN) 10.0.0.0/24 dev eth0 scope link  src 10.0.0.100 
-      (XEN) 172.17.0.0/16 dev br-sp9a53b711 scope link  src 172.17.0.2 
-      (XEN) 192.168.50.0/24 dev eth0 scope link  src 192.168.50.6  metric 1024 
-      (XEN) 192.168.50.1 dev eth0 scope link  src 192.168.50.6  metric 1024 
+      (XEN) default via 192.168.50.1 dev eth0  src 192.168.50.6  metric 1024
+      (XEN) 10.0.0.0/24 dev eth0 scope link  src 10.0.0.100
+      (XEN) 172.17.0.0/16 dev br-sp9a53b711 scope link  src 172.17.0.2
+      (XEN) 192.168.50.0/24 dev eth0 scope link  src 192.168.50.6  metric 1024
+      (XEN) 192.168.50.1 dev eth0 scope link  src 192.168.50.6  metric 1024
       ```
 
 4. Execute provisioning script on your host PC and pass obtained IP address as parameter:
