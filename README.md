@@ -196,7 +196,7 @@ If you do not have those please consider getting a [docking station](https://eu.
 2. Install Aos provisioning script according to [Aos get started](https://docs.aosedge.tech/docs/quick-start/set-up)
    instruction;
 3. Obtain Raspberry Pi 5 IP address using your network DHCP server information or by checking the IP address by using
-   `ifconfig` command on AosCore `DomD`:
+   `ip r` command on AosCore `DomD`:
 
    - once booted, `DOM0` (`Zephyr OS`) console is available:
 
@@ -216,7 +216,7 @@ If you do not have those please consider getting a [docking station](https://eu.
       By repeating the sequence above, you are switching between consoles in a loop: `DOM0`, `DOM1`, `Xen` etc.
 
    - Press `enter` to get a login prompt:
-  
+
       ```console
       (XEN) main login:
       ```
@@ -228,25 +228,21 @@ If you do not have those please consider getting a [docking station](https://eu.
       (XEN) root@main:~#
       ```
 
-   - Input `ifconfig` command to get your device IP address (see `inet addr`):
+   - Input `ip r` command to get your device IP address (see `default`):
 
       ```console
-      (XEN) root@main:~# ifconfig
-      (XEN) eth0      Link encap:Ethernet  HWaddr 2C:CF:67:32:83:CD
-      (XEN)           inet addr:192.168.10.124  Bcast:192.168.10.255  Mask:255.255.255.0
-      (XEN)           inet6 addr: fe80::2ecf:67ff:fe32:83cd/64 Scope:Link
-      (XEN)           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      (XEN)           RX packets:14 errors:0 dropped:0 overruns:0 frame:0
-      (XEN)           TX packets:27 errors:0 dropped:0 overruns:0 carrier:0
-      (XEN)           collisions:0 txqueuelen:1000 
-      (XEN)           RX bytes:1448 (1.4 KiB)  TX bytes:2640 (2.5 KiB)
-      (XEN)           Interrupt:86 
+      (XEN) root@main:~# ip r
+      (XEN) default via 192.168.50.1 dev eth0  src 192.168.50.6  metric 1024
+      (XEN) 10.0.0.0/24 dev eth0 scope link  src 10.0.0.100
+      (XEN) 172.17.0.0/16 dev br-sp9a53b711 scope link  src 172.17.0.2
+      (XEN) 192.168.50.0/24 dev eth0 scope link  src 192.168.50.6  metric 1024
+      (XEN) 192.168.50.1 dev eth0 scope link  src 192.168.50.6  metric 1024
       ```
 
 4. Execute provisioning script on your host PC and pass obtained IP address as parameter:
 
    ```console
-   aos-prov provision -u 192.168.10.124
+   aos-prov provision -u 192.168.50.6
    ```
 
 5. Once provisioning is finished successfully, you should see your unit online on `AosCloud` following link provided by
@@ -258,9 +254,9 @@ If you do not have those please consider getting a [docking station](https://eu.
    ```
 
 6. AosEdge image requires internet connection with the cloud for normal operation. To ensure that internet connection
-available on the device, login into `DomD` using serial console as described in
-[previous chapter](#provision-device-with-aoscloud). Ping `google.com`:
+   available on the device, login into `DomD` using serial console as described in
+   [previous chapter](#provision-device-with-aoscloud). Ping `google.com`:
 
-```console
-ping google.com
-```
+   ```console
+   ping google.com
+   ```

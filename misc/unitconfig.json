@@ -1,4 +1,24 @@
 {
+    "nodes": [
+        {
+            "labels": [
+                "main"
+            ],
+            "nodeType": "aos-rpi-1.0-main-domd",
+            "priority": 100,
+            "resources": [
+                {
+                    "name": "kuksa",
+                    "hosts": [
+                        {
+                            "ip": "10.0.0.100",
+                            "hostname": "Server"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
     "components": [
         {
             "id": "aos-rpi-1.0-main-domd"

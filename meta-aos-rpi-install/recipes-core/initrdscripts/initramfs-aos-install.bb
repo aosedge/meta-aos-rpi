@@ -1,5 +1,6 @@
-SUMMARY = "Aos RPI install image script"
-
+SUMMARY = "Aos RPi install image script"
+DESCRIPTION = "Deployment script for initrd"
+HOMEPAGE = "https://aosedge.tech"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
@@ -21,4 +22,3 @@ inherit allarch
 FILES:${PN} += "/init /dev/console"
 
 RDEPENDS:${PN} += "busybox e2fsprogs"
-

@@ -1,6 +1,6 @@
 require optee.inc
 
-EXTRA_OEMAKE += " \
+EXTRA_OEMAKE += "\
     CFG_NS_VIRTUALIZATION=y \
     CFG_VIRT_GUEST_COUNT=3 \
     CFG_PKCS11_TA_HEAP_SIZE="(256 * 1024)" \

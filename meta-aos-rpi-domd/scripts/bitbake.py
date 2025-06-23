@@ -6,7 +6,7 @@ import os
 
 def call_bitbake(
     work_dir, yocto_dir, build_dir, target, bbake_conf=None, task=None, do_clean=False
-):
+): # pylint: disable=too-many-arguments
     """Calls bitbake."""
 
     if bbake_conf:
