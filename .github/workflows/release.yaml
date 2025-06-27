@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: aosedge/meta-aos-rpi
+          fetch-depth: 0
 
       - name: Set release version
         id: version
@@ -30,7 +31,7 @@ jobs:
           release_date="$(date -I)"
 
           echo "Release tag: $tag"
-          echo "Version: $version"
+          echo "Release version: $version"
           echo "Release date: $release_date"
 
           echo "tag=$tag" >> $GITHUB_OUTPUT
@@ -54,14 +55,27 @@ jobs:
       - name: Build artifacts
         id: build
         run: |
+          echo "Update yaml file image versions"
+
+          tag="${{ steps.version.outputs.tag }}"
+          version="${{ steps.version.outputs.version }}"
+          prev_tag=$(git describe --tags --abbrev=0 "${tag}"^ || true)
+          prev_version=${prev_tag#"v"}
+
+          echo "Current version:  $version"
+          echo "Previous version: $prev_version"
+
+          mkdir build
+          cp aos-rpi.yaml build/
+
+          sed -i "s/BUNDLE_IMAGE_VERSION: \"[^\"]*\"/BUNDLE_IMAGE_VERSION: \"$version\"/" build/aos-rpi.yaml
+          sed -i "s/ROOTFS_REF_VERSION: \"[^\"]*\"/ROOTFS_REF_VERSION: \"$prev_version\"/" build/aos-rpi.yaml
+
           echo "Build docker"
 
           docker/build_docker.sh -f docker/Dockerfile
 
           echo "Build images"
-
-          mkdir build
-          cp aos-rpi.yaml build/
 
           docker/run_docker.sh -n -w build -- moulin aos-rpi.yaml --DOMD_ROOT=usb --CACHE_LOCATION=inside
           docker/run_docker.sh -n -w build -- ninja install-usb.img
