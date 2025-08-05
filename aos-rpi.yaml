@@ -595,8 +595,11 @@ parameters:
           domd:
             builder:
               conf:
-                - [DOMD_OVERLAYS, "%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"]
-                - [MACHINE_FEATURES:append, " domd_nvme"]
+                - [
+                    DOMD_OVERLAYS,
+                    "%{SOC_FAMILY}-%{MACHINE}-usb.dtbo %{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo",
+                  ]
+                - [MACHINE_FEATURES:append, " domd_usb domd_nvme"]
 
   SELINUX:
     desc: "Enables SELinux"
