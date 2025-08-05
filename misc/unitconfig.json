@@ -1,11 +1,11 @@
 {
     "nodes": [
         {
+            "nodeType": "aos-rpi-1.0-main-domd",
+            "priority": 100,
             "labels": [
                 "main"
             ],
-            "nodeType": "aos-rpi-1.0-main-domd",
-            "priority": 100,
             "resources": [
                 {
                     "name": "kuksa",
@@ -15,6 +15,20 @@
                             "hostname": "Server"
                         }
                     ]
+                }
+            ],
+            "devices": [
+                {
+                    "name": "camera0",
+                    "groups": [
+                        "video"
+                    ],
+                    "hostDevices": [
+                        "/dev/video0",
+                        "/dev/video1",
+                        "/dev/media0"
+                    ],
+                    "sharedCount": 1
                 }
             ]
         }
