@@ -77,8 +77,8 @@ common_data:
       rev: "develop"
 
     - type: git
-      url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "develop"
+      url: "https://github.com/mlohvynenko/meta-aos-rpi.git"
+      rev: "feature_add_gpio"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
@@ -142,7 +142,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "develop"
+        rev: "main"
 
     builder:
       type: zephyr
