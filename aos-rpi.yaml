@@ -194,6 +194,8 @@ components:
         - [XEN_IMG_ADDR, "%{XEN_IMG_ADDR}"]
         - [XEN_DTBO_ADDR, "%{XEN_DTBO_ADDR}"]
         - [XENPOLICY_IMG_ADDR, "%{XENPOLICY_IMG_ADDR}"]
+        - [DOMD_OVERLAYS:append, " %{SOC_FAMILY}-%{MACHINE}-usb.dtbo"]
+        - [MACHINE_FEATURES:append, " domd_usb"]
 
         # RPI specific
         - [ENABLE_UART, "1"]
@@ -574,13 +576,6 @@ parameters:
         variables:
           DOMD_ROOT: usb
           DOMD_BLK_DEV: "sda"
-
-        components:
-          domd:
-            builder:
-              conf:
-                - [DOMD_OVERLAYS, "%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"]
-                - [MACHINE_FEATURES:append, " domd_usb"]
 
     nvme:
       overrides:
