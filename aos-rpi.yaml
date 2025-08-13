@@ -43,9 +43,6 @@ variables:
   # Network configuration
   MAIN_NODE_IP: "10.0.0.100"
 
-  # Aos node configuration
-  AOS_DOM0_NODE_TYPE: "rpi-dom0"
-
   AOS_BASE_IMAGE: "aos-image-rpi"
   AOS_INSTALL_IMAGE: "core-image-minimal"
 
@@ -153,7 +150,7 @@ components:
       target: "aos_core_zephyr"
       work_dir: build
       vars:
-        - 'CONFIG_AOS_NODE_TYPE="%{AOS_DOM0_NODE_TYPE}"'
+        - 'CONFIG_AOS_NODE_TYPE="%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-dom0"'
         - 'CONFIG_TA_DEPLOY_DIR="../../../%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/ta"'
         - 'CONFIG_AOS_ROOT_CA_PATH="../../../%{YOCTOS_WORK_DIR}/meta-aos/recipes-aos/aos-rootca/files/Aos_Root_CA.pem"'
 
