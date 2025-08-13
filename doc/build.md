@@ -41,9 +41,9 @@ options:
                          Domd node type to build (default: single)
   --MACHINE {rpi5}       Raspberry Pi machine (default: rpi5)
   --CACHE_LOCATION {outside,inside}
-                        Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
+                         Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
   --DOMD_ROOT {usb,nvme}
-                        Domd root device (default: usb)
+                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                         Enables SELinux (default: disabled)
 ```
