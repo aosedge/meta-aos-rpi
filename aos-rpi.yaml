@@ -260,6 +260,7 @@ components:
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
+        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-can.dtbo"
 
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}-var.ext4"
@@ -454,6 +455,7 @@ images:
           "%{SOC_FAMILY}-%{MACHINE}-usb.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
+          "%{SOC_FAMILY}-%{MACHINE}-can.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-can.dtbo"
 
           "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
 
@@ -645,3 +647,18 @@ parameters:
             builder:
               conf:
                 - [AOS_USE_DHCP, "0"]
+
+  ENABLE_CAN:
+    desc: "Enables CAN in domd"
+    yes:
+      default: true
+      overrides:
+        components:
+          domd:
+            builder:
+              conf:
+                - [MACHINE_FEATURES:append, " domd_can"]
+                - [DOMD_OVERLAYS:append, " %{SOC_FAMILY}-%{MACHINE}-can.dtbo"]
+
+    no:
+      default: false

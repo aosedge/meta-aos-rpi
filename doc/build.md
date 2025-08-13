@@ -33,21 +33,22 @@ moulin aos-rpi.yaml --help-config
 
 usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
-                           [--USE_DHCP {yes,no}]
+                           [--USE_DHCP {yes,no}] [--ENABLE_CAN {yes,no}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
 options:
   --DOMD_NODE_TYPE {main,secondary}
-                        Domd node type to build (default: main)
-  --MACHINE {rpi5}      Raspberry Pi machine (default: rpi5)
+                         Domd node type to build (default: main)
+  --MACHINE {rpi5}       Raspberry Pi machine (default: rpi5)
   --CACHE_LOCATION {outside,inside}
-                        Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
+                         Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
   --DOMD_ROOT {usb,nvme}
-                        Domd root device (default: usb)
+                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
-                        Enables SELinux (default: disabled)
-  --USE_DHCP {yes,no}   Use DHCP for network configuration
+                         Enables SELinux (default: disabled)
+  --USE_DHCP {yes,no}    Use DHCP for network configuration
+  --ENABLE_CAN {yes,no}  Enables CAN in domd (default: yes)
 ```
 
 * `DOMD_NODE_TYPE` - specifies the DomD node type to build: `main` - main node, `secondary` - secondary node. By default,
@@ -60,6 +61,8 @@ options:
 * `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
 
 * `USE_DHCP` - determines whether the system should use DHCP to automatically obtain network settings.
+
+* `ENABLE_CAN` - enables CAN bus support in DomD. By default, it is enabled.
 
 After performing moulin command with desired configuration, it will generate `build.ninja` with all necessary build
 targets.
