@@ -54,7 +54,7 @@ common_data:
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "scarthgap"
+      rev: "ec1f3712f2e8b725df52a90a65567d57bda7ba9d"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
@@ -142,7 +142,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "develop"
+        rev: "main"
 
     builder:
       type: zephyr
