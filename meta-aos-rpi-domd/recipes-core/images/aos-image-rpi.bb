@@ -8,11 +8,17 @@ require recipes-core/images/aos-image.inc
 
 inherit extrausers
 
+CAN_PACKAGES = " \
+    iproute2 \
+    can-utils \
+"
+
 IMAGE_INSTALL:append = " \
     packagegroup-core-ssh-openssh \
     netconfig \
     tzdata \
     sudo \
+    ${@bb.utils.contains("MACHINE_FEATURES", "domd_can", "${CAN_PACKAGES}", "" ,d)}   \
 "
 
 IMAGE_INSTALL:append = " \
