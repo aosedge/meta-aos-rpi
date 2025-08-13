@@ -77,8 +77,8 @@ common_data:
       rev: "develop"
 
     - type: git
-      url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "develop"
+      url: "https://github.com/mlohvynenko/meta-aos-rpi.git"
+      rev: "feature_enable_multinode"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
