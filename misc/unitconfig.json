@@ -17,11 +17,39 @@
                     ]
                 }
             ]
+        },
+        {
+            "labels": [
+                "secondary"
+            ],
+            "nodeType": "aos-rpi-1.0-secondary-domd",
+            "priority": 100,
+            "resources": [
+                {
+                    "name": "kuksa",
+                    "hosts": [
+                        {
+                            "ip": "10.0.0.100",
+                            "hostname": "Server"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "labels": [
+                "secondary"
+            ],
+            "nodeType": "aos-rpi-1.0-dom0",
+            "priority": 50
         }
     ],
     "components": [
         {
             "id": "aos-rpi-1.0-main-domd"
+        },
+        {
+            "id": "aos-rpi-1.0-secondary-domd"
         }
     ]
 }
