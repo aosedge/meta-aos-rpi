@@ -145,7 +145,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "develop"
+        rev: "main"
 
     builder:
       type: zephyr
