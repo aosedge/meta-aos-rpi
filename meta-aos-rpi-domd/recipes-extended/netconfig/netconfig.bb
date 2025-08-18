@@ -23,4 +23,8 @@ do_install:append() {
         echo "Gateway=${AOS_NODE_GW_IP}" >> ${D}${sysconfdir}/systemd/network/20-wired.network
         echo "DNS=${AOS_NODE_GW_IP}" >> ${D}${sysconfdir}/systemd/network/20-wired.network
     fi
+
+    if [ -n "${AOS_DNS_IP}" ]; then
+        echo "DNS=${AOS_DNS_IP}" >> ${D}${sysconfdir}/systemd/network/20-wired.network
+    fi
 }
