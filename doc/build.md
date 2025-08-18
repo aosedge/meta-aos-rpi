@@ -31,15 +31,15 @@ parameters. You can check them with`--help-config` command line option:
 ```console
 moulin aos-rpi.yaml --help-config
 
-usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
+usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {single,main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
                            [--USE_DHCP {yes,no}] [--ENABLE_CAN {yes,no}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
 options:
-  --DOMD_NODE_TYPE {main,secondary}
-                         Domd node type to build (default: main)
+  --DOMD_NODE_TYPE {single,main,secondary}
+                         Domd node type to build (default: single)
   --MACHINE {rpi5}       Raspberry Pi machine (default: rpi5)
   --CACHE_LOCATION {outside,inside}
                          Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
@@ -51,8 +51,8 @@ options:
   --ENABLE_CAN {yes,no}  Enables CAN in domd (default: yes)
 ```
 
-* `DOMD_NODE_TYPE` - specifies the DomD node type to build: `main` - main node, `secondary` - secondary node. By default,
-   main node is built;
+* `DOMD_NODE_TYPE` - specifies the DomD node type to build: `single` - single node,
+   `main` - main node, `secondary` - secondary node. By default, single node is built;
 
 * `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
 

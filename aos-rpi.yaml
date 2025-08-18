@@ -44,7 +44,7 @@ variables:
   MAIN_NODE_IP: "10.0.0.100"
 
   # Aos node configuration
-  AOS_DOM0_NODE_TYPE: "rpi-dom0"
+  AOS_DOM0_NODE_TYPE: "aos-rpi-dom0"
 
   AOS_BASE_IMAGE: "aos-image-rpi"
   AOS_INSTALL_IMAGE: "core-image-minimal"
@@ -344,12 +344,12 @@ components:
       script: "../scripts/image_archive.sh"
 
       additional_deps:
-        - "boot-%{DOMD_ROOT}.img"
-        - "rootfs-%{DOMD_ROOT}.img"
+        - "boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img"
+        - "rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img"
 
       target_images:
-        - "../boot-%{DOMD_ROOT}.img.gz"
-        - "../rootfs-%{DOMD_ROOT}.img.gz"
+        - "../boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
+        - "../rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
 
   layers:
     builder:
@@ -427,7 +427,7 @@ components:
           fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
 images:
-  boot-%{DOMD_ROOT}:
+  boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -469,7 +469,7 @@ images:
         type: vfat
         size: 512 MiB
 
-  rootfs-%{DOMD_ROOT}:
+  rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -489,7 +489,7 @@ images:
         type: empty
         size: 4096 MiB
 
-  install-%{DOMD_ROOT}:
+  install-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -505,18 +505,36 @@ images:
         type: ext4
         size: 300 MiB
         items:
-          "boot.img.gz": "boot-%{DOMD_ROOT}.img.gz"
-          "rootfs.img.gz": "rootfs-%{DOMD_ROOT}.img.gz"
+          "boot.img.gz": "boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
+          "rootfs.img.gz": "rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
 
 parameters:
   DOMD_NODE_TYPE:
     desc: "Domd node type to build"
-    "main":
+    "single":
       default: true
       overrides:
         variables:
+          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-dom0"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-domd"
+          DOMD_NODE_TYPE: "single"
+
+        components:
+          domd:
+            builder:
+              conf:
+                - [AOS_MAIN_NODE, "1"]
+                - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
+                - [AOS_USE_DHCP, "1"]
+
+    "main":
+      overrides:
+        variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-dom0"
           AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-domd"
+          DOMD_NODE_TYPE: "main"
 
         components:
           domd:
@@ -530,7 +548,9 @@ parameters:
       overrides:
         variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-dom0"
           AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-domd"
+          DOMD_NODE_TYPE: "secondary"
 
         components:
           domd:
