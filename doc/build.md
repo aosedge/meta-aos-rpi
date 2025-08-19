@@ -33,7 +33,6 @@ moulin aos-rpi.yaml --help-config
 
 usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {single,main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
-                           [--USE_DHCP {yes,no}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
@@ -47,7 +46,6 @@ options:
                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                         Enables SELinux (default: disabled)
-  --USE_DHCP {yes,no}   Use DHCP for network configuration
 ```
 
 * `DOMD_NODE_TYPE` - specifies the DomD node type to build: `single` - single node,
@@ -59,8 +57,6 @@ options:
 * `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
 
 * `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
-
-* `USE_DHCP` - determines whether the system should use DHCP to automatically obtain network settings.
 
 After performing moulin command with desired configuration, it will generate `build.ninja` with all necessary build
 targets.
