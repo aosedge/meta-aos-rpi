@@ -222,6 +222,7 @@ components:
           ]
         - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_DOMD_COMPONENT_PREFIX}"]
         - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
+        - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
 
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
@@ -543,6 +544,7 @@ parameters:
                 - [AOS_MAIN_NODE, "1"]
                 - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
                 - [AOS_NODE_GW_IP, "10.0.0.1"]
+                - [AOS_USE_DHCP, "0"]
 
     "secondary":
       overrides:
@@ -558,6 +560,7 @@ parameters:
               conf:
                 - [AOS_MAIN_NODE, "0"]
                 - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
+                - [AOS_USE_DHCP, "1"]
 
   MACHINE:
     desc: "Raspberry Pi machine"
@@ -649,27 +652,6 @@ parameters:
 
     disabled:
       default: true
-
-  USE_DHCP:
-    desc: "Use DHCP for network configuration"
-    "yes":
-      default: true
-      overrides:
-        components:
-          domd:
-            builder:
-              conf:
-                - [AOS_USE_DHCP, "1"]
-                - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
-                - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
-
-    "no":
-      overrides:
-        components:
-          domd:
-            builder:
-              conf:
-                - [AOS_USE_DHCP, "0"]
 
   ENABLE_CAN:
     desc: "Enables CAN in domd"

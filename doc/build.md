@@ -32,8 +32,7 @@ parameters. You can check them with`--help-config` command line option:
 moulin aos-rpi.yaml --help-config
 
 usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {single,main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
-                           [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
-                           [--USE_DHCP {yes,no}] [--ENABLE_CAN {yes,no}]
+                           [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}] [--ENABLE_CAN {yes,no}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
@@ -47,7 +46,6 @@ options:
                          Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                          Enables SELinux (default: disabled)
-  --USE_DHCP {yes,no}    Use DHCP for network configuration
   --ENABLE_CAN {yes,no}  Enables CAN in domd (default: yes)
 ```
 
@@ -59,8 +57,6 @@ options:
 * `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
 
 * `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
-
-* `USE_DHCP` - determines whether the system should use DHCP to automatically obtain network settings.
 
 * `ENABLE_CAN` - enables CAN bus support in DomD. By default, it is enabled.
 
