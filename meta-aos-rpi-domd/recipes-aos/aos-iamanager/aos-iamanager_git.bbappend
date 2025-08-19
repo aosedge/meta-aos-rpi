@@ -2,8 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS:prepend:aos-main-node := "${THISDIR}/files/main-node:"
 FILESEXTRAPATHS:prepend:aos-secondary-node := "${THISDIR}/files/secondary-node:"
 
-SRC_URI:append:aos-main-node = " \
-    file://aos-vis-service.conf \
+SRC_URI:append = " \
     file://optee-identity.conf \
     file://grpc-dns-resolver.conf \
     file://remove-deprovision.conf \
