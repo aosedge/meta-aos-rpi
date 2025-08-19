@@ -1,32 +1,96 @@
 {
     "os_list": [
         {
-            "name": "AosCore for USB drive v{{ .version }} - 64bit",
-            "description": "Pre-configured AosCore image with rootfs on USB drive",
-            "url": "{{ .url_usb }}",
+            "name": "AosCore for USB drive single node v{{ .version }} - 64bit",
+            "description": "Pre-configured AosCore single node image with rootfs on USB drive",
+            "url": "{{ .url_single_usb }}",
             "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
             "website": "aosedge.tech",
             "release_date": "{{ .release_date }}",
-            "extract_size": {{ .extract_size_usb }},
-            "extract_sha256": "{{ .extract_sha256_usb }}",
-            "image_download_size": {{ .image_download_size_usb }},
-            "image_download_sha256": "{{ .image_download_sha256_usb }}",
+            "extract_size": {{ .extract_size_single_usb }},
+            "extract_sha256": "{{ .extract_sha256_single_usb }}",
+            "image_download_size": {{ .image_download_size_single_usb }},
+            "image_download_sha256": "{{ .image_download_sha256_single_usb }}",
             "devices": [
                 "pi5-64bit"
             ],
             "init_format": "systemd"
         },
         {
-            "name": "AosCore for NVMe drive v{{ .version }} - 64bit",
-            "description": "Pre-configured AosCore image with rootfs on NVMe drive",
-            "url": "{{ .url_nvme }}",
+            "name": "AosCore for USB drive main node v{{ .version }} - 64bit",
+            "description": "Pre-configured AosCore main node image with rootfs on USB drive",
+            "url": "{{ .url_main_usb }}",
             "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
             "website": "aosedge.tech",
             "release_date": "{{ .release_date }}",
-            "extract_size": {{ .extract_size_nvme }},
-            "extract_sha256": "{{ .extract_sha256_nvme }}",
-            "image_download_size": {{ .image_download_size_nvme }},
-            "image_download_sha256": "{{ .image_download_sha256_nvme }}",
+            "extract_size": {{ .extract_size_main_usb }},
+            "extract_sha256": "{{ .extract_sha256_main_usb }}",
+            "image_download_size": {{ .image_download_size_main_usb }},
+            "image_download_sha256": "{{ .image_download_sha256_main_usb }}",
+            "devices": [
+                "pi5-64bit"
+            ],
+            "init_format": "systemd"
+        },
+        {
+            "name": "AosCore for USB drive secondary node v{{ .version }} - 64bit",
+            "description": "Pre-configured AosCore secondary node image with rootfs on USB drive",
+            "url": "{{ .url_secondary_usb }}",
+            "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+            "website": "aosedge.tech",
+            "release_date": "{{ .release_date }}",
+            "extract_size": {{ .extract_size_secondary_usb }},
+            "extract_sha256": "{{ .extract_sha256_secondary_usb }}",
+            "image_download_size": {{ .image_download_size_secondary_usb }},
+            "image_download_sha256": "{{ .image_download_sha256_secondary_usb }}",
+            "devices": [
+                "pi5-64bit"
+            ],
+            "init_format": "systemd"
+        },
+        {
+            "name": "AosCore for NVMe drive single node v{{ .version }} - 64bit",
+            "description": "Pre-configured AosCore single node image with rootfs on NVMe drive",
+            "url": "{{ .url_single_nvme }}",
+            "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+            "website": "aosedge.tech",
+            "release_date": "{{ .release_date }}",
+            "extract_size": {{ .extract_size_single_nvme }},
+            "extract_sha256": "{{ .extract_sha256_single_nvme }}",
+            "image_download_size": {{ .image_download_size_single_nvme }},
+            "image_download_sha256": "{{ .image_download_sha256_single_nvme }}",
+            "devices": [
+                "pi5-64bit"
+            ],
+            "init_format": "systemd"
+        },
+        {
+            "name": "AosCore for NVMe drive main node v{{ .version }} - 64bit",
+            "description": "Pre-configured AosCore main node image with rootfs on NVMe drive",
+            "url": "{{ .url_main_nvme }}",
+            "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+            "website": "aosedge.tech",
+            "release_date": "{{ .release_date }}",
+            "extract_size": {{ .extract_size_main_nvme }},
+            "extract_sha256": "{{ .extract_sha256_main_nvme }}",
+            "image_download_size": {{ .image_download_size_main_nvme }},
+            "image_download_sha256": "{{ .image_download_sha256_main_nvme }}",
+            "devices": [
+                "pi5-64bit"
+            ],
+            "init_format": "systemd"
+        },
+        {
+            "name": "AosCore for NVMe drive secondary node v{{ .version }} - 64bit",
+            "description": "Pre-configured AosCore secondary node image with rootfs on NVMe drive",
+            "url": "{{ .url_secondary_nvme }}",
+            "icon": "https://avatars.githubusercontent.com/u/96244376?s=200&v=4",
+            "website": "aosedge.tech",
+            "release_date": "{{ .release_date }}",
+            "extract_size": {{ .extract_size_secondary_nvme }},
+            "extract_sha256": "{{ .extract_sha256_secondary_nvme }}",
+            "image_download_size": {{ .image_download_size_secondary_nvme }},
+            "image_download_sha256": "{{ .image_download_sha256_secondary_nvme }}",
             "devices": [
                 "pi5-64bit"
             ],
