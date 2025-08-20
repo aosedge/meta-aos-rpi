@@ -17,6 +17,18 @@ document.
 The image contains a reference system that allows implementation of services orchestration on mixed-safety designs.
 To learn more about the approach, please check out [AosEdge documentation](https://docs.aosedge.tech).
 
+## Differences between images
+
+Currently, single and dynamic nodes unit setups are supported:
+
+* `single` unit consists of one Raspberry Pi 5 that obtains IP address by DHCP.
+  Use `AosCore single node for USB drive` or `AosCore single node for NVMe drive` image for this configuration,
+* `dynamic node` unit consists of one or several Raspberry Pi 5 devices that require
+  static network configuration. One Raspberry Pi 5 acts as the main node, whereas others act as secondary nodes.
+  Use `AosCore main node for USB drive` or `AosCore main node for NVMe drive` for main node and
+  `AosCore secondary node for USB drive` or `AosCore secondary node for NVMe drive` image for secondary nodes.
+  Please refer to the [dynamic nodes](doc/dynamicnodes.md) document for details.
+
 ### System configuration
 
 The system runs our [Yocto](https://www.yoctoproject.org) based Linux distro and [Zephyr RTOS](https://www.zephyrproject.org)
