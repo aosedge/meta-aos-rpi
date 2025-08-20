@@ -111,7 +111,7 @@ If you do not have those please consider getting a [docking station](https://eu.
 
 ### Flash AosCore install image to SD card using Raspberry Pi Imager
 
-1. Download and install [Raspberry Pi Imager](https://www.raspberrypi.com/software);
+1. Download and install [Raspberry Pi Imager](https://www.raspberrypi.com/software) version 1.9.6 or newer;
 2. Insert the SD card into a card reader on your host PC;
 3. Run Raspberry Pi Imager with `repo` parameter to retrieve the latest AosCore image:
 
