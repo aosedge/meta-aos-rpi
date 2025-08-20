@@ -25,6 +25,10 @@ IMAGE_INSTALL:append = " \
     aos-messageproxy \
 "
 
+PACKAGE_INSTALL:append = " \
+    kernel-modules \
+"
+
 EXTRA_USERS_PARAMS = " \
     useradd aos; \
     usermod -a -G sudo aos; \
