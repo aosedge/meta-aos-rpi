@@ -17,6 +17,18 @@ document.
 The image contains a reference system that allows implementation of services orchestration on mixed-safety designs.
 To learn more about the approach, please check out [AosEdge documentation](https://docs.aosedge.tech).
 
+## Differences between images
+
+Currently, single and dynamic node unit set ups are supported:
+
+* `single` configuration consist of an exactly one RPI5 board that is flashed with the AosCore image.
+* `dynamic node` configuration consists of at least one RPI5 flashed with the next images:
+  * AosCore `main` image. Exactly 1 RPI5 board is required.
+  * AosCore `secondary` image. It's possible to have 0+ RPI5 boards flashed with this image.
+
+The steps below covers steps to deploy the `single` unit configuration.
+To deploy `dynamic node` unit configuration, please refer to [dynamic nodes](doc/troubleshooting.md) document.
+
 ### System configuration
 
 The system runs our [Yocto](https://www.yoctoproject.org) based Linux distro and [Zephyr RTOS](https://www.zephyrproject.org)
