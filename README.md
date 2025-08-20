@@ -125,7 +125,8 @@ If you do not have those please consider getting a [docking station](https://eu.
       ![Step 1](doc/pictures/install_step_1.png)
    - select **AosCore image**:  
       ![Step 2](doc/pictures/install_step_2.png)
-   - depend on your setup, select image either for NVMe drive **AosCore for NVMe drive** or **AosCore for USB drive**:  
+   - depend on your setup, select single node image either for NVMe drive **AosCore single node for NVMe drive**
+    or **AosCore single node for USB drive**:  
       ![Step 3](doc/pictures/install_step_3.png)
 
 5. Select storage:
@@ -225,13 +226,16 @@ If you do not have those please consider getting a [docking station](https://eu.
      be logged in `DomD`:
 
       ```console
-      (XEN) root@main:~#
+      (XEN) main login: pi
+      (XEN) Password:
+
+      (XEN) main:~$
       ```
 
    - Input `ip r` command to get your device IP address (see `default`):
 
       ```console
-      (XEN) root@main:~# ip r
+      (XEN) main:~# ip r
       (XEN) default via 192.168.50.1 dev eth0  src 192.168.50.6  metric 1024
       (XEN) 10.0.0.0/24 dev eth0 scope link  src 10.0.0.100
       (XEN) 172.17.0.0/16 dev br-sp9a53b711 scope link  src 172.17.0.2
