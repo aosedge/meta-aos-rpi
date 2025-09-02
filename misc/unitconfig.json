@@ -26,6 +26,15 @@
                         "/dev/media0"
                     ],
                     "sharedCount": 1
+                },
+                {
+                    "name": "gpio",
+                    "groups": [
+                        "gpio"
+                    ],
+                    "hostDevices": [
+                        "/dev/gpiochip0"
+                    ]
                 }
             ]
         },
