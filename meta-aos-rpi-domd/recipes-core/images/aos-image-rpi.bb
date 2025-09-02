@@ -18,7 +18,8 @@ IMAGE_INSTALL:append = " \
     netconfig \
     tzdata \
     sudo \
-    ${@bb.utils.contains("MACHINE_FEATURES", "domd_can", "${CAN_PACKAGES}", "" ,d)}   \
+    ${@bb.utils.contains("MACHINE_FEATURES", "domd_can", "${CAN_PACKAGES}", "" ,d)} \
+    udev-rules-rpi \
 "
 
 IMAGE_INSTALL:append = " \
