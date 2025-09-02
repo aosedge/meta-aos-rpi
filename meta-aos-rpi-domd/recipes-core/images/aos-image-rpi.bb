@@ -23,6 +23,7 @@ IMAGE_INSTALL:append = " \
 
 IMAGE_INSTALL:append = " \
     aos-messageproxy \
+    udev-rules \
 "
 
 PACKAGE_INSTALL:append = " \
@@ -30,6 +31,7 @@ PACKAGE_INSTALL:append = " \
 "
 
 EXTRA_USERS_PARAMS = " \
+    groupadd --system gpio; \
     useradd aos; \
     usermod -a -G sudo aos; \
 "
