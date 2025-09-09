@@ -19,11 +19,11 @@
 		compatible = "xen,domain";
 		#address-cells = <0x2>;
 		#size-cells = <0x2>;
-		memory = <0x0 0x80000>;
+		memory = <0x0 0x200000>; /* 2GB */
 		vpl011 = <0x1>;
 		direct-map;
 		cpus = <0x1>;
-		xen,static-mem = <0x0 0x50000000 0x0 0x20000000>;
+		xen,static-mem = <0x0 0x50000000 0x0 0x80000000>;
 		xen,enhanced = "enabled";
 		xen,tee = "optee";
 	};
