@@ -171,7 +171,7 @@ components:
 
       - type: git
         url: "https://github.com/xen-troops/meta-xt-rpi5.git"
-        rev: "main"
+        rev: "2275c8e166177e606e0e62961d02317a692d42c3"
 
     builder:
       type: yocto
