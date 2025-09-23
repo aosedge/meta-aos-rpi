@@ -73,8 +73,8 @@ common_data:
       rev: "master"
 
     - type: git
-      url: "https://github.com/aosedge/meta-aos"
-      rev: "develop"
+      url: "https://github.com/mlohvynenko/meta-aos"
+      rev: "feature_move_kuksa_client"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
