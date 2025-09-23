@@ -358,6 +358,7 @@ components:
       work_dir: "workdir"
       script: "../yocto/meta-aos/scripts/layer_builder.py"
       target_images:
+        - "../output/layers/aos-kuksa-client-layer-%{MACHINE}-1.0.0.tar.gz"
         - "../output/layers/aos-pylibs-layer-%{MACHINE}-1.0.0.tar.gz"
         - "../output/layers/aos-rpilibs-layer-%{MACHINE}-1.0.0.tar.gz"
 
@@ -370,6 +371,9 @@ components:
         output_dir: "../output/layers"
         base_image: "%{AOS_BASE_IMAGE}"
         items:
+          kuksa-client-layer:
+            target: "aos-kuksa-client-layer"
+
           pylibs-layer:
             target: "aos-pylibs-layer"
 
