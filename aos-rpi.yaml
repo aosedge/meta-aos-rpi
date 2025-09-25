@@ -184,6 +184,7 @@ components:
         - [RPI_SOC_FAMILY, "%{SOC_FAMILY}"]
         - [XT_DOM_NAME, "domd"]
         - [XT_DEVICE_TREES, "%{XT_XEN_DTBO_NAME}"]
+        - [DOMD_CAN_TYPE, "%{DOMD_CAN_TYPE}"]
         - [PREFERRED_VERSION_xen, "4.19.0+git"]
         - [PREFERRED_VERSION_xen-tools, "4.19.0+git"]
         - [PREFERRED_VERSION_u-boot, "2024.04"]
@@ -196,7 +197,7 @@ components:
         - [XENPOLICY_IMG_ADDR, "%{XENPOLICY_IMG_ADDR}"]
         - [
             DOMD_OVERLAYS:append,
-            " %{SOC_FAMILY}-%{MACHINE}-usb.dtbo %{SOC_FAMILY}-%{MACHINE}-can.dtbo",
+            " %{SOC_FAMILY}-%{MACHINE}-usb.dtbo %{SOC_FAMILY}-%{MACHINE}-can-%{DOMD_CAN_TYPE}.dtbo",
           ]
         - [MACHINE_FEATURES:append, " domd_usb domd_can"]
 
@@ -264,7 +265,7 @@ components:
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
-        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-can.dtbo"
+        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-can-%{DOMD_CAN_TYPE}.dtbo"
 
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}-var.ext4"
@@ -463,7 +464,7 @@ images:
           "%{SOC_FAMILY}-%{MACHINE}-usb.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
-          "%{SOC_FAMILY}-%{MACHINE}-can.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-can.dtbo"
+          "%{SOC_FAMILY}-%{MACHINE}-can-%{DOMD_CAN_TYPE}.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-can-%{DOMD_CAN_TYPE}.dtbo"
 
           "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
 
@@ -565,6 +566,19 @@ parameters:
                 - [AOS_MAIN_NODE, "0"]
                 - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
                 - [AOS_USE_DHCP, "1"]
+
+  DOMD_CAN_TYPE:
+    desc: "Domd CAN chip type"
+    "SEEED-FD":
+      default: true
+      overrides:
+        variables:
+          DOMD_CAN_TYPE: "seeed-fd"
+
+    "MCP2515":
+      overrides:
+        variables:
+          DOMD_CAN_TYPE: "mcp2515"
 
   MACHINE:
     desc: "Raspberry Pi machine"

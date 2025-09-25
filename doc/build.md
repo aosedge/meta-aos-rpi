@@ -31,7 +31,8 @@ parameters. You can check them with`--help-config` command line option:
 ```console
 moulin aos-rpi.yaml --help-config
 
-usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {single,main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
+usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {single,main,secondary}] [--DOMD_CAN_TYPE {SEEED-FD,MCP2515}]
+                           [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
 
 Config file description: AosCore build for Raspberry Pi 5
@@ -39,6 +40,8 @@ Config file description: AosCore build for Raspberry Pi 5
 options:
   --DOMD_NODE_TYPE {single,main,secondary}
                         Domd node type to build (default: single)
+  --DOMD_CAN_TYPE {SEEED-FD,MCP2515}
+                        Domd CAN device type (default: SEEED-FD)
   --MACHINE {rpi5}      Raspberry Pi machine (default: rpi5)
   --CACHE_LOCATION {outside,inside}
                         Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
@@ -51,6 +54,8 @@ options:
 * `DOMD_NODE_TYPE` - specifies the DomD node type to build: `single` - single node,
    `main` - main node, `secondary` - secondary node (`main` and `secondary` node types are used for multinode setup).
    By default, `single` node is built;
+
+* `DOMD_CAN_TYPE` - specifies the DomD CAN device type. Currently supported `SEEED-FD` and `MCP2515`. By default, `SEEED-FD` is used;
 
 * `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
 
