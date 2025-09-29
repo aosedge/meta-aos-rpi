@@ -8,10 +8,6 @@ SRC_URI:append = " \
     file://remove-deprovision.conf \
 "
 
-AOS_IAM_IDENT_MODULES:aos-main-node = "\
-    identhandler/modules/visidentifier \
-"
-
 AOS_IAM_CERT_MODULES = "\
     certhandler/modules/pkcs11module \
 "
