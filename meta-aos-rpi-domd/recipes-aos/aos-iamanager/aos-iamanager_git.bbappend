@@ -8,10 +8,6 @@ SRC_URI:append = " \
     file://remove-deprovision.conf \
 "
 
-AOS_IAM_CERT_MODULES = "\
-    certhandler/modules/pkcs11module \
-"
-
 RDEPENDS:${PN} += "\
     aos-setupdisk \
     optee-client \
