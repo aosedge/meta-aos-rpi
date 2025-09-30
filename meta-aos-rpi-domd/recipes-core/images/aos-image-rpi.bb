@@ -20,6 +20,7 @@ IMAGE_INSTALL:append = " \
     sudo \
     ${@bb.utils.contains("MACHINE_FEATURES", "domd_can", "${CAN_PACKAGES}", "" ,d)} \
     udev-rules-rpi \
+    v4l-utils \
 "
 
 IMAGE_INSTALL:append = " \
