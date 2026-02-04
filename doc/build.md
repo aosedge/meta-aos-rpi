@@ -31,15 +31,17 @@ parameters. You can check them with`--help-config` command line option:
 ```console
 moulin aos-rpi.yaml --help-config
 
-usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {main,secondary}] [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
+usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {single,main,secondary}] [--DOMD_CAN_TYPE {SEEED-FD,MCP2515}]
+                           [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
-                           [--USE_DHCP {yes,no}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
 options:
-  --DOMD_NODE_TYPE {main,secondary}
-                        Domd node type to build (default: main)
+  --DOMD_NODE_TYPE {single,main,secondary}
+                        Domd node type to build (default: single)
+  --DOMD_CAN_TYPE {SEEED-FD,MCP2515}
+                        Domd CAN device type (default: SEEED-FD)
   --MACHINE {rpi5}      Raspberry Pi machine (default: rpi5)
   --CACHE_LOCATION {outside,inside}
                         Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
@@ -47,11 +49,13 @@ options:
                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                         Enables SELinux (default: disabled)
-  --USE_DHCP {yes,no}   Use DHCP for network configuration
 ```
 
-* `DOMD_NODE_TYPE` - specifies the DomD node type to build: `main` - main node, `secondary` - secondary node. By default,
-   main node is built;
+* `DOMD_NODE_TYPE` - specifies the DomD node type to build: `single` - single node,
+   `main` - main node, `secondary` - secondary node (`main` and `secondary` node types are used for multinode setup).
+   By default, `single` node is built;
+
+* `DOMD_CAN_TYPE` - specifies the DomD CAN device type. Currently supported `SEEED-FD` and `MCP2515`. By default, `SEEED-FD` is used;
 
 * `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
 
@@ -59,47 +63,40 @@ options:
 
 * `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
 
-* `USE_DHCP` - determines whether the system should use DHCP to automatically obtain network settings.
-
 After performing moulin command with desired configuration, it will generate `build.ninja` with all necessary build
 targets.
 
 The moulin yaml file contains two target for different block devices:
 
-* `boot-usb` - for SD-Card that contains boot partition and Dom0 zephyr partition;
-* `rootfs-usb` - for USB flash drive  that contains rootfs partitions of DomD and other guest domains.
+* `boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}` - contains boot partition and Dom0 zephyr partition;
+* `rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}` - contains rootfs partitions of DomD and other guest domains.
 
-or
+The configuration depends on `DOMD_NODE_TYPE` and `DOMD_ROOT` options.
 
-* `boot-nvme` - for SD-Card that contains boot partition and Dom0 zephyr partition;
-* `rootfs-usb` - for NVMe device that contains rootfs partitions of DomD and other guest domains.
-
-The configuration depends on `DOMD_ROOT` option.
-
-### Build install image for usb
+### Build install image for usb single node
 
 ```console
-moulin aos-rpi.yaml --DOMD_ROOT=usb
-ninja install-usb.img
+moulin aos-rpi.yaml --DOMD_NODE_TYPE=single --DOMD_ROOT=usb
+ninja install-single-usb.img
 ```
 
-### Build install image for NVMe
+### Build install image for NVMe single node
 
 ```console
-moulin aos-rpi.yaml --DOMD_ROOT=nvme
-ninja install-nvme.img
+moulin aos-rpi.yaml --DOMD_NODE_TYPE=single --DOMD_ROOT=nvme
+ninja install-single-nvme.img
 ```
 
 ## Flash install image
 
 ```console
-sudo dd if=install-usb.img of=/dev/<sd-dev> bs=4M status=progress
+sudo dd if=install-single-usb.img of=/dev/<sd-dev> bs=4M status=progress
 ```
 
 or
 
 ```console
-sudo dd if=install-nvme.img of=/dev/<sd-dev> bs=4M status=progress
+sudo dd if=install-single-nvme.img of=/dev/<sd-dev> bs=4M status=progress
 ```
 
 **NOTE:** Be sure to identify correctly `<sd-dev>` which is usually `sda`. For SD-card identification

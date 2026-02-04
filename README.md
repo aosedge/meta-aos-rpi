@@ -17,6 +17,18 @@ document.
 The image contains a reference system that allows implementation of services orchestration on mixed-safety designs.
 To learn more about the approach, please check out [AosEdge documentation](https://docs.aosedge.tech).
 
+## Differences between images
+
+Currently, single and dynamic nodes unit setups are supported:
+
+* `single` unit consists of one Raspberry Pi 5 that obtains IP address by DHCP.
+  Use `AosCore single node for USB drive` or `AosCore single node for NVMe drive` image for this configuration,
+* `dynamic node` unit consists of one or several Raspberry Pi 5 devices that require
+  static network configuration. One Raspberry Pi 5 acts as the main node, whereas others act as secondary nodes.
+  Use `AosCore main node for USB drive` or `AosCore main node for NVMe drive` for main node and
+  `AosCore secondary node for USB drive` or `AosCore secondary node for NVMe drive` image for secondary nodes.
+  Please refer to the [dynamic nodes](doc/dynamicnodes.md) document for details.
+
 ### System configuration
 
 The system runs our [Yocto](https://www.yoctoproject.org) based Linux distro and [Zephyr RTOS](https://www.zephyrproject.org)
@@ -49,11 +61,11 @@ For more details and possible changes please refer to [Hardware assignment](doc/
 
 ### Table of contents
 
-- [Hardware prerequisites](#hardware-prerequisites)
-- [Setup Raspberry Pi 5](#setup-raspberry-pi-5)
-- [Flash AosCore install image to SD card using Raspberry Pi Imager](#flash-aoscore-install-image-to-sd-card-using-raspberry-pi-imager)
-- [Install AosCore image on your device](#install-aoscore-image-on-your-device)
-- [Provision device with AosCloud](#provision-device-with-aoscloud)
+* [Hardware prerequisites](#hardware-prerequisites)
+* [Setup Raspberry Pi 5](#setup-raspberry-pi-5)
+* [Flash AosCore install image to SD card using Raspberry Pi Imager](#flash-aoscore-install-image-to-sd-card-using-raspberry-pi-imager)
+* [Install AosCore image on your device](#install-aoscore-image-on-your-device)
+* [Provision device with AosCloud](#provision-device-with-aoscloud)
 
 ### Hardware prerequisites
 
@@ -66,16 +78,16 @@ for boot device and rootfs device respectively. In order to run this demo, the f
    **IMPORTANT**: during the installation, system EEPROM will be automatically updated to the latest available official
    version;
 2. It is not strictly necessary to have the following parts, but we **strongly recommend** adding:
-   - [Pi RTC Battery](https://www.raspberrypi.com/products/rtc-battery/) to avoid issues with AosEdge certificates;
-   - [Pi Active Cooler](https://www.raspberrypi.com/products/active-cooler/) so we can put some real CPU load;
+   * [Pi RTC Battery](https://www.raspberrypi.com/products/rtc-battery/) to avoid issues with AosEdge certificates;
+   * [Pi Active Cooler](https://www.raspberrypi.com/products/active-cooler/) so we can put some real CPU load;
 3. [Pi UART Debugger](https://www.waveshare.com/wiki/Pi_UART_Debugger), or any other serial console suitable for
    Raspberry Pi 5. Note that we **require** using SH1.0 3PIN UART Debug port to free up GPIO pins;
 4. SD Card 2GB or bigger. If unsure, please check out [Raspberry Pi official SD cards](https://www.raspberrypi.com/documentation/accessories/sd-cards.html)
    or [SanDisk Extreme SD cards](https://shop.sandisk.com/en-ua/products/memory-cards/microsd-cards/sandisk-extreme-uhs-i-microsd?sku=SDSQXAF-032G-GN6MA);
 5. One of the following:
-   - [Raspberry Pi M.2 HAT+ extension board](https://www.raspberrypi.com/products/m2-hat-plus) with installed
+   * [Raspberry Pi M.2 HAT+ extension board](https://www.raspberrypi.com/products/m2-hat-plus) with installed
    NVMe drive 16GB minimum - this option is **strongly recommended** because it is way faster than USB Flash;
-   - USB flash drive 16GB minimum.
+   * USB flash drive 16GB minimum.
 
    It is important to ensure that the selected NVMe SSD or Flash USB drive is clean and **does not contain any boot
    images** so that system will boot from SD card. Also make sure to back up the SD card image because the card will be
@@ -90,12 +102,12 @@ If you do not have those please consider getting a [docking station](https://eu.
    other peripherals in the official
    [getting started](https://www.raspberrypi.com/documentation/computers/getting-started.html) manual;
 2. Depends on the selected block device:
-   - for the M.2 NVMe drive: assemble Raspberry Pi M.2 HAT+ extension board with NVMe drive according to
+   * for the M.2 NVMe drive: assemble Raspberry Pi M.2 HAT+ extension board with NVMe drive according to
      [assembly instruction](https://www.raspberrypi.com/documentation/accessories/m2-hat-plus.html#installation).
 
      **NOTE**: It is not necessary to update Raspberry Pi firmware as stated in the above document as it will be
      automatically updated during installation of AosEdge image;
-   - for the USB flash drive: insert the USB flash drive into available USB 3.0 or USB 2.0 connector on your Raspberry
+   * for the USB flash drive: insert the USB flash drive into available USB 3.0 or USB 2.0 connector on your Raspberry
      Pi 5 (depends on your flash drive capability);
 3. Connect Pi UART Debugger (or other serial console) and set up your favorite terminal program to work with debug UART
    (see [this instruction](https://www.waveshare.com/wiki/Pi_UART_Debugger) as reference);
@@ -111,7 +123,7 @@ If you do not have those please consider getting a [docking station](https://eu.
 
 ### Flash AosCore install image to SD card using Raspberry Pi Imager
 
-1. Download and install [Raspberry Pi Imager](https://www.raspberrypi.com/software);
+1. Download and install [Raspberry Pi Imager](https://www.raspberrypi.com/software) version 1.9.6 or newer;
 2. Insert the SD card into a card reader on your host PC;
 3. Run Raspberry Pi Imager with `repo` parameter to retrieve the latest AosCore image:
 
@@ -121,35 +133,36 @@ If you do not have those please consider getting a [docking station](https://eu.
 
 4. Select desired image:
 
-   - click **CHOOSE OS** button:  
+   * click **CHOOSE OS** button:  
       ![Step 1](doc/pictures/install_step_1.png)
-   - select **AosCore image**:  
+   * select **AosCore image**:  
       ![Step 2](doc/pictures/install_step_2.png)
-   - depend on your setup, select image either for NVMe drive **AosCore for NVMe drive** or **AosCore for USB drive**:  
+   * depend on your setup, select single node image either for NVMe drive **AosCore single node for NVMe drive**
+    or for USB drive **AosCore single node for USB drive**:
       ![Step 3](doc/pictures/install_step_3.png)
 
 5. Select storage:
 
-   - click **CHOOSE STORAGE**:  
+   * click **CHOOSE STORAGE**:  
       ![Step 4](doc/pictures/install_step_4.png)
-   - select your SD card device:  
+   * select your SD card device:  
       ![Step 5](doc/pictures/install_step_5.png)
 
 6. Flash SD card:
 
-   - press **NEXT** button:  
+   * press **NEXT** button:  
       ![Step 6](doc/pictures/install_step_6.png)
-   - сhoose **EDIT SETTINGS** if you wish to set a username and password for logging into the device.
+   * сhoose **EDIT SETTINGS** if you wish to set a username and password for logging into the device.
       **ATTENTION:** username and password are required otherwise, you will not be able to log into the Raspberry Pi:  
       ![Step 7](doc/pictures/install_step_7.png)
-   - navigate to the 'Set username and password' section, select it, and set the username and password
+   * navigate to the 'Set username and password' section, select it, and set the username and password
    that will be used to log in to the system on the device. Press **SAVE** to apply the changes:  
       ![Step 8](doc/pictures/install_step_8.png)
-   - press **YES** button to begin flashing the SD card:  
+   * press **YES** button to begin flashing the SD card:  
       ![Step 9](doc/pictures/install_step_9.png)
-   - wait when writing process is finished:  
+   * wait when writing process is finished:  
       ![Step 10](doc/pictures/install_step_10.png)
-   - remove SD card and press **CONTINUE** button:  
+   * remove SD card and press **CONTINUE** button:  
       ![Step 11](doc/pictures/install_step_11.png)
 
 ### Install AosCore image on your device
@@ -159,7 +172,7 @@ If you do not have those please consider getting a [docking station](https://eu.
 3. Observe AosCore installation progress in your favorite terminal program using debug serial console. Please note
    <ins>this process takes some time</ins> as system unpacks and deploys multiple images on different storages!
 
-   - you should see the following output when installation script is started successfully:
+   * you should see the following output when installation script is started successfully:
 
       ```console
       ********************************************************************************
@@ -169,7 +182,7 @@ If you do not have those please consider getting a [docking station](https://eu.
       ...
       ```
 
-   - on successful install scrip finish, the following output should appear:
+   * on successful install scrip finish, the following output should appear:
 
       ```console
       ...
@@ -179,7 +192,7 @@ If you do not have those please consider getting a [docking station](https://eu.
       ********************************************************************************
       ```
 
-   - the device will reboot automatically.
+   * the device will reboot automatically.
 
 ### Provision device with AosCloud
 
@@ -198,13 +211,13 @@ If you do not have those please consider getting a [docking station](https://eu.
 3. Obtain Raspberry Pi 5 IP address using your network DHCP server information or by checking the IP address by using
    `ip r` command on AosCore `DomD`:
 
-   - once booted, `DOM0` (`Zephyr OS`) console is available:
+   * once booted, `DOM0` (`Zephyr OS`) console is available:
 
       ```console
       (XEN) *** Serial input to DOM0 (type 'CTRL-a' three times to switch input)
       ```
 
-   - press `Ctrl+a` three times (note that it works fine in `cu`, but on `minicom` and maybe other terminals `Ctrl+a`
+   * press `Ctrl+a` three times (note that it works fine in `cu`, but on `minicom` and maybe other terminals `Ctrl+a`
      overlaps with terminal's own commands, so you need to press it *six* times or you have to release `Ctrl` each time
      or whatever - check your terminal's documentation in case of issues) in a row to enter into `DOM1` (`DomD`)
      console:
@@ -215,23 +228,26 @@ If you do not have those please consider getting a [docking station](https://eu.
 
       By repeating the sequence above, you are switching between consoles in a loop: `DOM0`, `DOM1`, `Xen` etc.
 
-   - Press `enter` to get a login prompt:
+   * Press `enter` to get a login prompt:
 
       ```console
       (XEN) main login:
       ```
 
-   - Enter your user name and password that was set during flashing AosEdge install image to SD-Card. Now, you should
+   * Enter your user name and password that was set during flashing AosEdge install image to SD-Card. Now, you should
      be logged in `DomD`:
 
       ```console
-      (XEN) root@main:~#
+      (XEN) main login: pi
+      (XEN) Password:
+
+      (XEN) main:~$
       ```
 
-   - Input `ip r` command to get your device IP address (see `default`):
+   * Input `ip r` command to get your device IP address (see `default`):
 
       ```console
-      (XEN) root@main:~# ip r
+      (XEN) main:~# ip r
       (XEN) default via 192.168.50.1 dev eth0  src 192.168.50.6  metric 1024
       (XEN) 10.0.0.0/24 dev eth0 scope link  src 10.0.0.100
       (XEN) 172.17.0.0/16 dev br-sp9a53b711 scope link  src 172.17.0.2

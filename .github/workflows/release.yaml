@@ -77,35 +77,44 @@ jobs:
 
           echo "Build images"
 
-          docker/run_docker.sh -n -w build -- moulin aos-rpi.yaml --DOMD_ROOT=usb --CACHE_LOCATION=inside
-          docker/run_docker.sh -n -w build -- ninja install-usb.img
+          for root_type in "usb" "nvme"; do
+            for node_type in "single" "main" "secondary"; do
+              target_name="install-${node_type}-${root_type}.img"
 
-          echo "extract_size_usb=$(stat -c %s build/install-usb.img)" >> $GITHUB_OUTPUT
-          echo "extract_sha256_usb=$(sha256sum build/install-usb.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+              echo "Building image $target_name"
 
-          gzip build/install-usb.img
+              docker/run_docker.sh -n -w build -- moulin aos-rpi.yaml --DOMD_ROOT="$root_type" \
+                                                                      --DOMD_NODE_TYPE="$node_type" \
+                                                                      --CACHE_LOCATION=inside
 
-          echo "image_download_size_usb=$(stat -c %s build/install-usb.img.gz)" >> $GITHUB_OUTPUT
-          echo "image_download_sha256_usb=$(sha256sum build/install-usb.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
+              docker/run_docker.sh -n -w build -- ninja "$target_name"
 
-          docker/run_docker.sh -n -w build -- moulin aos-rpi.yaml --DOMD_ROOT=nvme --CACHE_LOCATION=inside
-          docker/run_docker.sh -n -w build -- ninja install-nvme.img
+              EXTRACT_SIZE=$(stat -c %s "build/$target_name")
+              EXTRACT_SHA256=$(sha256sum "build/$target_name" | awk '{print $1}')
 
-          echo "extract_size_nvme=$(stat -c %s build/install-nvme.img)" >> $GITHUB_OUTPUT
-          echo "extract_sha256_nvme=$(sha256sum build/install-nvme.img | awk '{print $1}')" >> $GITHUB_OUTPUT
+              gzip "build/$target_name"
 
-          gzip build/install-nvme.img
+              DOWNLOAD_SIZE=$(stat -c %s "build/$target_name.gz")
+              DOWNLOAD_SHA256=$(sha256sum "build/$target_name.gz" | awk '{print $1}')
 
-          echo "image_download_size_nvme=$(stat -c %s build/install-nvme.img.gz)" >> $GITHUB_OUTPUT
-          echo "image_download_sha256_nvme=$(sha256sum build/install-nvme.img.gz | awk '{print $1}')" >> $GITHUB_OUTPUT
+              echo "extract_size_${node_type}_${root_type}=$EXTRACT_SIZE" >> $GITHUB_OUTPUT
+              echo "extract_sha256_${node_type}_${root_type}=$EXTRACT_SHA256" >> $GITHUB_OUTPUT
+              echo "image_download_size_${node_type}_${root_type}=$DOWNLOAD_SIZE" >> $GITHUB_OUTPUT
+              echo "image_download_sha256_${node_type}_${root_type}=$DOWNLOAD_SHA256" >> $GITHUB_OUTPUT
+
+              echo "Build FOTA"
+
+              docker/run_docker.sh -n -w build -- ninja fota-full
+
+            done
+          done
+
+          docker/run_docker.sh -n -w build -- moulin aos-rpi.yaml --DOMD_NODE_TYPE=single \
+                                                                  --CACHE_LOCATION=inside
 
           echo "Build layers"
 
           docker/run_docker.sh -n -w build -- ninja layers
-
-          echo "Build FOTA"
-
-          docker/run_docker.sh -n -w build -- ninja fota-full
 
           echo "Build SDK"
 
@@ -119,16 +128,42 @@ jobs:
           vars: |
             version: "${{ steps.version.outputs.version }}"
             release_date: "${{ steps.version.outputs.release_date }}"
-            url_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-usb.img.gz"
-            extract_size_usb: ${{ steps.build.outputs.extract_size_usb }}
-            extract_sha256_usb: ${{ steps.build.outputs.extract_sha256_usb }}
-            image_download_size_usb: ${{ steps.build.outputs.image_download_size_usb }}
-            image_download_sha256_usb: ${{ steps.build.outputs.image_download_sha256_usb }}
-            url_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-nvme.img.gz"
-            extract_size_nvme: ${{ steps.build.outputs.extract_size_nvme }}
-            extract_sha256_nvme: ${{ steps.build.outputs.extract_sha256_nvme }}
-            image_download_size_nvme: ${{ steps.build.outputs.image_download_size_nvme }}
-            image_download_sha256_nvme: ${{ steps.build.outputs.image_download_sha256_nvme }}
+
+            url_single_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-single-usb.img.gz"
+            extract_size_single_usb: ${{ steps.build.outputs.extract_size_single_usb }}
+            extract_sha256_single_usb: ${{ steps.build.outputs.extract_sha256_single_usb }}
+            image_download_size_single_usb: ${{ steps.build.outputs.image_download_size_single_usb }}
+            image_download_sha256_single_usb: ${{ steps.build.outputs.image_download_sha256_single_usb }}
+
+            url_main_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-main-usb.img.gz"
+            extract_size_main_usb: ${{ steps.build.outputs.extract_size_main_usb }}
+            extract_sha256_main_usb: ${{ steps.build.outputs.extract_sha256_main_usb }}
+            image_download_size_main_usb: ${{ steps.build.outputs.image_download_size_main_usb }}
+            image_download_sha256_main_usb: ${{ steps.build.outputs.image_download_sha256_main_usb }}
+
+            url_secondary_usb: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-secondary-usb.img.gz"
+            extract_size_secondary_usb: ${{ steps.build.outputs.extract_size_secondary_usb }}
+            extract_sha256_secondary_usb: ${{ steps.build.outputs.extract_sha256_secondary_usb }}
+            image_download_size_secondary_usb: ${{ steps.build.outputs.image_download_size_secondary_usb }}
+            image_download_sha256_secondary_usb: ${{ steps.build.outputs.image_download_sha256_secondary_usb }}
+
+            url_single_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-single-nvme.img.gz"
+            extract_size_single_nvme: ${{ steps.build.outputs.extract_size_single_nvme }}
+            extract_sha256_single_nvme: ${{ steps.build.outputs.extract_sha256_single_nvme }}
+            image_download_size_single_nvme: ${{ steps.build.outputs.image_download_size_single_nvme }}
+            image_download_sha256_single_nvme: ${{ steps.build.outputs.image_download_sha256_single_nvme }}
+
+            url_main_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-main-nvme.img.gz"
+            extract_size_main_nvme: ${{ steps.build.outputs.extract_size_main_nvme }}
+            extract_sha256_main_nvme: ${{ steps.build.outputs.extract_sha256_main_nvme }}
+            image_download_size_main_nvme: ${{ steps.build.outputs.image_download_size_main_nvme }}
+            image_download_sha256_main_nvme: ${{ steps.build.outputs.image_download_sha256_main_nvme }}
+
+            url_secondary_nvme: "https://github.com/aosedge/meta-aos-rpi/releases/download/${{ steps.version.outputs.tag }}/install-secondary-nvme.img.gz"
+            extract_size_secondary_nvme: ${{ steps.build.outputs.extract_size_secondary_nvme }}
+            extract_sha256_secondary_nvme: ${{ steps.build.outputs.extract_sha256_secondary_nvme }}
+            image_download_size_secondary_nvme: ${{ steps.build.outputs.image_download_size_secondary_nvme }}
+            image_download_sha256_secondary_nvme: ${{ steps.build.outputs.image_download_sha256_secondary_nvme }}
 
           result_path: build/os_sublist.json
 
@@ -143,8 +178,15 @@ jobs:
 
           gh release create --draft "$tag" --title "Version $version"
 
-          gh release upload "$tag" build/install-usb.img.gz
-          gh release upload "$tag" build/install-nvme.img.gz
+          for root_type in "usb" "nvme"; do
+            for node_type in "single" "main" "secondary"; do
+              artifact_name="install-${node_type}-${root_type}.img.gz"
+
+              echo "Uploading $artifact_name"
+              gh release upload "$tag" "build/$artifact_name"
+            done
+          done
+
           gh release upload "$tag" build/os_sublist.json
 
 

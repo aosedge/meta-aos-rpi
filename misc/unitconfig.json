@@ -1,10 +1,52 @@
 {
     "nodes": [
         {
+            "nodeType": "aos-rpi-1.0-single-domd",
+            "priority": 100,
+            "resources": [
+                {
+                    "name": "kuksa",
+                    "hosts": [
+                        {
+                            "ip": "10.0.0.100",
+                            "hostname": "Server"
+                        }
+                    ]
+                }
+            ],
+            "devices": [
+                {
+                    "name": "camera0",
+                    "groups": [
+                        "video"
+                    ],
+                    "hostDevices": [
+                        "/dev/video0",
+                        "/dev/video1",
+                        "/dev/media0"
+                    ],
+                    "sharedCount": 1
+                },
+                {
+                    "name": "gpio",
+                    "groups": [
+                        "gpio"
+                    ],
+                    "hostDevices": [
+                        "/dev/gpiochip0"
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeType": "aos-rpi-1.0-single-dom0",
+            "priority": 50
+        },
+        {
+            "nodeType": "aos-rpi-1.0-main-domd",
             "labels": [
                 "main"
             ],
-            "nodeType": "aos-rpi-1.0-main-domd",
             "priority": 100,
             "resources": [
                 {
@@ -17,11 +59,49 @@
                     ]
                 }
             ]
+        },
+        {
+            "nodeType": "aos-rpi-1.0-main-dom0",
+            "labels": [
+                "main"
+            ],
+            "priority": 50
+        },
+        {
+            "nodeType": "aos-rpi-1.0-secondary-domd",
+            "labels": [
+                "secondary"
+            ],
+            "priority": 100,
+            "resources": [
+                {
+                    "name": "kuksa",
+                    "hosts": [
+                        {
+                            "ip": "10.0.0.100",
+                            "hostname": "Server"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeType": "aos-rpi-1.0-secondary-dom0",
+            "labels": [
+                "secondary"
+            ],
+            "priority": 50
         }
     ],
     "components": [
         {
+            "id": "aos-rpi-1.0-single-domd"
+        },
+        {
             "id": "aos-rpi-1.0-main-domd"
+        },
+        {
+            "id": "aos-rpi-1.0-secondary-domd"
         }
     ]
 }

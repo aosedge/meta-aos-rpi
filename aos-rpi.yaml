@@ -43,9 +43,6 @@ variables:
   # Network configuration
   MAIN_NODE_IP: "10.0.0.100"
 
-  # Aos node configuration
-  AOS_DOM0_NODE_TYPE: "rpi-dom0"
-
   AOS_BASE_IMAGE: "aos-image-rpi"
   AOS_INSTALL_IMAGE: "core-image-minimal"
 
@@ -187,6 +184,7 @@ components:
         - [RPI_SOC_FAMILY, "%{SOC_FAMILY}"]
         - [XT_DOM_NAME, "domd"]
         - [XT_DEVICE_TREES, "%{XT_XEN_DTBO_NAME}"]
+        - [DOMD_CAN_TYPE, "%{DOMD_CAN_TYPE}"]
         - [PREFERRED_VERSION_xen, "4.19.0+git"]
         - [PREFERRED_VERSION_xen-tools, "4.19.0+git"]
         - [PREFERRED_VERSION_u-boot, "2024.04"]
@@ -197,6 +195,11 @@ components:
         - [XEN_IMG_ADDR, "%{XEN_IMG_ADDR}"]
         - [XEN_DTBO_ADDR, "%{XEN_DTBO_ADDR}"]
         - [XENPOLICY_IMG_ADDR, "%{XENPOLICY_IMG_ADDR}"]
+        - [
+            DOMD_OVERLAYS:append,
+            " %{SOC_FAMILY}-%{MACHINE}-usb.dtbo %{SOC_FAMILY}-%{MACHINE}-can-%{DOMD_CAN_TYPE}.dtbo",
+          ]
+        - [MACHINE_FEATURES:append, " domd_usb domd_can"]
 
         # RPI specific
         - [ENABLE_UART, "1"]
@@ -220,6 +223,7 @@ components:
           ]
         - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_DOMD_COMPONENT_PREFIX}"]
         - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
+        - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
 
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
@@ -261,6 +265,7 @@ components:
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
         - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
+        - "tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-can-%{DOMD_CAN_TYPE}.dtbo"
 
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}-var.ext4"
@@ -341,12 +346,12 @@ components:
       script: "../scripts/image_archive.sh"
 
       additional_deps:
-        - "boot-%{DOMD_ROOT}.img"
-        - "rootfs-%{DOMD_ROOT}.img"
+        - "boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img"
+        - "rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img"
 
       target_images:
-        - "../boot-%{DOMD_ROOT}.img.gz"
-        - "../rootfs-%{DOMD_ROOT}.img.gz"
+        - "../boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
+        - "../rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
 
   layers:
     builder:
@@ -354,7 +359,9 @@ components:
       work_dir: "workdir"
       script: "../yocto/meta-aos/scripts/layer_builder.py"
       target_images:
+        - "../output/layers/aos-kuksa-client-layer-%{MACHINE}-1.0.0.tar.gz"
         - "../output/layers/aos-pylibs-layer-%{MACHINE}-1.0.0.tar.gz"
+        - "../output/layers/aos-rpilibs-layer-%{MACHINE}-1.0.0.tar.gz"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -365,8 +372,14 @@ components:
         output_dir: "../output/layers"
         base_image: "%{AOS_BASE_IMAGE}"
         items:
+          kuksa-client-layer:
+            target: "aos-kuksa-client-layer"
+
           pylibs-layer:
             target: "aos-pylibs-layer"
+
+          rpilibs-layer:
+            target: "aos-rpilibs-layer"
 
   fota-full:
     builder:
@@ -424,7 +437,7 @@ components:
           fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
 images:
-  boot-%{DOMD_ROOT}:
+  boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -455,6 +468,7 @@ images:
           "%{SOC_FAMILY}-%{MACHINE}-usb.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-mmc.dtbo"
           "%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-pcie1.dtbo"
+          "%{SOC_FAMILY}-%{MACHINE}-can-%{DOMD_CAN_TYPE}.dtbo": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{SOC_FAMILY}-%{MACHINE}-can-%{DOMD_CAN_TYPE}.dtbo"
 
           "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
 
@@ -465,7 +479,7 @@ images:
         type: vfat
         size: 512 MiB
 
-  rootfs-%{DOMD_ROOT}:
+  rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -485,7 +499,7 @@ images:
         type: empty
         size: 4096 MiB
 
-  install-%{DOMD_ROOT}:
+  install-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
     desc: "Full RPI image"
     sector_size: 512
@@ -501,18 +515,36 @@ images:
         type: ext4
         size: 300 MiB
         items:
-          "boot.img.gz": "boot-%{DOMD_ROOT}.img.gz"
-          "rootfs.img.gz": "rootfs-%{DOMD_ROOT}.img.gz"
+          "boot.img.gz": "boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
+          "rootfs.img.gz": "rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
 
 parameters:
   DOMD_NODE_TYPE:
     desc: "Domd node type to build"
-    "main":
+    "single":
       default: true
       overrides:
         variables:
+          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-dom0"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-domd"
+          DOMD_NODE_TYPE: "single"
+
+        components:
+          domd:
+            builder:
+              conf:
+                - [AOS_MAIN_NODE, "1"]
+                - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
+                - [AOS_USE_DHCP, "1"]
+
+    "main":
+      overrides:
+        variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-dom0"
           AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-domd"
+          DOMD_NODE_TYPE: "main"
 
         components:
           domd:
@@ -521,12 +553,15 @@ parameters:
                 - [AOS_MAIN_NODE, "1"]
                 - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
                 - [AOS_NODE_GW_IP, "10.0.0.1"]
+                - [AOS_USE_DHCP, "0"]
 
     "secondary":
       overrides:
         variables:
           AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-dom0"
           AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-domd"
+          DOMD_NODE_TYPE: "secondary"
 
         components:
           domd:
@@ -534,6 +569,20 @@ parameters:
               conf:
                 - [AOS_MAIN_NODE, "0"]
                 - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
+                - [AOS_USE_DHCP, "1"]
+
+  DOMD_CAN_TYPE:
+    desc: "Domd CAN chip type"
+    "SEEED-FD":
+      default: true
+      overrides:
+        variables:
+          DOMD_CAN_TYPE: "seeed-fd"
+
+    "MCP2515":
+      overrides:
+        variables:
+          DOMD_CAN_TYPE: "mcp2515"
 
   MACHINE:
     desc: "Raspberry Pi machine"
@@ -577,13 +626,6 @@ parameters:
         variables:
           DOMD_ROOT: usb
           DOMD_BLK_DEV: "sda"
-
-        components:
-          domd:
-            builder:
-              conf:
-                - [DOMD_OVERLAYS, "%{SOC_FAMILY}-%{MACHINE}-usb.dtbo"]
-                - [MACHINE_FEATURES:append, " domd_usb"]
 
     nvme:
       overrides:
@@ -632,24 +674,3 @@ parameters:
 
     disabled:
       default: true
-
-  USE_DHCP:
-    desc: "Use DHCP for network configuration"
-    "yes":
-      default: true
-      overrides:
-        components:
-          domd:
-            builder:
-              conf:
-                - [AOS_USE_DHCP, "1"]
-                - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
-                - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
-
-    "no":
-      overrides:
-        components:
-          domd:
-            builder:
-              conf:
-                - [AOS_USE_DHCP, "0"]
