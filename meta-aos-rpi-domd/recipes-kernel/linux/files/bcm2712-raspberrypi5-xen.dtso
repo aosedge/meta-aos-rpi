@@ -19,36 +19,21 @@
 		compatible = "xen,domain";
 		#address-cells = <0x2>;
 		#size-cells = <0x2>;
-		memory = <0x0 0x200000>; /* 2GB */
+		memory = <0x0 0x80000>;
 		vpl011 = <0x1>;
 		direct-map;
 		cpus = <0x1>;
-		xen,static-mem = <0x0 0x50000000 0x0 0x80000000>;
+		xen,static-mem = <0x0 0x50000000 0x0 0x18000000 0x0 0x20000000 0x0 0x8000000>;
 		xen,enhanced = "enabled";
 		xen,tee = "optee";
 	};
-};
 
 /*
  * HACK uart regs to be xen page aligned to avoid XEN fail in dom0less mode
  * when vuart "vpl011" is used for DomU
  */
-&_uart0 {
+&uart10 {
 	reg = <0x7d001000 0x1000>;
-};
-
-/*
- * HACK there is number of uarts use same IRQ, so XEN fails when uses
- * _uart0 as console uart.
- * Delete interrupts info and disable devices;
- */
-&_uart2 {
-	interrupts = <>;
-	status = "disabled";
-};
-&_uart5 {
-	interrupts = <>;
-	status = "disabled";
 };
 
 &gio_aon        { xen,passthrough; };
