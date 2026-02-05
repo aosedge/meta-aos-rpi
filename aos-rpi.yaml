@@ -50,19 +50,19 @@ common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "dce4163d42f7036ea216b52b9135968d51bec4c1"
+      rev: "353491479086e8d3f209d5cce0019a29e143b064"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "b8d1a14f7f3b76457c36752202ea7ae5881b6654"
+      rev: "7a5075cef77b5f7af454e9868e1d0019f2fd1394"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "450941a1b6df96285691e8c23d4f332d3c88a994"
+      rev: "f92518e20530edfebca45e4170e11460949a5303"
 
     - type: git
       url: "git://git.yoctoproject.org/meta-security"
-      rev: "bc865c5276c2ab4031229916e8d7c20148dfbac3"
+      rev: "97e482b71688b62ac1109d16e89368122f039cbf"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
@@ -70,15 +70,15 @@ common_data:
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: "v0.2.0"
+      rev: "v0.3.0"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
-      rev: "v8.2.2"
+      rev: "v8.2.3"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "v1.1.2"
+      rev: "v1.1.3"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
@@ -167,11 +167,11 @@ components:
       - *COMMON_YOCTO_SOURCES
       - type: git
         url: "https://git.yoctoproject.org/meta-raspberrypi"
-        rev: "6df7e028a2b7b2d8cab0745dc0ed2eebc3742a17"
+        rev: "2c646d29912dcc873469a57b1c207e1549c5094d"
 
       - type: git
         url: "https://github.com/xen-troops/meta-xt-rpi5.git"
-        rev: "v0.2.2"
+        rev: "e9473cc4e5b1e1d19df7da59daa17936d636ee21"
 
     builder:
       type: yocto
@@ -297,7 +297,7 @@ components:
       - *COMMON_YOCTO_SOURCES
       - type: git
         url: "https://git.yoctoproject.org/meta-raspberrypi"
-        rev: "6df7e028a2b7b2d8cab0745dc0ed2eebc3742a17"
+        rev: "2c646d29912dcc873469a57b1c207e1549c5094d"
 
     builder:
       type: yocto
