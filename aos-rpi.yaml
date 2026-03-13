@@ -46,6 +46,12 @@ variables:
   AOS_BASE_IMAGE: "aos-image-rpi"
   AOS_INSTALL_IMAGE: "core-image-minimal"
 
+  # Node info
+  AOS_ARCHITECTURE: "aarch64"
+  AOS_ARCHITECTURE_VARIANT: ""
+  AOS_OS: "linux"
+  AOS_OS_VERSION: ""
+
 common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
@@ -224,6 +230,11 @@ components:
         - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_DOMD_COMPONENT_PREFIX}"]
         - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
         - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
+
+        - [AOS_ARCHITECTURE, "%{AOS_ARCHITECTURE}"]
+        - [AOS_ARCHITECTURE_VARIANT, "%{AOS_ARCHITECTURE_VARIANT}"]
+        - [AOS_OS, "%{AOS_OS}"]
+        - [AOS_OS_VERSION, "%{AOS_OS_VERSION}"]
 
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
