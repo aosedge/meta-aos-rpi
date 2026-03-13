@@ -674,3 +674,20 @@ parameters:
 
     disabled:
       default: true
+
+  WITH_MESSAGE_PROXY:
+    desc: "Enable Aos message proxy"
+    "yes":
+      default: true
+      overrides:
+        components:
+          aos-vm:
+            builder:
+              conf:
+                - [
+                    IMAGE_INSTALL:append,
+                    " ${@'aos-messageproxy' if bb.utils.to_boolean(d.getVar('AOS_MAIN_NODE')) else ''}",
+                  ]
+
+    "no":
+      default: false
