@@ -23,10 +23,6 @@ IMAGE_INSTALL:append = " \
     v4l-utils \
 "
 
-IMAGE_INSTALL:append = " \
-    aos-messageproxy \
-"
-
 PACKAGE_INSTALL:append = " \
     kernel-modules \
 "
