@@ -697,3 +697,25 @@ parameters:
 
     disabled:
       default: true
+
+  ENABLE_AOS_IN_DOM0:
+    desc: "Enable Aos in Dom0"
+    "yes":
+      overrides:
+        components:
+          aos-vm:
+            builder:
+              conf:
+                - [
+                    IMAGE_INSTALL:append,
+                    " ${@'aos-messageproxy' if bb.utils.to_boolean(d.getVar('AOS_MAIN_NODE')) else ''}",
+                  ]
+
+    "no":
+      default: true
+      overrides:
+        components:
+          dom0:
+            builder:
+              vars:
+                - "CONFIG_AOS_ENABLE=n"
