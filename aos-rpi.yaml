@@ -77,8 +77,8 @@ common_data:
       rev: "v8.2.3"
 
     - type: git
-      url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "v1.1.3"
+      url: "https://github.com/mlohvynenko/meta-aos-rpi.git"
+      rev: "feature_unification_rc"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
@@ -141,8 +141,8 @@ components:
     build-dir: "%{DOM0_BUILD_DIR}"
     sources:
       - type: west
-        url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "v1.1.2"
+        url: "https://github.com/mlohvynenko/aos_core_zephyr.git"
+        rev: "feature_disable_aos"
 
     builder:
       type: zephyr
