@@ -15,14 +15,16 @@ RDEPENDS:${PN} += "\
 "
 
 do_install:append() {
-    install -d ${D}${sysconfdir}/systemd/system/${PN}.service.d
-    install -m 0644 ${WORKDIR}/optee-identity.conf ${D}${sysconfdir}/systemd/system/${PN}.service.d/20-optee-identity.conf
-    install -m 0644 ${WORKDIR}/grpc-dns-resolver.conf ${D}${sysconfdir}/systemd/system/${PN}.service.d/20-grpc-dns-resolver.conf
+    install -d ${D}${systemd_system_unitdir}
 
-    install -d ${D}${sysconfdir}/systemd/system/${PN}-provisioning.service.d
-    install -m 0644 ${WORKDIR}/optee-identity.conf ${D}${sysconfdir}/systemd/system/${PN}-provisioning.service.d/20-optee-identity.conf
-    install -m 0644 ${WORKDIR}/grpc-dns-resolver.conf ${D}${sysconfdir}/systemd/system/${PN}-provisioning.service.d/20-grpc-dns-resolver.conf
-    install -m 0644 ${WORKDIR}/remove-deprovision.conf ${D}${sysconfdir}/systemd/system/${PN}-provisioning.service.d/20-remove-deprovision.conf
+    install -d ${D}${sysconfdir}/systemd/system/aos-iam.service.d
+    install -m 0644 ${WORKDIR}/optee-identity.conf ${D}${sysconfdir}/systemd/system/aos-iam.service.d/20-optee-identity.conf
+    install -m 0644 ${WORKDIR}/grpc-dns-resolver.conf ${D}${sysconfdir}/systemd/system/aos-iam.service.d/20-grpc-dns-resolver.conf
+
+    install -d ${D}${sysconfdir}/systemd/system/aos-iam-prov.service.d
+    install -m 0644 ${WORKDIR}/optee-identity.conf ${D}${sysconfdir}/systemd/system/aos-iam-prov.service.d/20-optee-identity.conf
+    install -m 0644 ${WORKDIR}/grpc-dns-resolver.conf ${D}${sysconfdir}/systemd/system/aos-iam-prov.service.d/20-grpc-dns-resolver.conf
+    install -m 0644 ${WORKDIR}/remove-deprovision.conf ${D}${sysconfdir}/systemd/system/aos-iam-prov.service.d/20-remove-deprovision.conf
 }
 
 # Do not install headers files
