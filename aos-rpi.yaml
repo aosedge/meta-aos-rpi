@@ -568,6 +568,7 @@ parameters:
                 - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
                 - [AOS_NODE_GW_IP, "10.0.0.1"]
                 - [AOS_USE_DHCP, "0"]
+                - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
 
               layers:
                 - "../meta-aos-rpi/meta-aos-rpi-domd-main"
@@ -585,7 +586,6 @@ parameters:
             builder:
               conf:
                 - [AOS_MAIN_NODE, "0"]
-                - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
                 - [AOS_USE_DHCP, "1"]
 
               layers:
