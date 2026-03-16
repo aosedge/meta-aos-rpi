@@ -155,9 +155,6 @@ common_data:
     # Requires to properly generate Aos FOTA
     - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
 
-    # Aos UM components prefix
-    - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-"]
-
 components:
   dom0:
     default: true
@@ -244,7 +241,7 @@ components:
             aosupdate.path=sm\\\\/runtimes\\\\/rootfs
             ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp', '', d)}",
           ]
-        - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_DOMD_COMPONENT_PREFIX}"]
+        - [AOS_COMPONENT_RUNTIME_PREFIX, "%{AOS_DOMD_COMPONENT_PREFIX}"]
         - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
         - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
 
@@ -409,16 +406,16 @@ components:
 
       components:
         rootfs-full:
-          componentType: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
+          componentType: "%{AOS_DOMD_COMPONENT_PREFIX}domd"
           enabled: true
           method: "overlay"
-          ostree_repo: "../../ostree_repo/%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
+          ostree_repo: "../../ostree_repo/%{AOS_DOMD_COMPONENT_PREFIX}domd"
           yocto_dir: "../%{YOCTOS_WORK_DIR}"
           build_dir: "%{DOMD_BUILD_DIR}"
           type: "full"
           description: "DomD rootfs image"
           version: "%{AOS_BUNDLE_IMAGE_VERSION}"
-          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+          fileName: "%{AOS_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
           exclude:
             - "var/*"
 
@@ -436,10 +433,10 @@ components:
 
       components:
         rootfs-incremental:
-          componentType: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
+          componentType: "%{AOS_DOMD_COMPONENT_PREFIX}domd"
           enabled: true
           method: "overlay"
-          ostree_repo: "../../ostree_repo/%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
+          ostree_repo: "../../ostree_repo/%{AOS_DOMD_COMPONENT_PREFIX}domd"
           yocto_dir: "../%{YOCTOS_WORK_DIR}"
           build_dir: "%{DOMD_BUILD_DIR}"
           type: "incremental"
@@ -448,7 +445,7 @@ components:
           requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
           exclude:
             - "var/*"
-          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+          fileName: "%{AOS_DOMD_COMPONENT_PREFIX}domd-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
 images:
   boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
@@ -539,7 +536,7 @@ parameters:
       default: true
       overrides:
         variables:
-          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-"
+          AOS_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-"
           AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-dom0"
           AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-domd"
           DOMD_NODE_TYPE: "single"
@@ -558,7 +555,7 @@ parameters:
     "main":
       overrides:
         variables:
-          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
+          AOS_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
           AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-dom0"
           AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-domd"
           DOMD_NODE_TYPE: "main"
@@ -578,7 +575,7 @@ parameters:
     "secondary":
       overrides:
         variables:
-          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
+          AOS_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
           AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-dom0"
           AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-domd"
           DOMD_NODE_TYPE: "secondary"
