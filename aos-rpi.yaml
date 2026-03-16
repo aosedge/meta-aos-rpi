@@ -111,6 +111,23 @@ common_data:
     # Enable security features
     - [DISTRO_FEATURES:append, " security"]
 
+  domd-common-layers: &DOMD_COMMON_LAYERS
+    - "../meta-virtualization"
+    - "../meta-openembedded/meta-oe"
+    - "../meta-openembedded/meta-networking"
+    - "../meta-openembedded/meta-perl"
+    - "../meta-openembedded/meta-python"
+    - "../meta-openembedded/meta-filesystems"
+    - "../meta-security"
+    - "../meta-selinux"
+    - "../meta-xt-common/meta-xt-domx"
+    - "../meta-xt-common/meta-xt-driver-domain"
+    - "../meta-xt-common/meta-xt-security"
+    - "../meta-raspberrypi"
+    - "../meta-xt-rpi5"
+    - "../meta-aos"
+    - "../meta-aos-rpi/meta-aos-rpi-domd-common"
+
   common_dom_conf: &COMMON_DOM_CONF # Make logs persistent
     - [VOLATILE_LOG_DIR, "no"]
 
@@ -227,21 +244,7 @@ components:
 
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
-        - "../meta-virtualization"
-        - "../meta-openembedded/meta-oe"
-        - "../meta-openembedded/meta-networking"
-        - "../meta-openembedded/meta-perl"
-        - "../meta-openembedded/meta-python"
-        - "../meta-openembedded/meta-filesystems"
-        - "../meta-security"
-        - "../meta-selinux"
-        - "../meta-xt-common/meta-xt-domx"
-        - "../meta-xt-common/meta-xt-driver-domain"
-        - "../meta-xt-common/meta-xt-security"
-        - "../meta-raspberrypi"
-        - "../meta-xt-rpi5"
-        - "../meta-aos"
-        - "../meta-aos-rpi/meta-aos-rpi-domd"
+        - *DOMD_COMMON_LAYERS
 
       target_images:
         - "tmp/deploy/images/%{MACHINE}/bootfiles"
@@ -538,6 +541,9 @@ parameters:
                 - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
                 - [AOS_USE_DHCP, "1"]
 
+              layers:
+                - "../meta-aos-rpi/meta-aos-rpi-domd-main"
+
     "main":
       overrides:
         variables:
@@ -555,6 +561,9 @@ parameters:
                 - [AOS_NODE_GW_IP, "10.0.0.1"]
                 - [AOS_USE_DHCP, "0"]
 
+              layers:
+                - "../meta-aos-rpi/meta-aos-rpi-domd-main"
+
     "secondary":
       overrides:
         variables:
@@ -570,6 +579,9 @@ parameters:
                 - [AOS_MAIN_NODE, "0"]
                 - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
                 - [AOS_USE_DHCP, "1"]
+
+              layers:
+                - "../meta-aos-rpi/meta-aos-rpi-domd-node"
 
   DOMD_CAN_TYPE:
     desc: "Domd CAN chip type"
