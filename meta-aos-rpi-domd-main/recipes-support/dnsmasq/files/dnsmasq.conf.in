@@ -1,0 +1,10 @@
+all-servers
+strict-order
+expand-hosts
+pid-file=@ADDNHOSTS_PATH@/pidfile
+except-interface=lo
+bind-dynamic
+no-hosts
+listen-address=@LISTEN_IP@
+addn-hosts=@ADDNHOSTS_PATH@/addnhosts
+addn-hosts=@PERSISTENT_ADDNHOSTS_PATH@/addnhosts
