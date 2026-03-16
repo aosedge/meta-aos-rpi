@@ -12,7 +12,7 @@ RDEPENDS:${PN} += "\
 "
 
 do_install:append() {
-    install -d ${D}${sysconfdir}/systemd/system/${PN}.service.d
-    install -m 0644 ${WORKDIR}/optee-identity.conf ${D}${sysconfdir}/systemd/system/${PN}.service.d/20-optee-identity.conf
-    install -m 0644 ${WORKDIR}/grpc-dns-resolver.conf ${D}${sysconfdir}/systemd/system/${PN}.service.d/20-grpc-dns-resolver.conf
+    install -d ${D}${sysconfdir}/systemd/system/aos-sm.service.d
+    install -m 0644 ${WORKDIR}/optee-identity.conf ${D}${sysconfdir}/systemd/system/aos-sm.service.d/20-optee-identity.conf
+    install -m 0644 ${WORKDIR}/grpc-dns-resolver.conf ${D}${sysconfdir}/systemd/system/aos-sm.service.d/20-grpc-dns-resolver.conf
 }
