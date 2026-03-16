@@ -1,5 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
+DEPENDS:append = " efivar"
+
 SRC_URI += "\
     file://optee-identity.conf \
     file://grpc-dns-resolver.conf \
