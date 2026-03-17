@@ -288,9 +288,9 @@ components:
     builder:
       type: custom_script
       work_dir: "workdir"
-      script: "../yocto/meta-aos-rpi/meta-aos-rpi-domd/scripts/sdk_builder.py"
+      script: "../yocto/meta-aos/scripts/sdk_builder.py"
       target_images:
-        - "../output/sdk/aos-vm-dev-glibc-x86_64-%{AOS_BASE_IMAGE}-core2-64-%{MACHINE}-toolchain-5.0.8.sh"
+        - "../output/sdk"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
