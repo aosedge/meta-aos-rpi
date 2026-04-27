@@ -48,6 +48,9 @@ RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v25.6/pro
 RUN unzip protoc-25.6-linux-x86_64.zip -d /usr/local
 RUN rm -f protoc3 protoc-25.6-linux-x86_64.zip
 
+# Install python packages
+RUN pip3 install pydantic
+
 # Install Zephyr SDK
 
 RUN pip3 install west --no-cache-dir
