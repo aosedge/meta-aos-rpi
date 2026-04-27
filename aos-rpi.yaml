@@ -58,35 +58,35 @@ common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "scarthgap"
+      rev: "353491479086e8d3f209d5cce0019a29e143b064"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "scarthgap"
+      rev: "7a5075cef77b5f7af454e9868e1d0019f2fd1394"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "scarthgap"
+      rev: "f92518e20530edfebca45e4170e11460949a5303"
 
     - type: git
       url: "git://git.yoctoproject.org/meta-security"
-      rev: "scarthgap"
+      rev: "97e482b71688b62ac1109d16e89368122f039cbf"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "scarthgap"
+      rev: "3aff015697fa056b4af83b1c9ba44eca346a8a37"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: "master"
+      rev: "v0.3.0"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
       rev: "develop"
 
     - type: git
-      url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "develop"
+      url: "https://github.com/mlohvynenko/meta-aos-rpi.git"
+      rev: "integration"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
@@ -163,8 +163,8 @@ components:
     build-dir: "%{DOM0_BUILD_DIR}"
     sources:
       - type: west
-        url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "develop"
+        url: "https://github.com/mlohvynenko/aos_core_zephyr"
+        rev: "main"
 
     builder:
       type: zephyr
@@ -189,11 +189,11 @@ components:
       - *COMMON_YOCTO_SOURCES
       - type: git
         url: "https://git.yoctoproject.org/meta-raspberrypi"
-        rev: "scarthgap"
+        rev: "2c646d29912dcc873469a57b1c207e1549c5094d"
 
       - type: git
         url: "https://github.com/xen-troops/meta-xt-rpi5.git"
-        rev: "main"
+        rev: "e9473cc4e5b1e1d19df7da59daa17936d636ee21"
 
     builder:
       type: yocto
@@ -310,7 +310,7 @@ components:
       - *COMMON_YOCTO_SOURCES
       - type: git
         url: "https://git.yoctoproject.org/meta-raspberrypi"
-        rev: "scarthgap"
+        rev: "2c646d29912dcc873469a57b1c207e1549c5094d"
 
     builder:
       type: yocto
