@@ -32,6 +32,8 @@ variables:
   AOS_UNIT_MODEL: "aos-rpi"
   AOS_UNIT_VERSION: "1.0.0"
 
+  AOS_COMPONENT_RUNTIME_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{DOMD_NODE_TYPE}-%{MACHINE}-%{DOMD_ROOT}-"
+
   # Version configuration
 
   AOS_BUNDLE_IMAGE_VERSION: "1.0.0"
@@ -241,7 +243,7 @@ components:
             aosupdate.path=sm\\\\/runtimes\\\\/rootfs
             ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp', '', d)}",
           ]
-        - [AOS_COMPONENT_RUNTIME_PREFIX, "%{AOS_DOMD_COMPONENT_PREFIX}"]
+        - [AOS_COMPONENT_RUNTIME_PREFIX, "%{AOS_COMPONENT_RUNTIME_PREFIX}"]
         - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
         - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
 
@@ -370,83 +372,97 @@ components:
       work_dir: "workdir"
       script: "../yocto/meta-aos/scripts/layer_builder.py"
       target_images:
-        - "../output/layers/aos-kuksa-client-layer-%{MACHINE}-1.0.0.tar.gz"
-        - "../output/layers/aos-pylibs-layer-%{MACHINE}-1.0.0.tar.gz"
-        - "../output/layers/aos-rpilibs-layer-%{MACHINE}-1.0.0.tar.gz"
+        - "../output/layers/config.yaml"
+        - "../output/layers/kuksa-client/%{AOS_OS}-%{AOS_ARCHITECTURE}-1.0.0.tar.gz"
+        - "../output/layers/pylibs/%{AOS_OS}-%{AOS_ARCHITECTURE}-1.0.0.tar.gz"
+        - "../output/layers/rpilibs/%{AOS_OS}-%{AOS_ARCHITECTURE}-1.0.0.tar.gz"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
 
       layers:
+        architecture: "%{AOS_ARCHITECTURE}"
+        os: "%{AOS_OS}"
+        output_dir: "../output/layers"
+        publisher:
+          company: "EPAM Systems"
+
+        publish:
+          tlsKey: "aos-user-oem.p12"
+          domain: "aoscloud.io"
+
         yocto_dir: "../%{YOCTOS_WORK_DIR}"
         build_dir: "%{DOMD_BUILD_DIR}"
-        output_dir: "../output/layers"
         base_image: "%{AOS_BASE_IMAGE}"
         items:
-          kuksa-client-layer:
+          kuksa-client:
             target: "aos-kuksa-client-layer"
+            version: "1.0.0"
 
-          pylibs-layer:
+          pylibs:
             target: "aos-pylibs-layer"
+            version: "1.0.0"
 
-          rpilibs-layer:
+          rpilibs:
             target: "aos-rpilibs-layer"
+            version: "1.0.0"
 
-  fota-full:
+  fota:
     builder:
       type: custom_script
       work_dir: "workdir"
       script: "../yocto/meta-aos/scripts/fota_builder.py"
-      args: "-v"
       target_images:
-        - "../output/fota/%{AOS_DOMD_NODE_TYPE}-fota-full-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        - "../output/fota"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
 
       components:
-        rootfs-full:
-          componentType: "%{AOS_DOMD_COMPONENT_PREFIX}domd"
-          enabled: true
-          method: "overlay"
-          ostree_repo: "../../ostree_repo/%{AOS_DOMD_COMPONENT_PREFIX}domd"
-          yocto_dir: "../%{YOCTOS_WORK_DIR}"
-          build_dir: "%{DOMD_BUILD_DIR}"
-          type: "full"
-          description: "DomD rootfs image"
-          version: "%{AOS_BUNDLE_IMAGE_VERSION}"
-          fileName: "%{AOS_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
-          exclude:
-            - "var/*"
+        architecture: "%{AOS_ARCHITECTURE}"
+        os: "%{AOS_OS}"
+        output_dir: "../output/fota"
+        publisher:
+          company: "EPAM Systems"
 
-  fota-incremental:
-    builder:
-      type: custom_script
-      work_dir: "workdir"
-      script: "../yocto/meta-aos/scripts/fota_builder.py"
-      args: "-v"
-      target_images:
-        - "../output/fota/%{AOS_DOMD_NODE_TYPE}-fota-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        publish:
+          tlsKey: "aos-user-oem.p12"
+          domain: "aoscloud.io"
 
-      additional_deps:
-        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
+        work_dir: "workdir"
+        items:
+          rootfs-full:
+            componentType: "%{AOS_COMPONENT_RUNTIME_PREFIX}rootfs"
+            mediaType: "application/vnd.aos.image.component.full.v1+squashfs"
+            enabled: true
+            method: "overlay"
+            ostree_repo: "../../ostree_repo/%{AOS_DOMD_NODE_TYPE}-rootfs"
+            yocto_dir: "../%{YOCTOS_WORK_DIR}"
+            build_dir: "%{DOMD_BUILD_DIR}"
+            type: "full"
+            description: "%{AOS_DOMD_NODE_TYPE} rootfs image"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+            fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+            exclude:
+              - "home/*"
+              - "var/*"
 
-      components:
-        rootfs-incremental:
-          componentType: "%{AOS_DOMD_COMPONENT_PREFIX}domd"
-          enabled: true
-          method: "overlay"
-          ostree_repo: "../../ostree_repo/%{AOS_DOMD_COMPONENT_PREFIX}domd"
-          yocto_dir: "../%{YOCTOS_WORK_DIR}"
-          build_dir: "%{DOMD_BUILD_DIR}"
-          type: "incremental"
-          description: "DomD rootfs image"
-          version: "%{AOS_BUNDLE_IMAGE_VERSION}"
-          requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
-          exclude:
-            - "var/*"
-          fileName: "%{AOS_DOMD_COMPONENT_PREFIX}domd-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
-
+          rootfs-incremental:
+            componentType: "%{AOS_COMPONENT_RUNTIME_PREFIX}rootfs"
+            mediaType: "application/vnd.aos.image.component.inc.v1+squashfs"
+            enabled: false
+            method: "overlay"
+            ostree_repo: "../../ostree_repo/%{AOS_DOMD_NODE_TYPE}-rootfs"
+            yocto_dir: "../%{YOCTOS_WORK_DIR}"
+            build_dir: "%{DOMD_BUILD_DIR}"
+            type: "incremental"
+            description: "%{AOS_DOMD_NODE_TYPE} rootfs image"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+            requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
+            fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+            exclude:
+              - "home/*"
+              - "var/*"
 images:
   boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
@@ -536,9 +552,8 @@ parameters:
       default: true
       overrides:
         variables:
-          AOS_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-"
-          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-dom0"
-          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-domd"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-single-dom0"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-single-domd"
           DOMD_NODE_TYPE: "single"
 
         components:
@@ -555,9 +570,8 @@ parameters:
     "main":
       overrides:
         variables:
-          AOS_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
-          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-dom0"
-          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-domd"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-main-dom0"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-main-domd"
           DOMD_NODE_TYPE: "main"
 
         components:
@@ -576,9 +590,8 @@ parameters:
     "secondary":
       overrides:
         variables:
-          AOS_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
-          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-dom0"
-          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-domd"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-secondary-dom0"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-secondary-domd"
           DOMD_NODE_TYPE: "secondary"
 
         components:
