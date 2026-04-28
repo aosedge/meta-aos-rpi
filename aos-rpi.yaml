@@ -47,7 +47,7 @@ variables:
   AOS_INSTALL_IMAGE: "core-image-minimal"
 
   # Node info
-  AOS_ARCHITECTURE: "aarch64"
+  AOS_ARCHITECTURE: "arm64"
   AOS_ARCHITECTURE_VARIANT: ""
   AOS_OS: "linux"
   AOS_OS_VERSION: ""
