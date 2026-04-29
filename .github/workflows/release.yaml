@@ -104,7 +104,12 @@ jobs:
 
               echo "Build FOTA"
 
-              docker/run_docker.sh -n -w build -- ninja fota-full
+              docker/run_docker.sh -n -w build -- ninja fota
+
+              if [ -d build/output/fota ]; then
+                echo "Archive components"
+                tar -czf "build/output/aos-rpi-fota-${node_type}-${root_type}-${version}.tar.gz" -C build output fota
+              fi
 
             done
           done
@@ -115,6 +120,11 @@ jobs:
           echo "Build layers"
 
           docker/run_docker.sh -n -w build -- ninja layers
+
+          if [ -d build/output/layers ]; then
+            echo "Archive layers"
+            tar -czf "build/output/aos-rpi-layers-${version}.tar.gz" -C build output layers
+          fi
 
           echo "Build SDK"
 
@@ -190,13 +200,13 @@ jobs:
           gh release upload "$tag" build/os_sublist.json
 
 
-          for file in build/output/layers/*; do
-            gh release upload "$tag" "$file"
-          done
+          if [ -f "build/output/aos-rpi-layers-${version}.tar.gz" ]; then
+            gh release upload "$tag" "build/output/aos-rpi-layers-${version}.tar.gz"
+          fi
 
-          for file in build/output/fota/*; do
-            gh release upload "$tag" "$file"
-          done
+          if [ -f "build/output/aos-rpi-fota-${node_type}-${root_type}-${version}.tar.gz" ]; then
+            gh release upload "$tag" "build/output/aos-rpi-fota-${node_type}-${root_type}-${version}.tar.gz"
+          fi
 
           for file in build/output/sdk/*.sh; do
             gh release upload "$tag" "$file"
