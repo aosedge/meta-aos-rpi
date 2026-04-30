@@ -106,6 +106,8 @@ jobs:
 
               docker/run_docker.sh -n -w build -- ninja fota
 
+              ls -la build/output/fota
+
               if [ -d build/output/fota ]; then
                 echo "Archive components"
                 tar -czf "build/output/aos-rpi-fota-${node_type}-${root_type}-${version}.tar.gz" -C build output fota
@@ -120,6 +122,8 @@ jobs:
           echo "Build layers"
 
           docker/run_docker.sh -n -w build -- ninja layers
+
+          ls -la build/output/layers
 
           if [ -d build/output/layers ]; then
             echo "Archive layers"
@@ -199,6 +203,7 @@ jobs:
 
           gh release upload "$tag" build/os_sublist.json
 
+          tree build/output || ls -la build/output
 
           if [ -f "build/output/aos-rpi-layers-${version}.tar.gz" ]; then
             gh release upload "$tag" "build/output/aos-rpi-layers-${version}.tar.gz"
