@@ -7,7 +7,7 @@ variables:
   DOM0_OS: "zephyr"
 
   INSTALL_BUILD_DIR: "build-install"
-  DOMD_BUILD_DIR: "build-domd"
+  DOMD_BUILD_DIR: "build-domd-%{DOMD_NODE_TYPE}"
   DOM0_BUILD_DIR: "zephyr/build-dom0"
 
   XT_XEN_DTBO_NAME: "%{SOC_FAMILY}-%{MACHINE}-xen.dtbo"
