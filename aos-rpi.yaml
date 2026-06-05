@@ -69,7 +69,7 @@ common_data:
       rev: "scarthgap"
 
     - type: git
-      url: "git://git.yoctoproject.org/meta-security"
+      url: "https://git.yoctoproject.org/meta-security"
       rev: "scarthgap"
 
     - type: git
