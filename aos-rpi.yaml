@@ -69,7 +69,7 @@ common_data:
       rev: "f92518e20530edfebca45e4170e11460949a5303"
 
     - type: git
-      url: "git://git.yoctoproject.org/meta-security"
+      url: "https://git.yoctoproject.org/meta-security"
       rev: "97e482b71688b62ac1109d16e89368122f039cbf"
 
     - type: git
