@@ -7,7 +7,7 @@ variables:
   DOM0_OS: "zephyr"
 
   INSTALL_BUILD_DIR: "build-install"
-  DOMD_BUILD_DIR: "build-domd"
+  DOMD_BUILD_DIR: "build-domd-%{DOMD_NODE_TYPE}"
   DOM0_BUILD_DIR: "zephyr/build-dom0"
 
   XT_XEN_DTBO_NAME: "%{SOC_FAMILY}-%{MACHINE}-xen.dtbo"
@@ -30,7 +30,9 @@ variables:
 
   # Aos unit configuration
   AOS_UNIT_MODEL: "aos-rpi"
-  AOS_UNIT_VERSION: "1.0"
+  AOS_UNIT_VERSION: "1.0.0"
+
+  AOS_COMPONENT_RUNTIME_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{DOMD_NODE_TYPE}-%{MACHINE}-%{DOMD_ROOT}-"
 
   # Version configuration
 
@@ -45,6 +47,12 @@ variables:
 
   AOS_BASE_IMAGE: "aos-image-rpi"
   AOS_INSTALL_IMAGE: "core-image-minimal"
+
+  # Node info
+  AOS_ARCHITECTURE: "arm64"
+  AOS_ARCHITECTURE_VARIANT: ""
+  AOS_OS: "linux"
+  AOS_OS_VERSION: ""
 
 common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
@@ -61,7 +69,7 @@ common_data:
       rev: "f92518e20530edfebca45e4170e11460949a5303"
 
     - type: git
-      url: "git://git.yoctoproject.org/meta-security"
+      url: "https://git.yoctoproject.org/meta-security"
       rev: "97e482b71688b62ac1109d16e89368122f039cbf"
 
     - type: git
@@ -111,6 +119,23 @@ common_data:
     # Enable security features
     - [DISTRO_FEATURES:append, " security"]
 
+  domd-common-layers: &DOMD_COMMON_LAYERS
+    - "../meta-virtualization"
+    - "../meta-openembedded/meta-oe"
+    - "../meta-openembedded/meta-networking"
+    - "../meta-openembedded/meta-perl"
+    - "../meta-openembedded/meta-python"
+    - "../meta-openembedded/meta-filesystems"
+    - "../meta-security"
+    - "../meta-selinux"
+    - "../meta-xt-common/meta-xt-domx"
+    - "../meta-xt-common/meta-xt-driver-domain"
+    - "../meta-xt-common/meta-xt-security"
+    - "../meta-raspberrypi"
+    - "../meta-xt-rpi5"
+    - "../meta-aos"
+    - "../meta-aos-rpi/meta-aos-rpi-domd-common"
+
   common_dom_conf: &COMMON_DOM_CONF # Make logs persistent
     - [VOLATILE_LOG_DIR, "no"]
 
@@ -132,9 +157,6 @@ common_data:
     # Requires to properly generate Aos FOTA
     - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
 
-    # Aos UM components prefix
-    - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-"]
-
 components:
   dom0:
     default: true
@@ -152,7 +174,7 @@ components:
       vars:
         - 'CONFIG_AOS_NODE_TYPE="%{AOS_DOM0_NODE_TYPE}"'
         - 'CONFIG_TA_DEPLOY_DIR="../../../%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/ta"'
-        - 'CONFIG_AOS_ROOT_CA_PATH="../../../%{YOCTOS_WORK_DIR}/meta-aos/recipes-aos/aos-rootca/files/Aos_Root_CA.pem"'
+        - 'CONFIG_AOS_ROOT_CA_PATH="../../../%{YOCTOS_WORK_DIR}/meta-aos/recipes-support/ca-certificates/ca-certificates/AosRootCA.crt"'
 
       target_images:
         - "build/zephyr/zephyr.bin"
@@ -218,30 +240,21 @@ components:
             opendisk.target=\\\\/dev\\\\/%{DOMD_BLK_DEV}3
             opendisk.pkcs11=optee
             aosupdate.disk=\\\\/dev\\\\/aosvg\\\\/workdirs
-            aosupdate.path=um\\\\/update_rootfs
+            aosupdate.path=sm\\\\/runtimes\\\\/rootfs
             ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp', '', d)}",
           ]
-        - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_DOMD_COMPONENT_PREFIX}"]
+        - [AOS_COMPONENT_RUNTIME_PREFIX, "%{AOS_COMPONENT_RUNTIME_PREFIX}"]
         - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
         - [AOS_DNS_IP, "%{MAIN_NODE_IP}"]
 
+        - [AOS_ARCHITECTURE, "%{AOS_ARCHITECTURE}"]
+        - [AOS_ARCHITECTURE_VARIANT, "%{AOS_ARCHITECTURE_VARIANT}"]
+        - [AOS_OS, "%{AOS_OS}"]
+        - [AOS_OS_VERSION, "%{AOS_OS_VERSION}"]
+
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
-        - "../meta-virtualization"
-        - "../meta-openembedded/meta-oe"
-        - "../meta-openembedded/meta-networking"
-        - "../meta-openembedded/meta-perl"
-        - "../meta-openembedded/meta-python"
-        - "../meta-openembedded/meta-filesystems"
-        - "../meta-security"
-        - "../meta-selinux"
-        - "../meta-xt-common/meta-xt-domx"
-        - "../meta-xt-common/meta-xt-driver-domain"
-        - "../meta-xt-common/meta-xt-security"
-        - "../meta-raspberrypi"
-        - "../meta-xt-rpi5"
-        - "../meta-aos"
-        - "../meta-aos-rpi/meta-aos-rpi-domd"
+        - *DOMD_COMMON_LAYERS
 
       target_images:
         - "tmp/deploy/images/%{MACHINE}/bootfiles"
@@ -277,9 +290,9 @@ components:
     builder:
       type: custom_script
       work_dir: "workdir"
-      script: "../yocto/meta-aos-rpi/meta-aos-rpi-domd/scripts/sdk_builder.py"
+      script: "../yocto/meta-aos/scripts/sdk_builder.py"
       target_images:
-        - "../output/sdk/aos-vm-dev-glibc-x86_64-%{AOS_BASE_IMAGE}-core2-64-%{MACHINE}-toolchain-5.0.8.sh"
+        - "../output/sdk"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
@@ -359,83 +372,97 @@ components:
       work_dir: "workdir"
       script: "../yocto/meta-aos/scripts/layer_builder.py"
       target_images:
-        - "../output/layers/aos-kuksa-client-layer-%{MACHINE}-1.0.0.tar.gz"
-        - "../output/layers/aos-pylibs-layer-%{MACHINE}-1.0.0.tar.gz"
-        - "../output/layers/aos-rpilibs-layer-%{MACHINE}-1.0.0.tar.gz"
+        - "../output/layers/config.yaml"
+        - "../output/layers/kuksa-client/%{AOS_OS}-%{AOS_ARCHITECTURE}-1.0.0.tar.gz"
+        - "../output/layers/pylibs/%{AOS_OS}-%{AOS_ARCHITECTURE}-1.0.0.tar.gz"
+        - "../output/layers/rpilibs/%{AOS_OS}-%{AOS_ARCHITECTURE}-1.0.0.tar.gz"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
 
       layers:
+        architecture: "%{AOS_ARCHITECTURE}"
+        os: "%{AOS_OS}"
+        output_dir: "../output/layers"
+        publisher:
+          company: "EPAM Systems"
+
+        publish:
+          tlsKey: "aos-user-oem.p12"
+          domain: "aoscloud.io"
+
         yocto_dir: "../%{YOCTOS_WORK_DIR}"
         build_dir: "%{DOMD_BUILD_DIR}"
-        output_dir: "../output/layers"
         base_image: "%{AOS_BASE_IMAGE}"
         items:
-          kuksa-client-layer:
+          kuksa-client:
             target: "aos-kuksa-client-layer"
+            version: "1.0.0"
 
-          pylibs-layer:
+          pylibs:
             target: "aos-pylibs-layer"
+            version: "1.0.0"
 
-          rpilibs-layer:
+          rpilibs:
             target: "aos-rpilibs-layer"
+            version: "1.0.0"
 
-  fota-full:
+  fota:
     builder:
       type: custom_script
       work_dir: "workdir"
       script: "../yocto/meta-aos/scripts/fota_builder.py"
-      args: "-v"
       target_images:
-        - "../output/fota/%{AOS_DOMD_NODE_TYPE}-fota-full-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        - "../output/fota"
 
       additional_deps:
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
 
       components:
-        rootfs-full:
-          componentType: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
-          enabled: true
-          method: "overlay"
-          ostree_repo: "../../ostree_repo/%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
-          yocto_dir: "../%{YOCTOS_WORK_DIR}"
-          build_dir: "%{DOMD_BUILD_DIR}"
-          type: "full"
-          description: "DomD rootfs image"
-          version: "%{AOS_BUNDLE_IMAGE_VERSION}"
-          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
-          exclude:
-            - "var/*"
+        architecture: "%{AOS_ARCHITECTURE}"
+        os: "%{AOS_OS}"
+        output_dir: "../output/fota"
+        publisher:
+          company: "EPAM Systems"
 
-  fota-incremental:
-    builder:
-      type: custom_script
-      work_dir: "workdir"
-      script: "../yocto/meta-aos/scripts/fota_builder.py"
-      args: "-v"
-      target_images:
-        - "../output/fota/%{AOS_DOMD_NODE_TYPE}-fota-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.tar"
+        publish:
+          tlsKey: "aos-user-oem.p12"
+          domain: "aoscloud.io"
 
-      additional_deps:
-        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.rootfs.ext4"
+        work_dir: "workdir"
+        items:
+          rootfs-full:
+            componentType: "%{AOS_COMPONENT_RUNTIME_PREFIX}rootfs"
+            mediaType: "application/vnd.aos.image.component.full.v1+squashfs"
+            enabled: true
+            method: "overlay"
+            ostree_repo: "../../ostree_repo/%{AOS_DOMD_NODE_TYPE}-rootfs"
+            yocto_dir: "../%{YOCTOS_WORK_DIR}"
+            build_dir: "%{DOMD_BUILD_DIR}"
+            type: "full"
+            description: "%{AOS_DOMD_NODE_TYPE} rootfs image"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+            fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+            exclude:
+              - "home/*"
+              - "var/*"
 
-      components:
-        rootfs-incremental:
-          componentType: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
-          enabled: true
-          method: "overlay"
-          ostree_repo: "../../ostree_repo/%{AOS_UM_DOMD_COMPONENT_PREFIX}domd"
-          yocto_dir: "../%{YOCTOS_WORK_DIR}"
-          build_dir: "%{DOMD_BUILD_DIR}"
-          type: "incremental"
-          description: "DomD rootfs image"
-          version: "%{AOS_BUNDLE_IMAGE_VERSION}"
-          requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
-          exclude:
-            - "var/*"
-          fileName: "%{AOS_UM_DOMD_COMPONENT_PREFIX}domd-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
-
+          rootfs-incremental:
+            componentType: "%{AOS_COMPONENT_RUNTIME_PREFIX}rootfs"
+            mediaType: "application/vnd.aos.image.component.inc.v1+squashfs"
+            enabled: false
+            method: "overlay"
+            ostree_repo: "../../ostree_repo/%{AOS_DOMD_NODE_TYPE}-rootfs"
+            yocto_dir: "../%{YOCTOS_WORK_DIR}"
+            build_dir: "%{DOMD_BUILD_DIR}"
+            type: "incremental"
+            description: "%{AOS_DOMD_NODE_TYPE} rootfs image"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+            requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
+            fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+            exclude:
+              - "home/*"
+              - "var/*"
 images:
   boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
@@ -525,9 +552,8 @@ parameters:
       default: true
       overrides:
         variables:
-          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-"
-          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-dom0"
-          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-single-domd"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-single-dom0"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-single-domd"
           DOMD_NODE_TYPE: "single"
 
         components:
@@ -538,12 +564,14 @@ parameters:
                 - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
                 - [AOS_USE_DHCP, "1"]
 
+              layers:
+                - "../meta-aos-rpi/meta-aos-rpi-domd-main"
+
     "main":
       overrides:
         variables:
-          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-"
-          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-dom0"
-          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-main-domd"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-main-dom0"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-main-domd"
           DOMD_NODE_TYPE: "main"
 
         components:
@@ -554,13 +582,16 @@ parameters:
                 - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
                 - [AOS_NODE_GW_IP, "10.0.0.1"]
                 - [AOS_USE_DHCP, "0"]
+                - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
+
+              layers:
+                - "../meta-aos-rpi/meta-aos-rpi-domd-main"
 
     "secondary":
       overrides:
         variables:
-          AOS_UM_DOMD_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-"
-          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-dom0"
-          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-secondary-domd"
+          AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-secondary-dom0"
+          AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-secondary-domd"
           DOMD_NODE_TYPE: "secondary"
 
         components:
@@ -568,8 +599,10 @@ parameters:
             builder:
               conf:
                 - [AOS_MAIN_NODE, "0"]
-                - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
                 - [AOS_USE_DHCP, "1"]
+
+              layers:
+                - "../meta-aos-rpi/meta-aos-rpi-domd-node"
 
   DOMD_CAN_TYPE:
     desc: "Domd CAN chip type"
@@ -674,3 +707,25 @@ parameters:
 
     disabled:
       default: true
+
+  ENABLE_AOS_IN_DOM0:
+    desc: "Enable Aos in Dom0"
+    "yes":
+      overrides:
+        components:
+          aos-vm:
+            builder:
+              conf:
+                - [
+                    IMAGE_INSTALL:append,
+                    " ${@'aos-messageproxy' if bb.utils.to_boolean(d.getVar('AOS_MAIN_NODE')) else ''}",
+                  ]
+
+    "no":
+      default: true
+      overrides:
+        components:
+          dom0:
+            builder:
+              vars:
+                - "CONFIG_AOS_ENABLE=n"

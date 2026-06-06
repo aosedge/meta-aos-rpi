@@ -1,0 +1,10 @@
+[Unit]
+Description=AOS Reboot service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sync
+ExecStart=/usr/bin/xenstore-write data/user-reboot 2
+
+[Install]
+WantedBy=multi-user.target
