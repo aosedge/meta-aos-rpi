@@ -82,11 +82,11 @@ common_data:
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
-      rev: "v8.2.3"
+      rev: "v9.0.0"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "v1.1.3"
+      rev: "v2.0.0"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
@@ -164,7 +164,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "v1.1.2"
+        rev: "v1.1.3"
 
     builder:
       type: zephyr
