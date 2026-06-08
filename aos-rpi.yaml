@@ -389,7 +389,6 @@ components:
 
         publish:
           tlsKey: "aos-user-oem.p12"
-          domain: "aoscloud.io"
 
         yocto_dir: "../%{YOCTOS_WORK_DIR}"
         build_dir: "%{DOMD_BUILD_DIR}"
@@ -427,7 +426,6 @@ components:
 
         publish:
           tlsKey: "aos-user-oem.p12"
-          domain: "aoscloud.io"
 
         work_dir: "workdir"
         items:
