@@ -194,18 +194,20 @@ jobs:
 
               echo "Uploading $artifact_name"
               gh release upload "$tag" "build/$artifact_name"
+
+              artifact_name="aos-rpi-fota-${node_type}-${root_type}-${version}.tar.gz"
+              if [ -f "build/output/$artifact_name" ]; then
+                echo "Uploading $artifact_name"
+                gh release upload "$tag" "build/output/$artifact_name"
+              fi
+
             done
           done
 
           gh release upload "$tag" build/os_sublist.json
 
-
           if [ -f "build/output/aos-rpi-layers-${version}.tar.gz" ]; then
             gh release upload "$tag" "build/output/aos-rpi-layers-${version}.tar.gz"
-          fi
-
-          if [ -f "build/output/aos-rpi-fota-${node_type}-${root_type}-${version}.tar.gz" ]; then
-            gh release upload "$tag" "build/output/aos-rpi-fota-${node_type}-${root_type}-${version}.tar.gz"
           fi
 
           for file in build/output/sdk/*.sh; do

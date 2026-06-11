@@ -82,11 +82,11 @@ common_data:
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
-      rev: "v8.2.3"
+      rev: "develop"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "v1.1.3"
+      rev: "develop"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
@@ -389,7 +389,6 @@ components:
 
         publish:
           tlsKey: "aos-user-oem.p12"
-          domain: "aoscloud.io"
 
         yocto_dir: "../%{YOCTOS_WORK_DIR}"
         build_dir: "%{DOMD_BUILD_DIR}"
@@ -427,7 +426,6 @@ components:
 
         publish:
           tlsKey: "aos-user-oem.p12"
-          domain: "aoscloud.io"
 
         work_dir: "workdir"
         items:
@@ -440,7 +438,8 @@ components:
             yocto_dir: "../%{YOCTOS_WORK_DIR}"
             build_dir: "%{DOMD_BUILD_DIR}"
             type: "full"
-            description: "%{AOS_DOMD_NODE_TYPE} rootfs image"
+            title: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs full image"
+            description: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs full image for ${MACHINE}"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
             fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
             exclude:
@@ -456,7 +455,8 @@ components:
             yocto_dir: "../%{YOCTOS_WORK_DIR}"
             build_dir: "%{DOMD_BUILD_DIR}"
             type: "incremental"
-            description: "%{AOS_DOMD_NODE_TYPE} rootfs image"
+            title: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs incremental image"
+            description: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs incremental image for ${MACHINE}"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
             requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
             fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
