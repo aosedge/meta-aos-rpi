@@ -47,6 +47,10 @@ ROOTFS_POSTPROCESS_COMMAND:append = " \
     update_user_profile; \
 "
 
+TOOLCHAIN_HOST_TASK:append = " \
+    nativesdk-ros-sdk-env \
+"
+
 # Set fixed rootfs size
 IMAGE_ROOTFS_SIZE ?= "1048576"
 IMAGE_OVERHEAD_FACTOR ?= "1.0"
