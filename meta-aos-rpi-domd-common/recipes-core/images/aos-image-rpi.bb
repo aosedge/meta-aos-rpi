@@ -53,6 +53,13 @@ TOOLCHAIN_HOST_TASK:append = " \
     nativesdk-python-cmake-module \
 "
 
+# Packages needed by ROS2 packages
+IMAGE_INSTALL:append = " \
+    autoware-auto-msgs \
+    autoware-control-msgs \
+    autoware-vehicle-msgs \
+"
+
 # Set fixed rootfs size
 IMAGE_ROOTFS_SIZE ?= "1048576"
 IMAGE_OVERHEAD_FACTOR ?= "1.0"
