@@ -499,6 +499,10 @@ components:
             target: "aos-ml-layer"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
 
+          mqtt:
+            target: "aos-mqtt-layer"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+
   fota:
     builder:
       type: custom_script
