@@ -558,7 +558,7 @@ images:
       domd_aos:
         gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
         type: empty
-        size: 4096 MiB
+        size: 32768 MiB
 
   install-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
