@@ -143,6 +143,28 @@ common_data:
     # Enable security features
     - [DISTRO_FEATURES:append, " security"]
 
+      # Omit unneeded ROS recipes from the build
+    - [
+        BBMASK:append,
+        " generated-recipes/libcamera/libcamera_
+        generated-recipes/raph-robot/
+        generated-recipes/parameter-expression/
+        recipes-core/packagegroups/packagegroup-ros-world-jazzy.bb
+        recipes-core/packagegroups/packagegroup-ros-world\\.bb
+        recipes-core/images/ros-image-world.bb
+        generated-recipes/navigation2/
+        generated-recipes/trac-ik/
+        generated-recipes/ardrone-ros/
+        generated-recipes/easynav-plugins/
+        generated-recipes/turtlebot4/turtlebot4-navigation_
+        generated-recipes/turtlebot4-simulator/
+        generated-recipes/turtlebot3-home-service-challenge/
+        generated-recipes/turtlebot3-manipulation/turtlebot3-manipulation-navigation2_
+        generated-recipes/neo-nav2-bringup/
+        generated-recipes/ai-worker/ffw-navigation_
+        ",
+      ]
+
   domd-common-layers: &DOMD_COMMON_LAYERS
     - "../meta-virtualization"
     - "../meta-openembedded/meta-oe"
