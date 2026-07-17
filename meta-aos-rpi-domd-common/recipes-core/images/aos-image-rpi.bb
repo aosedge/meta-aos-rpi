@@ -55,6 +55,7 @@ TOOLCHAIN_HOST_TASK:append = " \
 "
 
 TOOLCHAIN_TARGET_TASK:append = " \
+    python-cmake-module \
     ${ROS_SDK_TARGET_PACKAGES} \
 "
 
