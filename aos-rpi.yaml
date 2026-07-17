@@ -29,7 +29,7 @@ variables:
   # Aos config
 
   # Aos unit configuration
-  AOS_UNIT_MODEL: "aos-rpi"
+  AOS_UNIT_MODEL: "aos-ros-rpi"
   AOS_UNIT_VERSION: "1.0.0"
 
   AOS_COMPONENT_RUNTIME_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{DOMD_NODE_TYPE}-%{MACHINE}-%{DOMD_ROOT}-"
