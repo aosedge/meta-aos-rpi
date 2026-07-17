@@ -70,6 +70,7 @@ IMAGE_INSTALL:append = " \
     pcl-ros \
     sensor-msgs \
     sensor-msgs-py \
+    redis \
 "
 
 # Set fixed rootfs size
