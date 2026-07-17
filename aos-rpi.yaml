@@ -165,6 +165,17 @@ common_data:
         ",
       ]
 
+    # Set ROS2 Jazzy configuration
+    - [PACKAGECONFIG:append:pn-clang, " libomp"]
+    - [FORTRAN:forcevariable, ",fortran"]
+    - [RUNTIMETARGET:append:pn-gcc-runtime, " libquadmath"]
+    - [HOSTTOOLS:append, " gfortran"]
+    - [ZENOH_SHARED_MEMORY, "true"]
+    - [ZENOH_UNSTABLE_API, "true"]
+    - [INSANE_SKIP:pn-zenoh-c, "buildpaths"]
+    - [DEBUG_PREFIX_MAP:remove:pn-zenoh-c, "-fcanon-prefix-map"]
+    - [DEBUG_PREFIX_MAP:remove:pn-zenoh-c-native, "-fcanon-prefix-map"]
+
   domd-common-layers: &DOMD_COMMON_LAYERS
     - "../meta-virtualization"
     - "../meta-openembedded/meta-oe"
