@@ -81,6 +81,30 @@ common_data:
       rev: "v0.3.0"
 
     - type: git
+      url: "https://github.com/kraj/meta-clang.git"
+      rev: "scarthgap"
+
+    - type: git
+      url: "https://github.com/ros/meta-ros.git"
+      rev: "scarthgap"
+
+    - type: git
+      url: "https://github.com/zboszor/meta-clang-revival"
+      rev: "scarthgap"
+
+    - type: git
+      url: "https://github.com/zboszor/meta-python-ai"
+      rev: "scarthgap"
+
+    - type: git
+      url: "https://github.com/robwoolley/meta-intel-realsense.git"
+      rev: "scarthgap"
+
+    - type: git
+      url: "https://github.com/Jarsop/meta-zenoh.git"
+      rev: "scarthgap"
+
+    - type: git
       url: "https://github.com/aosedge/meta-aos"
       rev: "develop"
 
@@ -122,12 +146,22 @@ common_data:
   domd-common-layers: &DOMD_COMMON_LAYERS
     - "../meta-virtualization"
     - "../meta-openembedded/meta-oe"
+    - "../meta-openembedded/meta-initramfs"
     - "../meta-openembedded/meta-networking"
     - "../meta-openembedded/meta-perl"
     - "../meta-openembedded/meta-python"
+    - "../meta-openembedded/meta-webserver"
+    - "../meta-zenoh/meta-zenoh"
+    - "../meta-ros/meta-ros-common"
+    - "../meta-ros/meta-ros2"
+    - "../meta-ros/meta-ros2-jazzy"
+    - "../meta-clang-revival"
+    - "../meta-python-ai"
+    - "../meta-clang"
     - "../meta-openembedded/meta-filesystems"
     - "../meta-security"
     - "../meta-selinux"
+    - "../meta-intel-realsense"
     - "../meta-xt-common/meta-xt-domx"
     - "../meta-xt-common/meta-xt-driver-domain"
     - "../meta-xt-common/meta-xt-security"
