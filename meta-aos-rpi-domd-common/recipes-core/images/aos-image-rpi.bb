@@ -58,6 +58,12 @@ IMAGE_INSTALL:append = " \
     autoware-auto-msgs \
     autoware-control-msgs \
     autoware-vehicle-msgs \
+    ros-core \
+    ros2cli \
+    cv-bridge \
+    pcl-ros \
+    sensor-msgs \
+    sensor-msgs-py \
 "
 
 # Set fixed rootfs size
