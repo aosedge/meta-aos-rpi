@@ -495,6 +495,10 @@ components:
             target: "aos-boto3-layer"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
 
+          ml:
+            target: "aos-ml-layer"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+
   fota:
     builder:
       type: custom_script
