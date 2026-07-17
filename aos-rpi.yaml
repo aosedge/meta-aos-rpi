@@ -177,6 +177,19 @@ common_data:
     - [DEBUG_PREFIX_MAP:remove:pn-zenoh-c-native, "-fcanon-prefix-map"]
 
     - [ROS_DISTRO, "jazzy"]
+    - [
+        ROS_WORLD_SKIP_GROUPS:append,
+        " moveit
+        fortran
+        qt5
+        ogre
+        webots-python-modules
+        opengl
+        x11
+        gazebo
+        gazebo11
+        hunter",
+      ]
 
   domd-common-layers: &DOMD_COMMON_LAYERS
     - "../meta-virtualization"
