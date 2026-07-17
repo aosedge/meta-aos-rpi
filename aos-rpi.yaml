@@ -503,6 +503,10 @@ components:
             target: "aos-mqtt-layer"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
 
+          rosbag:
+            target: "aos-rosbag-layer"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+
   fota:
     builder:
       type: custom_script
