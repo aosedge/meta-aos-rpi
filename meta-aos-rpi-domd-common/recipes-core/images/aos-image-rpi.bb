@@ -49,6 +49,8 @@ ROOTFS_POSTPROCESS_COMMAND:append = " \
 
 TOOLCHAIN_HOST_TASK:append = " \
     nativesdk-ros-sdk-env \
+    nativesdk-python3-colcon-cmake \
+    nativesdk-python-cmake-module \
 "
 
 # Set fixed rootfs size
