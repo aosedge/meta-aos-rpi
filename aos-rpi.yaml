@@ -176,6 +176,8 @@ common_data:
     - [DEBUG_PREFIX_MAP:remove:pn-zenoh-c, "-fcanon-prefix-map"]
     - [DEBUG_PREFIX_MAP:remove:pn-zenoh-c-native, "-fcanon-prefix-map"]
 
+    - [ROS_DISTRO, "jazzy"]
+
   domd-common-layers: &DOMD_COMMON_LAYERS
     - "../meta-virtualization"
     - "../meta-openembedded/meta-oe"
