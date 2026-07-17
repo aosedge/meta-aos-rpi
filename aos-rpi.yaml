@@ -191,6 +191,9 @@ common_data:
         hunter",
       ]
 
+    - [PREFERRED_VERSION_python3-boto3, "1.34.131"]
+    - [PREFERRED_VERSION_python3-botocore, "1.34.131"]
+
   domd-common-layers: &DOMD_COMMON_LAYERS
     - "../meta-virtualization"
     - "../meta-openembedded/meta-oe"
@@ -486,6 +489,10 @@ components:
 
           rpilibs:
             target: "aos-rpilibs-layer"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+
+          boto3:
+            target: "aos-boto3-layer"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
 
   fota:
