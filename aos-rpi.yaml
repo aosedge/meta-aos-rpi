@@ -507,6 +507,10 @@ components:
             target: "aos-rosbag-layer"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
 
+          valkey:
+            target: "aos-valkey-layer"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
+
   fota:
     builder:
       type: custom_script
