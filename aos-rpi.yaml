@@ -194,6 +194,8 @@ common_data:
     - [PREFERRED_VERSION_python3-boto3, "1.34.131"]
     - [PREFERRED_VERSION_python3-botocore, "1.34.131"]
 
+    - [LICENSE_FLAGS_ACCEPTED:append, " commercial synaptics-killswitch"]
+
   domd-common-layers: &DOMD_COMMON_LAYERS
     - "../meta-virtualization"
     - "../meta-openembedded/meta-oe"
