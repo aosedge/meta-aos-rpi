@@ -478,15 +478,15 @@ components:
         items:
           kuksa-client:
             target: "aos-kuksa-client-layer"
-            version: "1.0.0"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
 
           pylibs:
             target: "aos-pylibs-layer"
-            version: "1.0.0"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
 
           rpilibs:
             target: "aos-rpilibs-layer"
-            version: "1.0.0"
+            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
 
   fota:
     builder:
