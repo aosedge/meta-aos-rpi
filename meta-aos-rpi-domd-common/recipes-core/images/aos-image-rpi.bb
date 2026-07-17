@@ -71,6 +71,7 @@ IMAGE_INSTALL:append = " \
     sensor-msgs \
     sensor-msgs-py \
     redis \
+    python3-jsonschema \
 "
 
 # Set fixed rootfs size
