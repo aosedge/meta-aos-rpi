@@ -37,6 +37,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8
 
+RUN apt-get install  -y git diffstat \
+    python3-pexpect xz-utils debianutils iputils-ping \
+    python3-git python3-jinja2 libegl1-mesa \
+    g++-multilib lsb-release python3-distutils time gfortran
+
 # Install moulin
 
 RUN pip3 install git+https://github.com/xen-troops/moulin --no-cache-dir
