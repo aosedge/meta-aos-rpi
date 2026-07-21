@@ -251,7 +251,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "v1.1.2"
+        rev: "v1.1.3"
 
     builder:
       type: zephyr
