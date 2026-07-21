@@ -647,7 +647,7 @@ images:
       install:
         gpt_type: ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
         type: ext4
-        size: 512 MiB
+        size: 700 MiB
         items:
           "boot.img.gz": "boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
           "rootfs.img.gz": "rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
