@@ -75,6 +75,27 @@ wait_for_block_device() {
     return 0
 }
 
+flash_image() {
+    src="$1"
+    dst="$2"
+    pipe="/tmp/flash_pipe"
+
+    rm -f "$pipe"
+    mkfifo "$pipe"
+
+    gunzip -c "$src" >"$pipe" &
+    gunzip_pid=$!
+
+    dd of="$dst" bs=8096 <"$pipe"
+
+    rm -f "$pipe"
+
+    if ! wait "$gunzip_pid"; then
+        echo "ERROR: failed to decompress $src, aborting install" >&2
+        exit 1
+    fi
+}
+
 update_user() {
     mkdir -p /sd1 /flash1
     mount -t auto /dev/mmcblk0p1 /sd1/
@@ -122,7 +143,7 @@ mount -t auto /dev/mmcblk0p2 /sd2
 
 echo "Flashing root device..."
 
-gunzip -c /sd2/rootfs.img.gz | dd of="/dev/$BLOCK_DEVICE" bs=8096
+flash_image /sd2/rootfs.img.gz "/dev/$BLOCK_DEVICE"
 mkfs.ext4 -F -E lazy_journal_init=1 "/dev/$BLOCK_DEVICE_AOS_PARTITION"
 
 mount -t auto "/dev/$BLOCK_DEVICE_AOS_PARTITION" /flash3
@@ -133,7 +154,7 @@ echo "Flashing SD card..."
 
 cp /sd2/boot.img.gz /flash3 
 umount /sd2
-gunzip -c /flash3/boot.img.gz | dd of=/dev/mmcblk0 bs=8096
+flash_image /flash3/boot.img.gz /dev/mmcblk0
 rm /flash3/boot.img.gz
 
 echo
