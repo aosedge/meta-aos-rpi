@@ -153,6 +153,8 @@ common_data:
         recipes-core/packagegroups/packagegroup-ros-world\\.bb
         recipes-core/images/ros-image-world.bb
         generated-recipes/navigation2/
+        recipes-bbappends/navigation2/
+        recipes-bbappends-nav2/
         generated-recipes/trac-ik/
         generated-recipes/ardrone-ros/
         generated-recipes/easynav-plugins/
