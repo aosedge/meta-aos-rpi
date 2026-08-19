@@ -31,40 +31,52 @@ parameters. You can check them with`--help-config` command line option:
 ```console
 moulin aos-rpi.yaml --help-config
 
-usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {single,main,secondary}] [--DOMD_CAN_TYPE {SEEED-FD,MCP2515}]
-                           [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
-                           [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
-                           [--DOM0_AOS {enabled,disabled}]
+usage: moulin aos-rpi.yaml [--MACHINE {rpi5}] [--DOMD_NODE_TYPE {single,main,secondary}] [--DOMD_CAN_TYPE {SEEED-FD,MCP2515}] [--DEBUG_TWEAKS {disabled,enabled}]
+                           [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}] [--DOM0_AOS {enabled,disabled}] [--WITH_BENCHMARK {yes,no}]
+                           [--CACHE_LOCATION {outside,inside}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
 options:
+  --MACHINE {rpi5}      Raspberry Pi machine (default: rpi5)
   --DOMD_NODE_TYPE {single,main,secondary}
                         Domd node type to build (default: single)
   --DOMD_CAN_TYPE {SEEED-FD,MCP2515}
-                        Domd CAN device type (default: SEEED-FD)
-  --MACHINE {rpi5}      Raspberry Pi machine (default: rpi5)
-  --CACHE_LOCATION {outside,inside}
-                        Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
+                        Domd CAN chip type (default: SEEED-FD)
+  --DEBUG_TWEAKS {disabled,enabled}
+                        Allow configure build with debug-tweaks. (default: disabled)
   --DOMD_ROOT {usb,nvme}
                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                         Enables SELinux (default: disabled)
   --DOM0_AOS {enabled,disabled}
                         Enable Aos in Dom0 (default: disabled)
+  --WITH_BENCHMARK {yes,no}
+                        Enable benchmark tools (default: no)
+  --CACHE_LOCATION {outside,inside}
+                        Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
 ```
+
+* `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
 
 * `DOMD_NODE_TYPE` - specifies the DomD node type to build: `single` - single node,
    `main` - main node, `secondary` - secondary node (`main` and `secondary` node types are used for multinode setup).
    By default, `single` node is built;
 
-* `DOMD_CAN_TYPE` - specifies the DomD CAN device type. Currently supported `SEEED-FD` and `MCP2515`. By default, `SEEED-FD` is used;
+* `DOMD_CAN_TYPE` - specifies the DomD CAN device type. Currently supported `SEEED-FD` and `MCP2515`. By default,
+  `SEEED-FD` is used;
 
-* `MACHINE` - specifies Raspberry machine type. Currently only `rpi5` is supported;
+* `DEBUG_TWEAKS` - allows to configure build with debug-tweaks. Also it enables user root without password. By default,
+  it is disabled.
+
+* `DOMD_ROOT` - specifies the DomD root device type: `usb` - USB device, `nvme` - NVMe device. By default, `usb`
+  is used.
 
 * `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
 
 * `DOM0_AOS` - enables Aos in Dom0. By default, it is disabled.
+
+* `WITH_BENCHMARK` - enables benchmark tools. By default, it is disabled.
 
 * `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
 

@@ -546,6 +546,16 @@ images:
           "rootfs.img.gz": "rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
 
 parameters:
+  MACHINE:
+    desc: "Raspberry Pi machine"
+    rpi5:
+      default: true
+      overrides:
+        variables:
+          MACHINE: "raspberrypi5"
+          SOC_FAMILY: "bcm2712"
+          ZEPHYR_DOM0_MACHINE: "rpi_5"
+
   DOMD_NODE_TYPE:
     desc: "Domd node type to build"
     "single":
@@ -616,28 +626,6 @@ parameters:
       overrides:
         variables:
           DOMD_CAN_TYPE: "mcp2515"
-
-  MACHINE:
-    desc: "Raspberry Pi machine"
-    rpi5:
-      default: true
-      overrides:
-        variables:
-          MACHINE: "raspberrypi5"
-          SOC_FAMILY: "bcm2712"
-          ZEPHYR_DOM0_MACHINE: "rpi_5"
-
-  CACHE_LOCATION:
-    desc: "Indicated where cache and downloads are stored: inside build dir or outside."
-    outside:
-      default: true
-
-    inside:
-      overrides:
-        common_data:
-          common_conf:
-            - [SSTATE_DIR, "${TOPDIR}/../../common_data/sstate"]
-            - [DL_DIR, "${TOPDIR}/../../common_data/downloads"]
 
   DEBUG_TWEAKS:
     desc: "Allow configure build with debug-tweaks."
@@ -729,3 +717,26 @@ parameters:
             builder:
               vars:
                 - "CONFIG_AOS_ENABLE=n"
+
+  WITH_BENCHMARK:
+    desc: "Enable benchmark tools"
+    yes:
+      overrides:
+        common_data:
+          common_conf:
+            - [DISTRO_FEATURES:append, " benchmark"]
+
+    no:
+      default: true
+
+  CACHE_LOCATION:
+    desc: "Indicated where cache and downloads are stored: inside build dir or outside."
+    outside:
+      default: true
+
+    inside:
+      overrides:
+        common_data:
+          common_conf:
+            - [SSTATE_DIR, "${TOPDIR}/../../common_data/sstate"]
+            - [DL_DIR, "${TOPDIR}/../../common_data/downloads"]
