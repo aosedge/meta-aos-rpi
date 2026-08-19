@@ -36,8 +36,8 @@ variables:
 
   # Version configuration
 
-  AOS_BUNDLE_IMAGE_VERSION: "1.1.1"
-  AOS_ROOTFS_REF_VERSION: "1.1.0"
+  AOS_BUNDLE_IMAGE_VERSION: "2.0.0"
+  AOS_ROOTFS_REF_VERSION: "1.1.1"
 
   # Aos node configuration
   MAIN_NODE_HOSTNAME: "main"
@@ -58,23 +58,23 @@ common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "353491479086e8d3f209d5cce0019a29e143b064"
+      rev: "scarthgap"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "7a5075cef77b5f7af454e9868e1d0019f2fd1394"
+      rev: "scarthgap"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "f92518e20530edfebca45e4170e11460949a5303"
+      rev: "scarthgap"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-security"
-      rev: "97e482b71688b62ac1109d16e89368122f039cbf"
+      rev: "scarthgap"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "3aff015697fa056b4af83b1c9ba44eca346a8a37"
+      rev: "scarthgap"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
