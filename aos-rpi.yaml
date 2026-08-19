@@ -524,7 +524,7 @@ images:
       domd_aos:
         gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
         type: empty
-        size: 4096 MiB
+        size: 16384 MiB
 
   install-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
@@ -540,7 +540,7 @@ images:
       install:
         gpt_type: ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
         type: ext4
-        size: 300 MiB
+        size: 512 MiB
         items:
           "boot.img.gz": "boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
           "rootfs.img.gz": "rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
