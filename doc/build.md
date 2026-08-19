@@ -34,7 +34,7 @@ moulin aos-rpi.yaml --help-config
 usage: moulin aos-rpi.yaml [--DOMD_NODE_TYPE {single,main,secondary}] [--DOMD_CAN_TYPE {SEEED-FD,MCP2515}]
                            [--MACHINE {rpi5}] [--CACHE_LOCATION {outside,inside}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}]
-                           [--ENABLE_AOS_IN_DOM0 {yes,no}]
+                           [--DOM0_AOS {enabled,disabled}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
@@ -50,8 +50,8 @@ options:
                         Domd root device (default: usb)
   --SELINUX {enabled,permissive,disabled}
                         Enables SELinux (default: disabled)
-  --ENABLE_AOS_IN_DOM0 {yes,no}
-                        Enable Aos in Dom0 (default: no)
+  --DOM0_AOS {enabled,disabled}
+                        Enable Aos in Dom0 (default: disabled)
 ```
 
 * `DOMD_NODE_TYPE` - specifies the DomD node type to build: `single` - single node,
@@ -64,7 +64,7 @@ options:
 
 * `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
 
-* `ENABLE_AOS_IN_DOM0` - enables Aos in Dom0. By default, it is disabled.
+* `DOM0_AOS` - enables Aos in Dom0. By default, it is disabled.
 
 * `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
 
