@@ -708,9 +708,9 @@ parameters:
     disabled:
       default: true
 
-  ENABLE_AOS_IN_DOM0:
+  DOM0_AOS:
     desc: "Enable Aos in Dom0"
-    "yes":
+    enabled:
       overrides:
         components:
           aos-vm:
@@ -721,7 +721,7 @@ parameters:
                     " ${@'aos-messageproxy' if bb.utils.to_boolean(d.getVar('AOS_MAIN_NODE')) else ''}",
                   ]
 
-    "no":
+    disabled:
       default: true
       overrides:
         components:
