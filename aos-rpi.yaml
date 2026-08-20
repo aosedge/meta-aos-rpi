@@ -36,8 +36,8 @@ variables:
 
   # Version configuration
 
-  AOS_BUNDLE_IMAGE_VERSION: "1.1.1"
-  AOS_ROOTFS_REF_VERSION: "1.1.0"
+  AOS_BUNDLE_IMAGE_VERSION: "2.0.0"
+  AOS_ROOTFS_REF_VERSION: "1.1.1"
 
   # Aos node configuration
   MAIN_NODE_HOSTNAME: "main"
@@ -58,23 +58,23 @@ common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "353491479086e8d3f209d5cce0019a29e143b064"
+      rev: "scarthgap"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "7a5075cef77b5f7af454e9868e1d0019f2fd1394"
+      rev: "scarthgap"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "f92518e20530edfebca45e4170e11460949a5303"
+      rev: "scarthgap"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-security"
-      rev: "97e482b71688b62ac1109d16e89368122f039cbf"
+      rev: "scarthgap"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "3aff015697fa056b4af83b1c9ba44eca346a8a37"
+      rev: "scarthgap"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
@@ -82,11 +82,11 @@ common_data:
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
-      rev: "v9.0.0"
+      rev: "develop"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "v2.0.0"
+      rev: "develop"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
@@ -389,7 +389,6 @@ components:
 
         publish:
           tlsKey: "aos-user-oem.p12"
-          domain: "aoscloud.io"
 
         yocto_dir: "../%{YOCTOS_WORK_DIR}"
         build_dir: "%{DOMD_BUILD_DIR}"
@@ -427,7 +426,6 @@ components:
 
         publish:
           tlsKey: "aos-user-oem.p12"
-          domain: "aoscloud.io"
 
         work_dir: "workdir"
         items:
@@ -440,7 +438,8 @@ components:
             yocto_dir: "../%{YOCTOS_WORK_DIR}"
             build_dir: "%{DOMD_BUILD_DIR}"
             type: "full"
-            description: "%{AOS_DOMD_NODE_TYPE} rootfs image"
+            title: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs full image"
+            description: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs full image for ${MACHINE}"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
             fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
             exclude:
@@ -456,7 +455,8 @@ components:
             yocto_dir: "../%{YOCTOS_WORK_DIR}"
             build_dir: "%{DOMD_BUILD_DIR}"
             type: "incremental"
-            description: "%{AOS_DOMD_NODE_TYPE} rootfs image"
+            title: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs incremental image"
+            description: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs incremental image for ${MACHINE}"
             version: "%{AOS_BUNDLE_IMAGE_VERSION}"
             requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
             fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
@@ -524,7 +524,7 @@ images:
       domd_aos:
         gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
         type: empty
-        size: 4096 MiB
+        size: 16384 MiB
 
   install-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}:
     type: gpt
@@ -540,12 +540,22 @@ images:
       install:
         gpt_type: ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
         type: ext4
-        size: 300 MiB
+        size: 512 MiB
         items:
           "boot.img.gz": "boot-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
           "rootfs.img.gz": "rootfs-%{DOMD_NODE_TYPE}-%{DOMD_ROOT}.img.gz"
 
 parameters:
+  MACHINE:
+    desc: "Raspberry Pi machine"
+    rpi5:
+      default: true
+      overrides:
+        variables:
+          MACHINE: "raspberrypi5"
+          SOC_FAMILY: "bcm2712"
+          ZEPHYR_DOM0_MACHINE: "rpi_5"
+
   DOMD_NODE_TYPE:
     desc: "Domd node type to build"
     "single":
@@ -617,28 +627,6 @@ parameters:
         variables:
           DOMD_CAN_TYPE: "mcp2515"
 
-  MACHINE:
-    desc: "Raspberry Pi machine"
-    rpi5:
-      default: true
-      overrides:
-        variables:
-          MACHINE: "raspberrypi5"
-          SOC_FAMILY: "bcm2712"
-          ZEPHYR_DOM0_MACHINE: "rpi_5"
-
-  CACHE_LOCATION:
-    desc: "Indicated where cache and downloads are stored: inside build dir or outside."
-    outside:
-      default: true
-
-    inside:
-      overrides:
-        common_data:
-          common_conf:
-            - [SSTATE_DIR, "${TOPDIR}/../../common_data/sstate"]
-            - [DL_DIR, "${TOPDIR}/../../common_data/downloads"]
-
   DEBUG_TWEAKS:
     desc: "Allow configure build with debug-tweaks."
     disabled:
@@ -708,9 +696,9 @@ parameters:
     disabled:
       default: true
 
-  ENABLE_AOS_IN_DOM0:
+  DOM0_AOS:
     desc: "Enable Aos in Dom0"
-    "yes":
+    enabled:
       overrides:
         components:
           aos-vm:
@@ -721,7 +709,7 @@ parameters:
                     " ${@'aos-messageproxy' if bb.utils.to_boolean(d.getVar('AOS_MAIN_NODE')) else ''}",
                   ]
 
-    "no":
+    disabled:
       default: true
       overrides:
         components:
@@ -729,3 +717,26 @@ parameters:
             builder:
               vars:
                 - "CONFIG_AOS_ENABLE=n"
+
+  WITH_BENCHMARK:
+    desc: "Enable benchmark tools"
+    yes:
+      overrides:
+        common_data:
+          common_conf:
+            - [DISTRO_FEATURES:append, " benchmark"]
+
+    no:
+      default: true
+
+  CACHE_LOCATION:
+    desc: "Indicated where cache and downloads are stored: inside build dir or outside."
+    outside:
+      default: true
+
+    inside:
+      overrides:
+        common_data:
+          common_conf:
+            - [SSTATE_DIR, "${TOPDIR}/../../common_data/sstate"]
+            - [DL_DIR, "${TOPDIR}/../../common_data/downloads"]
