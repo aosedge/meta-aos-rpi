@@ -573,6 +573,7 @@ parameters:
                 - [AOS_MAIN_NODE, "1"]
                 - [AOS_NODE_IP, "%{MAIN_NODE_IP}/24"]
                 - [AOS_USE_DHCP, "1"]
+                - [AOS_HOSTS:append, " %{MAIN_NODE_IP}=%{MAIN_NODE_HOSTNAME}"]
 
               layers:
                 - "../meta-aos-rpi/meta-aos-rpi-domd-main"
