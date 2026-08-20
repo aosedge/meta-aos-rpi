@@ -2,16 +2,34 @@
 
 ## Requirements
 
-1. Ubuntu 18.0+ or any other Linux distribution which is supported by Poky/OE
+1. Ubuntu 22.0+ or any other Linux distribution which is supported by Poky/OE.
 
-2. Development packages for Yocto. Refer to [Yocto manual]
-   (<https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html#build-host-packages>).
+2. Development packages for Yocto. Refer to [Yocto manual](<https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html#build-host-packages>).
 
-3. You need `Moulin` of version 0.20 or newer installed in your PC. Recommended way is to install it for your user only:
-   `pip3 install --user git+https://github.com/xen-troops/moulin`. Make sure that your `PATH` environment variable
-    includes `${HOME}/.local/bin`.
+3. Install `curl`:
 
-4. Ninja build system: `sudo apt install ninja-build` on Ubuntu
+   ```console
+   sudo apt install curl
+   ```
+
+4. Some Linux distribution may require `lz4`: `sudo apt install lz4` on Ubuntu.
+
+5. You need `Moulin` of version 0.21 or newer installed in your PC. Recommended way is to install it for your user only:
+
+   ```console
+   pip3 install --user git+https://github.com/xen-troops/moulin
+   ```
+
+   Make sure that your `PATH` environment variable includes `${HOME}/.local/bin`.
+
+6. Ninja build system:
+
+   ```console
+   sudo apt install ninja-build
+   ```
+
+7. Zephyr SDK 0.17. Refer to
+   [Zephyr SDK installation instructions](<https://docs.zephyrproject.org/latest/develop/toolchains/zephyr_sdk.html>).
 
 ## Fetch
 
