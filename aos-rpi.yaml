@@ -58,23 +58,23 @@ common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "scarthgap"
+      rev: "1ba3cd7c884dc6c3d78c6bedc15e081f5000c8c9"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "scarthgap"
+      rev: "bec755063a8b5da65df626f5749496aadaa4f4bb"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "scarthgap"
+      rev: "422dcd49756aef2c780146d54ccb39477759267a"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-security"
-      rev: "scarthgap"
+      rev: "b13f1705d723650de61277670c8a76aadea4cfdd"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "scarthgap"
+      rev: "48f745109a1ecea9afe2a74d41dbd90fa7b370af"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
@@ -82,11 +82,11 @@ common_data:
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
-      rev: "develop"
+      rev: "v9.1.1"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "develop"
+      rev: "v2.1.0"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
