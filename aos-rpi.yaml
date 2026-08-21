@@ -82,27 +82,27 @@ common_data:
 
     - type: git
       url: "https://github.com/kraj/meta-clang.git"
-      rev: "scarthgap"
+      rev: "7cf54f70cebe897d844f649024322bb096d7cb50"
 
     - type: git
       url: "https://github.com/ros/meta-ros.git"
-      rev: "scarthgap"
+      rev: "0b0756d1bb624983a44ab1e4a20710cfd949d28e"
 
     - type: git
       url: "https://github.com/zboszor/meta-clang-revival"
-      rev: "scarthgap"
+      rev: "15bbb8a25648da1e591a596e7643d0a3c060e441"
 
     - type: git
       url: "https://github.com/zboszor/meta-python-ai"
-      rev: "scarthgap"
+      rev: "4f59c71ec2ce33f43f79732788c967b6f5436322"
 
     - type: git
       url: "https://github.com/robwoolley/meta-intel-realsense.git"
-      rev: "scarthgap"
+      rev: "67d11b1aacb456ccf7cdfa1127b8fa6594cf7ab4"
 
     - type: git
       url: "https://github.com/Jarsop/meta-zenoh.git"
-      rev: "scarthgap"
+      rev: "0398092cdb34c689fef7e392fafefc5b07a110b4"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
@@ -110,7 +110,7 @@ common_data:
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "demo_ros"
+      rev: "v2.1.1-ros.1"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
