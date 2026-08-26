@@ -2,6 +2,8 @@
 
 set -e
 
+trap 'echo "ERROR: install script failed (exit code $?). Dropping to a shell for debugging."; while true; do sh; done' EXIT
+
 sleep 1
 
 echo
@@ -54,7 +56,7 @@ wait_for_block_device() {
     device=/dev/$1
     c=0
     delay=1
-    timeout=5
+    timeout=30
 
     echo "Waiting for device $device to be ready..."
 
