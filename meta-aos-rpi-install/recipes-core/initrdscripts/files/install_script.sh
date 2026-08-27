@@ -88,7 +88,16 @@ flash_image() {
     gunzip -c "$src" >"$pipe" &
     gunzip_pid=$!
 
-    dd of="$dst" bs=8096 <"$pipe"
+    dd of="$dst" bs=8M <"$pipe" &
+    dd_pid=$!
+
+    while kill -0 "$dd_pid" 2>/dev/null; do
+        sleep 5
+        written=$(sed -n 's/^write_bytes: *//p' "/proc/$dd_pid/io" 2>/dev/null) || true
+        [ -n "$written" ] && echo "  ...flashed $((written / 1048576)) MiB so far"
+    done
+
+    wait "$dd_pid"
 
     rm -f "$pipe"
 
