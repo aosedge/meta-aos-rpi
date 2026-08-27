@@ -146,6 +146,11 @@ mount -t auto /dev/mmcblk0p2 /sd2
 echo "Flashing root device..."
 
 flash_image /sd2/rootfs.img.gz "/dev/$BLOCK_DEVICE"
+
+echo "Rescanning partition table on /dev/$BLOCK_DEVICE..."
+blockdev --rereadpt "/dev/$BLOCK_DEVICE"
+wait_for_block_device "$BLOCK_DEVICE_AOS_PARTITION"
+
 mkfs.ext4 -F -E lazy_journal_init=1 "/dev/$BLOCK_DEVICE_AOS_PARTITION"
 
 mount -t auto "/dev/$BLOCK_DEVICE_AOS_PARTITION" /flash3
