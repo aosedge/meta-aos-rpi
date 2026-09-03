@@ -51,7 +51,7 @@ moulin aos-rpi.yaml --help-config
 
 usage: moulin aos-rpi.yaml [--MACHINE {rpi5}] [--DOMD_NODE_TYPE {single,main,secondary}] [--DOMD_CAN_TYPE {SEEED-FD,MCP2515}] [--DEBUG_TWEAKS {disabled,enabled}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}] [--DOM0_AOS {enabled,disabled}] [--WITH_BENCHMARK {yes,no}]
-                           [--CACHE_LOCATION {outside,inside}]
+                           [--WITH_FASTDDS {yes,no}] [--CACHE_LOCATION {outside,inside}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
@@ -71,6 +71,8 @@ options:
                         Enable Aos in Dom0 (default: disabled)
   --WITH_BENCHMARK {yes,no}
                         Enable benchmark tools (default: no)
+  --WITH_FASTDDS {yes,no}
+                        Enable Fast DDS (default: no)
   --CACHE_LOCATION {outside,inside}
                         Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
 ```
@@ -95,6 +97,9 @@ options:
 * `DOM0_AOS` - enables Aos in Dom0. By default, it is disabled.
 
 * `WITH_BENCHMARK` - enables benchmark tools. By default, it is disabled.
+
+* `WITH_FASTDDS` - specifies to include Fast DDS and the discovery server into the build. They are added on the main
+node only.
 
 * `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
 
