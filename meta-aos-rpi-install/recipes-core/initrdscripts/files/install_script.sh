@@ -2,6 +2,8 @@
 
 set -e
 
+trap 'echo "ERROR: install script failed (exit code $?). Dropping to a shell for debugging."; while true; do sh; done' EXIT
+
 sleep 1
 
 echo
@@ -54,7 +56,7 @@ wait_for_block_device() {
     device=/dev/$1
     c=0
     delay=1
-    timeout=5
+    timeout=30
 
     echo "Waiting for device $device to be ready..."
 
@@ -86,7 +88,16 @@ flash_image() {
     gunzip -c "$src" >"$pipe" &
     gunzip_pid=$!
 
-    dd of="$dst" bs=8096 <"$pipe"
+    dd of="$dst" bs=8M <"$pipe" &
+    dd_pid=$!
+
+    while kill -0 "$dd_pid" 2>/dev/null; do
+        sleep 5
+        written=$(sed -n 's/^write_bytes: *//p' "/proc/$dd_pid/io" 2>/dev/null) || true
+        [ -n "$written" ] && echo "  ...flashed $((written / 1048576)) MiB so far"
+    done
+
+    wait "$dd_pid"
 
     rm -f "$pipe"
 
@@ -144,6 +155,11 @@ mount -t auto /dev/mmcblk0p2 /sd2
 echo "Flashing root device..."
 
 flash_image /sd2/rootfs.img.gz "/dev/$BLOCK_DEVICE"
+
+echo "Rescanning partition table on /dev/$BLOCK_DEVICE..."
+blockdev --rereadpt "/dev/$BLOCK_DEVICE"
+wait_for_block_device "$BLOCK_DEVICE_AOS_PARTITION"
+
 mkfs.ext4 -F -E lazy_journal_init=1 "/dev/$BLOCK_DEVICE_AOS_PARTITION"
 
 mount -t auto "/dev/$BLOCK_DEVICE_AOS_PARTITION" /flash3

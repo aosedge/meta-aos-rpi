@@ -730,6 +730,17 @@ parameters:
     no:
       default: true
 
+  WITH_FASTDDS:
+    desc: "Enable Fast DDS"
+    "yes":
+      overrides:
+        common_data:
+          common_conf:
+            - [DISTRO_FEATURES:append, " fastdds"]
+
+    "no":
+      default: true
+
   CACHE_LOCATION:
     desc: "Indicated where cache and downloads are stored: inside build dir or outside."
     outside:
