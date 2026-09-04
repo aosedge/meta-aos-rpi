@@ -58,7 +58,7 @@ common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "1ba3cd7c884dc6c3d78c6bedc15e081f5000c8c9"
+      rev: "00e6a3df8c68146aa98b724426227bda332bcf02"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
@@ -66,7 +66,7 @@ common_data:
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "422dcd49756aef2c780146d54ccb39477759267a"
+      rev: "f980aefbc8b3eeafb8d144e7fdac3c3b701a4fea"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-security"
@@ -82,11 +82,11 @@ common_data:
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
-      rev: "v9.1.1"
+      rev: "v9.1.2"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "v2.1.1"
+      rev: "v2.1.2"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
