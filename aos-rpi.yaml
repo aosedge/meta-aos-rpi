@@ -2,6 +2,25 @@ desc: "AosCore build for Raspberry Pi 5"
 min_ver: "0.24"
 
 variables:
+  # Image versions
+  RELEASE_VERSION: "2.1.2"
+  AOS_CORE_VERSION: "9.1.2"
+  AOS_ZEPHYR_VERSION: "3.4.0"
+  ROOTFS_REF_VERSION: "2.1.1"
+
+  # meta layers revisions
+  POKY_REV: "00e6a3df8c68146aa98b724426227bda332bcf02"
+  META_OPENEMBEDDED_REV: "bec755063a8b5da65df626f5749496aadaa4f4bb"
+  META_VIRTUALIZATION_REV: "f980aefbc8b3eeafb8d144e7fdac3c3b701a4fea"
+  META_SECURITY_REV: "b13f1705d723650de61277670c8a76aadea4cfdd"
+  META_SELINUX_REV: "48f745109a1ecea9afe2a74d41dbd90fa7b370af"
+  META_RASPBERRY_REV: "2c646d29912dcc873469a57b1c207e1549c5094d"
+  META_XT_RPI5_REV: "e9473cc4e5b1e1d19df7da59daa17936d636ee21"
+  META_XT_COMMON_REV: "v0.3.0"
+  AOS_ZEPHYR_REV: "v%{AOS_ZEPHYR_VERSION}"
+  META_AOS_REV: "v%{AOS_CORE_VERSION}"
+  META_AOS_RPI_REV: "v%{RELEASE_VERSION}"
+
   # Build configuration
   YOCTOS_WORK_DIR: "yocto"
   DOM0_OS: "zephyr"
@@ -34,11 +53,6 @@ variables:
 
   AOS_COMPONENT_RUNTIME_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{DOMD_NODE_TYPE}-%{MACHINE}-%{DOMD_ROOT}-"
 
-  # Version configuration
-
-  AOS_BUNDLE_IMAGE_VERSION: "2.0.0"
-  AOS_ROOTFS_REF_VERSION: "1.1.1"
-
   # Aos node configuration
   MAIN_NODE_HOSTNAME: "main"
 
@@ -58,35 +72,35 @@ common_data:
   common_yocto_sources: &COMMON_YOCTO_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "scarthgap"
+      rev: "%{POKY_REV}"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "scarthgap"
+      rev: "%{META_OPENEMBEDDED_REV}"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "scarthgap"
+      rev: "%{META_VIRTUALIZATION_REV}"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-security"
-      rev: "scarthgap"
+      rev: "%{META_SECURITY_REV}"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "scarthgap"
+      rev: "%{META_SELINUX_REV}"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: "v0.3.0"
+      rev: "%{META_XT_COMMON_REV}"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
-      rev: "develop"
+      rev: "%{META_AOS_REV}"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rpi.git"
-      rev: "develop"
+      rev: "%{META_AOS_RPI_REV}"
 
   common_conf: &COMMON_CONF
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
@@ -151,8 +165,8 @@ common_data:
     - [AOS_UNIT_VERSION, "%{AOS_UNIT_VERSION}"]
 
     # Image versions
-    - [AOS_ROOTFS_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
-    - [AOS_BOOT_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
+    - [AOS_ROOTFS_IMAGE_VERSION, "%{RELEASE_VERSION}"]
+    - [AOS_BOOT_IMAGE_VERSION, "%{RELEASE_VERSION}"]
 
     # Requires to properly generate Aos FOTA
     - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
@@ -164,7 +178,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aosedge/aos_core_zephyr"
-        rev: "v1.1.3"
+        rev: "%{AOS_ZEPHYR_REV}"
 
     builder:
       type: zephyr
@@ -189,11 +203,11 @@ components:
       - *COMMON_YOCTO_SOURCES
       - type: git
         url: "https://git.yoctoproject.org/meta-raspberrypi"
-        rev: "2c646d29912dcc873469a57b1c207e1549c5094d"
+        rev: "%{META_RASPBERRY_REV}"
 
       - type: git
         url: "https://github.com/xen-troops/meta-xt-rpi5.git"
-        rev: "e9473cc4e5b1e1d19df7da59daa17936d636ee21"
+        rev: "%{META_XT_RPI5_REV}"
 
     builder:
       type: yocto
@@ -310,7 +324,7 @@ components:
       - *COMMON_YOCTO_SOURCES
       - type: git
         url: "https://git.yoctoproject.org/meta-raspberrypi"
-        rev: "2c646d29912dcc873469a57b1c207e1549c5094d"
+        rev: "%{META_RASPBERRY_REV}"
 
     builder:
       type: yocto
@@ -440,8 +454,8 @@ components:
             type: "full"
             title: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs full image"
             description: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs full image for ${MACHINE}"
-            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
-            fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+            version: "%{RELEASE_VERSION}"
+            fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-full-%{RELEASE_VERSION}.squashfs"
             exclude:
               - "home/*"
               - "var/*"
@@ -457,9 +471,9 @@ components:
             type: "incremental"
             title: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs incremental image"
             description: "Aos RPI %{AOS_DOMD_NODE_TYPE} rootfs incremental image for ${MACHINE}"
-            version: "%{AOS_BUNDLE_IMAGE_VERSION}"
-            requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
-            fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
+            version: "%{RELEASE_VERSION}"
+            requiredVersion: "%{ROOTFS_REF_VERSION}"
+            fileName: "%{AOS_DOMD_NODE_TYPE}-rootfs-incremental-%{RELEASE_VERSION}.squashfs"
             exclude:
               - "home/*"
               - "var/*"
@@ -737,6 +751,26 @@ parameters:
         common_data:
           common_conf:
             - [DISTRO_FEATURES:append, " fastdds"]
+
+    "no":
+      default: true
+
+  DEVELOP:
+    desc: "Build development version"
+    "yes":
+      overrides:
+        variables:
+          POKY_REV: "scarthgap"
+          META_OPENEMBEDDED_REV: "scarthgap"
+          META_VIRTUALIZATION_REV: "scarthgap"
+          META_SECURITY_REV: "scarthgap"
+          META_SELINUX_REV: "scarthgap"
+          META_RASPBERRY_REV: "scarthgap"
+          META_XT_RPI5_REV: "main"
+          META_XT_COMMON_REV: "scarthgap"
+          AOS_ZEPHYR_REV: "develop"
+          META_AOS_REV: "develop"
+          META_AOS_RPI_REV: "develop"
 
     "no":
       default: true
