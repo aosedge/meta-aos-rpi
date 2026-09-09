@@ -51,7 +51,7 @@ moulin aos-rpi.yaml --help-config
 
 usage: moulin aos-rpi.yaml [--MACHINE {rpi5}] [--DOMD_NODE_TYPE {single,main,secondary}] [--DOMD_CAN_TYPE {SEEED-FD,MCP2515}] [--DEBUG_TWEAKS {disabled,enabled}]
                            [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}] [--DOM0_AOS {enabled,disabled}] [--WITH_BENCHMARK {yes,no}]
-                           [--WITH_FASTDDS {yes,no}] [--CACHE_LOCATION {outside,inside}]
+                           [--WITH_FASTDDS {yes,no}] [--DEVELOP {yes,no}] [--CACHE_LOCATION {outside,inside}]
 
 Config file description: AosCore build for Raspberry Pi 5
 
@@ -73,6 +73,7 @@ options:
                         Enable benchmark tools (default: no)
   --WITH_FASTDDS {yes,no}
                         Enable Fast DDS (default: no)
+  --DEVELOP {yes,no}    Build development version (default: no)
   --CACHE_LOCATION {outside,inside}
                         Indicated where cache and downloads are stored: inside build dir or outside. (default: outside)
 ```
@@ -100,6 +101,8 @@ options:
 
 * `WITH_FASTDDS` - specifies to include Fast DDS and the discovery server into the build. They are added on the main
 node only.
+
+* `DEVELOP` - specifies to build development version of the image.
 
 * `CACHE_LOCATION` - indicated where cache and downloads are stored: inside build dir or outside.
 

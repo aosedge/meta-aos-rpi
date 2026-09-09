@@ -68,7 +68,7 @@ jobs:
           mkdir build
           cp aos-rpi.yaml build/
 
-          sed -i "s/BUNDLE_IMAGE_VERSION: \"[^\"]*\"/BUNDLE_IMAGE_VERSION: \"$version\"/" build/aos-rpi.yaml
+          sed -i "s/RELEASE_VERSION: \"[^\"]*\"/RELEASE_VERSION: \"$version\"/" build/aos-rpi.yaml
           sed -i "s/ROOTFS_REF_VERSION: \"[^\"]*\"/ROOTFS_REF_VERSION: \"$prev_version\"/" build/aos-rpi.yaml
 
           echo "Build docker"
