@@ -742,7 +742,7 @@ parameters:
       overrides:
         common_data:
           common_conf:
-            - [DISTRO_FEATURES:append, " benchmark"]
+            - [DISTRO_FEATURES:append, " benchmark virtualization k3s"]
 
     no:
       default: true
