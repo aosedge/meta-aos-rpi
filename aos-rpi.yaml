@@ -168,6 +168,9 @@ common_data:
     - [AOS_ROOTFS_IMAGE_VERSION, "%{RELEASE_VERSION}"]
     - [AOS_BOOT_IMAGE_VERSION, "%{RELEASE_VERSION}"]
 
+    # Set var partition size
+    - [AOS_VAR_PART_SIZE, "4194304"]
+
     # Requires to properly generate Aos FOTA
     - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
 
