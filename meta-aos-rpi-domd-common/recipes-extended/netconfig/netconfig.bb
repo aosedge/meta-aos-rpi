@@ -17,9 +17,9 @@ do_install:append() {
 
     if [ ${AOS_USE_DHCP} = "1" ]; then
         echo "DHCP=yes" >> ${D}${sysconfdir}/systemd/network/20-wired.network
-        echo "Address=${AOS_NODE_IP}" >> ${D}${sysconfdir}/systemd/network/20-wired.network
+        echo "Address=${AOS_NODE_IP}/24" >> ${D}${sysconfdir}/systemd/network/20-wired.network
     else
-        echo "Address=${AOS_NODE_IP}" >> ${D}${sysconfdir}/systemd/network/20-wired.network
+        echo "Address=${AOS_NODE_IP}/24" >> ${D}${sysconfdir}/systemd/network/20-wired.network
         echo "Gateway=${AOS_NODE_GW_IP}" >> ${D}${sysconfdir}/systemd/network/20-wired.network
     fi
 
