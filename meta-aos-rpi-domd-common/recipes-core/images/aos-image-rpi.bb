@@ -13,12 +13,28 @@ CAN_PACKAGES = " \
     can-utils \
 "
 
+WIFI_PACKAGES = " \
+    wpa-supplicant \
+    iw \
+    wireless-regdb-static \
+    linux-firmware-rpidistro-bcm43455 \
+    kernel-module-brcmfmac \
+"
+
+GFX_PACKAGES = " \
+    mesa \
+    libdrm \
+    kmscube \
+"
+
 IMAGE_INSTALL:append = " \
     packagegroup-core-ssh-openssh \
     netconfig \
     tzdata \
     sudo \
     ${@bb.utils.contains("MACHINE_FEATURES", "domd_can", "${CAN_PACKAGES}", "" ,d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "domd_wifi", "${WIFI_PACKAGES}", "" ,d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "domd_hdmi", "${GFX_PACKAGES}", "" ,d)} \
     udev-rules-rpi \
     v4l-utils \
 "
