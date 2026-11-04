@@ -256,7 +256,7 @@ components:
             vardir.disk=\\\\/dev\\\\/%{DOMD_BLK_DEV}2
             opendisk.target=\\\\/dev\\\\/%{DOMD_BLK_DEV}3
             opendisk.pkcs11=optee
-            aosupdate.disk=\\\\/dev\\\\/aosvg\\\\/workdirs
+            aosupdate.disk=${@bb.utils.contains('AOS_INTEGRITY_DISKS', 'workdirs', '\\\\/dev\\\\/mapper\\\\/aosint-workdirs', '\\\\/dev\\\\/aosvg\\\\/workdirs', d)}
             aosupdate.path=sm\\\\/runtimes\\\\/rootfs
             ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'aosupdate.selinux_module=\\\\/usr\\\\/share\\\\/selinux\\\\/aos\\\\/base.pp', '', d)}",
           ]
@@ -735,6 +735,22 @@ parameters:
             builder:
               vars:
                 - "CONFIG_AOS_ENABLE=n"
+
+  WITH_DISK_INTEGRITY:
+    desc: "Enable dm-integrity on Aos disks"
+    "yes":
+      default: true
+      overrides:
+        components:
+          domd:
+            builder:
+              conf:
+                - [
+                    AOS_INTEGRITY_DISKS,
+                    "${@'workdirs storages states' if bb.utils.to_boolean(d.getVar('AOS_MAIN_NODE')) else 'workdirs'}",
+                  ]
+
+    "no": {}
 
   WITH_BENCHMARK:
     desc: "Enable benchmark tools"
