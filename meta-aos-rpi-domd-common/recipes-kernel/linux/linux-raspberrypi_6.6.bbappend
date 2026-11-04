@@ -1,6 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI:append = " \
+    file://integrity.cfg \
     file://misc.cfg \
     file://network.cfg \
     file://optee.cfg \
