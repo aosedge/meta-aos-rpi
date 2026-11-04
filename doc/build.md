@@ -50,7 +50,7 @@ parameters. You can check them with`--help-config` command line option:
 moulin aos-rpi.yaml --help-config
 
 usage: moulin aos-rpi.yaml [--MACHINE {rpi5}] [--DOMD_NODE_TYPE {single,main,secondary}] [--DOMD_CAN_TYPE {SEEED-FD,MCP2515}] [--DEBUG_TWEAKS {disabled,enabled}]
-                           [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}] [--DOM0_AOS {enabled,disabled}] [--WITH_BENCHMARK {yes,no}]
+                           [--DOMD_ROOT {usb,nvme}] [--SELINUX {enabled,permissive,disabled}] [--DOM0_AOS {enabled,disabled}] [--WITH_DISK_INTEGRITY {yes,no}] [--WITH_BENCHMARK {yes,no}]
                            [--WITH_FASTDDS {yes,no}] [--DEVELOP {yes,no}] [--CACHE_LOCATION {outside,inside}]
 
 Config file description: AosCore build for Raspberry Pi 5
@@ -69,6 +69,8 @@ options:
                         Enables SELinux (default: disabled)
   --DOM0_AOS {enabled,disabled}
                         Enable Aos in Dom0 (default: disabled)
+  --WITH_DISK_INTEGRITY {yes,no}
+                        Enable dm-integrity on Aos disks (default: yes)
   --WITH_BENCHMARK {yes,no}
                         Enable benchmark tools (default: no)
   --WITH_FASTDDS {yes,no}
@@ -96,6 +98,10 @@ options:
 * `SELINUX` - enables SELinux security in DomD Linux. Currently, not fully implemented and disabled by default.
 
 * `DOM0_AOS` - enables Aos in Dom0. By default, it is disabled.
+
+* `WITH_DISK_INTEGRITY` - specifies to protect Aos disks with dm-integrity: `workdirs`, `storages` and `states` on the
+main node, `workdirs` on the secondary node. Changing this option requires provisioning the device again: a rootfs
+update doesn't change the format of the existing disks.
 
 * `WITH_BENCHMARK` - enables benchmark tools. By default, it is disabled.
 
